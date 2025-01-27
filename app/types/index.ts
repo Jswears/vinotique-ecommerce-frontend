@@ -25,3 +25,19 @@ export interface WineDetails {
   description: string;
   imageUrl: string;
 }
+
+export interface CartItem {
+  wineId: string;
+  name: string;
+  price: number;
+  imageUrl: string;
+  quantity: number;
+  userId?: string;
+}
+
+export interface OrderItem {
+  userId: string;
+  wineId: string;
+  quantity: number;
+  action: "add" | "remove";
+}

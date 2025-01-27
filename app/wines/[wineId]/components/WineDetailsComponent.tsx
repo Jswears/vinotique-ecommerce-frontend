@@ -72,7 +72,7 @@ const WineDetailsComponent = ({ wineId }: WineDetailsComponentProps) => {
                                 </div>
                             </div>
                             <div className="mt-8">
-                                <AddToCartButton wine={wine} />
+                                <AddToCartButton wine={{ wineId: wine.wineId, name: wine.name, price: wine.price, imageUrl: wine.imageUrl }} />
                             </div>
                         </CardContent>
                     </div>

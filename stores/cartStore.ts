@@ -1,5 +1,6 @@
 import { api } from "@/app/lib/api";
 import { getGuestUserId } from "@/app/lib/auth";
+import { CartItem } from "@/app/types";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -13,13 +14,14 @@ type OrderItem = {
 };
 
 type CartState = {
-  cart: OrderItem[];
+  cart: CartItem[];
   cartQuantity: number;
+  updateCartQuantity: (quantity: number) => void;
   loading: boolean;
   error: string | null;
   updateCartState: (items: any) => Promise<void>;
   addToCart: (wine: OrderItem) => Promise<void>;
-  removeFromCart: (cartItem: OrderItem) => void;
+  removeFromCart: (cartItem: OrderItem) => Promise<void>;
 };
 
 export const useCartStore = create<CartState>()(
@@ -36,27 +38,40 @@ export const useCartStore = create<CartState>()(
           if (response && response.messages) {
             const data = (await api.get(`/cart/${getGuestUserId()}`)) || [];
             set({ cart: data, loading: false });
+            set({
+              cartQuantity: data.reduce(
+                (total: number, item: OrderItem) => total + item.quantity,
+                0
+              ),
+            });
           }
         } catch (error: any) {
           set({ error: error.message, loading: false });
         }
+      },
+      updateCartQuantity: (quantity: number) => {
+        set({ cartQuantity: quantity });
       },
       addToCart: async (wine: OrderItem) => {
         await get().updateCartState([
           { ...wine, userId: getGuestUserId(), action: "add" },
         ]);
       },
-      removeFromCart: (cartItem: OrderItem) => {
-        set((state) => {
-          return {
-            cart: state.cart.filter((item) => item.wineId !== cartItem.wineId),
-          };
-        });
+      removeFromCart: async (wine: OrderItem) => {
+        await get().updateCartState([
+          { ...wine, userId: getGuestUserId(), action: "remove" },
+        ]);
       },
     }),
     {
       name: "wine-cart-storage",
-      partialize: (state) => ({ cart: state.cart }),
+      partialize: (state) => ({
+        cart: state.cart,
+        cartQuantity: state.cart.reduce(
+          (total, item) => total + item.quantity,
+          0
+        ),
+      }),
     }
   )
 );

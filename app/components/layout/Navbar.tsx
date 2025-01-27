@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Wine, User } from "lucide-react"
 import { usePathname } from "next/navigation"
+import { CartIcon } from "@/app/components/layout/CartIcon"
 
 const Navbar = () => {
     const pathname = usePathname()
@@ -29,6 +30,7 @@ const Navbar = () => {
                         </div>
                     </div>
                     <div className="flex items-center space-x-4">
+                        <CartIcon />
                         <Button variant="ghost" size="icon" asChild>
                             <Link href="/account">
                                 <User className="h-5 w-5" />

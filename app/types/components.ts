@@ -1,4 +1,4 @@
-import { Wine } from ".";
+import { CartItem, Wine } from ".";
 
 export interface WineCardProps {
   wine: Wine;
@@ -15,5 +15,6 @@ export interface WineDetailsPageProps {
 }
 
 export interface AddToCartButtonProps {
-  wine: Wine;
+  wine: CartItem;
+  type: "simple" | "detailed";
 }
