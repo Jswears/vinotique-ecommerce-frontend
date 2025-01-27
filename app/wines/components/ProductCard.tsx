@@ -1,5 +1,6 @@
 'use client'
 import { WineCardProps } from '@/app/types/components';
+import { priceConversor } from '@/app/utils/priceConversor';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -21,7 +22,7 @@ const WineCard = ({ wine }: WineCardProps) => {
                     {!wine.isAvailable && (
                         <Badge variant="destructive">SOLD OUT</Badge>
                     )}
-                    <span className="font-bold">€{wine.price.toFixed(2)}</span>
+                    <span className="font-bold">{priceConversor(wine.price)}</span>
                 </div>
             </CardContent>
             <CardFooter className="p-4 pt-0">
