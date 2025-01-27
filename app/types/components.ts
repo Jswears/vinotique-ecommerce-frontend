@@ -13,3 +13,7 @@ export interface WineDetailsPageProps {
     wineId: string;
   };
 }
+
+export interface AddToCartButtonProps {
+  wine: Wine;
+}

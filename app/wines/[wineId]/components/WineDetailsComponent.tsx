@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Grape, MapPin } from 'lucide-react';
 import { priceConversor } from '@/app/utils/priceConversor';
 import { WineDetailsComponentProps } from '@/app/types/components';
+import AddToCartButton from '@/app/components/features/AddToCartButton';
 
 
 const WineDetailsComponent = ({ wineId }: WineDetailsComponentProps) => {
@@ -71,7 +72,7 @@ const WineDetailsComponent = ({ wineId }: WineDetailsComponentProps) => {
                                 </div>
                             </div>
                             <div className="mt-8">
-                                {/* <AddToCartButton wine={wine} /> */}
+                                <AddToCartButton wine={wine} />
                             </div>
                         </CardContent>
                     </div>
