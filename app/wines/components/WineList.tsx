@@ -6,6 +6,7 @@ import { api } from '@/app/lib/api';
 import { Wine } from '@/app/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
 
 
 
@@ -16,7 +17,7 @@ const WineList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState<number | null>(null);
     const [nextToken, setNextToken] = useState<string | null>(null);
-    const pageSize = 9;
+    const pageSize = 3;
 
     useEffect(() => {
         const fetchWines = async () => {
@@ -25,7 +26,7 @@ const WineList = () => {
                 const data = await api.get('/wines', { params: { pageSize, nextToken } })
                 setWines(data.items)
                 setNextToken(data.nextToken)
-                setTotalPages(data.nextToken ? currentPage + 1 : currentPage)
+                setTotalPages(data.totalCount ? Math.ceil(data.totalCount / pageSize) : 1) // Calculate total pages based on totalCount
             } catch (error: any) {
                 setError(error.message);
             } finally {
@@ -33,14 +34,27 @@ const WineList = () => {
             }
         };
         fetchWines();
-    }, [nextToken, currentPage]);
+    }, [currentPage]); // Removed nextToken dependency
 
-    const handlePageChange = (newPage: number) => {
-        setCurrentPage(newPage)
-        if (newPage === currentPage + 1) {
-            //do nothing, since the nextToken will trigger the `useEffect`
+    const handlePageChange = async (newPage: number) => {
+        if (newPage > currentPage && nextToken) {
+            setCurrentPage(newPage);
+        } else if (newPage < currentPage) {
+            setCurrentPage(newPage);
+            setNextToken(null);
         } else {
-            setNextToken(null)
+            setLoading(true);
+            try {
+                const data = await api.get('/wines', { params: { pageSize, nextToken: null } })
+                setWines(data.items)
+                setNextToken(data.nextToken)
+                setTotalPages(data.totalCount ? Math.ceil(data.totalCount / pageSize) : 1) // Calculate total pages based on totalCount
+                setCurrentPage(newPage);
+            } catch (error: any) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
         }
     }
 
@@ -86,9 +100,25 @@ const WineList = () => {
             </div>
             {totalPages && (
                 <div className="mt-6 flex justify-between items-center">
-                    {currentPage > 1 && (<button onClick={() => handlePageChange(currentPage - 1)}>Previous</button>)}
-                    <span>Page {currentPage} of {totalPages}</span>
-                    {nextToken && (<button onClick={() => handlePageChange(currentPage + 1)}>Next</button>)}
+                    {currentPage > 1 && (
+                        <Button
+                            variant={'secondary'}
+                            onClick={() => handlePageChange(currentPage - 1)}
+                        >
+                            Previous
+                        </Button>
+                    )}
+                    <span className="text-gray-700 dark:text-gray-300 font-medium">
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    {currentPage < totalPages && (
+                        <Button
+                            variant={'secondary'}
+                            onClick={() => handlePageChange(currentPage + 1)}
+                        >
+                            Next
+                        </Button>
+                    )}
                 </div>
             )}
         </div>

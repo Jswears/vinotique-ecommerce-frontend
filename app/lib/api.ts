@@ -15,6 +15,7 @@ export const api = {
     try {
       const response = await axiosClient.get(url, { params });
       console.log(response);
+      console.log("params:", params);
       return response.data;
     } catch (error: any) {
       console.error(
