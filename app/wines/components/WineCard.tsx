@@ -1,4 +1,5 @@
 'use client'
+import AddToCartButton from '@/app/components/features/AddToCartButton';
 import { WineCardProps } from '@/app/types/components';
 import { priceConversor } from '@/app/utils/priceConversor';
 import { Badge } from '@/components/ui/badge';
@@ -25,13 +26,14 @@ const WineCard = ({ wine }: WineCardProps) => {
                     <span className="font-bold">{priceConversor(wine.price)}</span>
                 </div>
             </CardContent>
-            <CardFooter className="p-4 pt-0">
-                <Link href={`/wines/${wine.wineId}`} passHref className="w-full">
-                    <Button variant="default" className="w-full">
-                        View Details
-                    </Button>
-                </Link>
+            <CardFooter className="p-4 pt-0 flex gap-2">
+                <AddToCartButton type='detailed' wine={wine} />
             </CardFooter>
+            <Link href={`/wines/${wine.wineId}`} passHref className="w-full">
+                <Button variant="secondary" className="w-full">
+                    View Details
+                </Button>
+            </Link>
         </Card>
     )
 }

@@ -37,21 +37,22 @@ const AddToCartButton = ({ wine, type }: AddToCartButtonProps) => {
 
 
     return (
-        <Button variant={type === "simple" ? "secondary" : "default"} size={type === "simple" ? "icon" : undefined} className="w-full" onClick={handleAddToCart} >
-            {loading ? (
-                <>
-                    <Check className="mr-2 h-4 w-4" />
-
-                    {type !== "simple" ? "Added to Cart" : ""}
-                </>
-            ) : (
-                type === "simple" ? "+" : (
+        <div>
+            <Button disabled={!wine.isAvailable} variant={type === "simple" ? "secondary" : "default"} size={type === "simple" ? "icon" : undefined} className="w-full" onClick={handleAddToCart} >
+                {loading ? (
                     <>
-                        <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+                        <Check className="mr-2 h-4 w-4" />
+                        {type !== "simple" ? "Added to Cart" : ""}
                     </>
-                )
-            )}
-        </Button>
+                ) : (
+                    type === "simple" ? "+" : (
+                        <>
+                            <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+                        </>
+                    )
+                )}
+            </Button>
+        </div>
     )
 }
 

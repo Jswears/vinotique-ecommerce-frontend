@@ -10,20 +10,6 @@ export interface Wine {
   category: string;
   stock: number;
   isAvailable: boolean;
-  createdAt: string;
-}
-
-export interface WineDetails {
-  wineId: string;
-  name: string;
-  category: string;
-  region: string;
-  producer: string;
-  vintage: string;
-  price: number;
-  stock: number;
-  description: string;
-  imageUrl: string;
 }
 
 export interface CartItem {
@@ -33,6 +19,7 @@ export interface CartItem {
   imageUrl: string;
   quantity?: number;
   userId?: string;
+  isAvailable?: boolean;
 }
 
 export interface OrderItem {
@@ -40,4 +27,12 @@ export interface OrderItem {
   wineId: string;
   quantity: number;
   action: "add" | "remove";
+}
+
+export interface CheckoutItem {
+  name: string;
+  price: number;
+  currency: string;
+  wineId: string;
+  quantity: number | undefined;
 }

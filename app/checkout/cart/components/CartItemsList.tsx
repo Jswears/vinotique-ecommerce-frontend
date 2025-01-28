@@ -3,7 +3,7 @@ import { api } from "@/app/lib/api";
 import { useEffect, useState } from "react";
 import CartItemsSkeleton from "./CartItemsSkeleton";
 import WineAlert from "@/app/components/ui/WineAlertComponent";
-import { CartItem } from "@/app/types";
+import { CartItem, CheckoutItem } from "@/app/types";
 import {
     Card,
     CardContent,
@@ -57,6 +57,35 @@ const CartItemsList = () => {
         )
     }
 
+    const handleCheckout = async () => {
+        try {
+            const cartItems: CheckoutItem[] = cart.map((item): CheckoutItem => ({
+                name: item.name,
+                price: item.price,
+                currency: "eur",
+                quantity: item.quantity,
+                wineId: item.wineId,
+            }));
+
+            const data = await api.post(`/payment`, {
+                cartItems,
+                successUrl: `${window.location.origin}/checkout/payment/success`,
+                cancelUrl: `${window.location.origin}/checkout/payment/cancel`,
+                metadata: {
+                    userId: getGuestUserId(), // Consider fetching user ID dynamically
+                },
+            });
+            const { sessionUrl } = data;
+            window.location.href = sessionUrl;
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error(error.message);
+            } else {
+                console.error(error);
+            }
+        }
+    };
+
     if (loading) {
         return (
             <CartItemsSkeleton />
@@ -100,7 +129,7 @@ const CartItemsList = () => {
                             <Trash2 className="mr-2 h-4 w-4" />
                             Clear Cart
                         </Button>
-                        <Button variant="default">
+                        <Button variant="default" onClick={handleCheckout}>
                             <CreditCard className="mr-2 h-4 w-4" />
                             Checkout
                         </Button>
