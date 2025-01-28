@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../../../lib/api';
 import Image from 'next/image';
 import { Wine } from '@/app/types';
-import WineDetailsSkeleton from './WineDetailsSkeletonComponent';
+import WineDetailsSkeleton from './WineDetailsSkeleton';
 import WineAlert from '@/app/components/ui/WineAlertComponent';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -72,7 +72,7 @@ const WineDetailsComponent = ({ wineId }: WineDetailsComponentProps) => {
                                 </div>
                             </div>
                             <div className="mt-8">
-                                <AddToCartButton wine={{ wineId: wine.wineId, name: wine.name, price: wine.price, imageUrl: wine.imageUrl }} />
+                                <AddToCartButton wine={{ wineId: wine.wineId, name: wine.name, price: wine.price, imageUrl: wine.imageUrl }} type='detailed' />
                             </div>
                         </CardContent>
                     </div>

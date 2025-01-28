@@ -1,12 +1,14 @@
 // app/wines/components/WineList.tsx
 "use client"
 import { useState, useEffect } from 'react';
-import ProductCard from './ProductCard';
+import WineCard from './WineCard';
 import { api } from '@/app/lib/api';
 import { Wine } from '@/app/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
+import WineCardSkeleton from './WinesCardSkeleton';
+import WineAlert from '@/app/components/ui/WineAlertComponent';
 
 
 
@@ -66,36 +68,16 @@ const WineList = () => {
         )
     }
 
-    if (loading) {
-        return (
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">Our Wines</h1>
-                <div className=" justify-center grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                    {[...Array(4)].map((_, index) => (
-                        <Skeleton key={index} className="h-[300px] w-full" />
-                    ))}
-                </div>
-            </div>
-        )
-    }
+    if (loading) return <WineCardSkeleton />
 
-    if (wines.length === 0 && !loading) {
-        return (
-            <div className='flex justify-center items-center h-[calc(100dvh-64px)]'>
-                <Alert className='h-36 flex flex-col justify-center items-center'>
-                    <AlertTitle>No wines available</AlertTitle>
-                    <AlertDescription>There are no wines available at the moment.</AlertDescription>
-                </Alert>
-            </div>
-        )
-    }
+    if (wines.length === 0 && !loading) return <WineAlert title='No wines available' error='There are no wines available at the moment' />
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">Our Wines</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {wines?.map((wine) => (
-                    <ProductCard key={wine.wineId} wine={wine} />
+                    <WineCard key={wine.wineId} wine={wine} />
                 ))}
             </div>
             {totalPages && (
