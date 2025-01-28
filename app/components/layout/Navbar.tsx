@@ -24,9 +24,6 @@ const Navbar = () => {
                             <NavLink href="/wines" active={pathname.startsWith("/wines")}>
                                 Wines
                             </NavLink>
-                            <NavLink href="/account" active={pathname === "/account"}>
-                                Account
-                            </NavLink>
                         </div>
                     </div>
                     <div className="flex items-center space-x-4">
