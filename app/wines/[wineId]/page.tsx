@@ -5,7 +5,8 @@ import WineDetailsComponent from "./components/WineDetailsComponent";
 import { WineDetailsPageProps } from "@/app/types/components";
 
 
-export async function generateMetadata({ params }: WineDetailsPageProps): Promise<Metadata> {
+export async function generateMetadata(props: WineDetailsPageProps): Promise<Metadata> {
+    const params = await props.params;
     try {
         const { wineId } = params;
         const wine = await api.get(`/wines/${wineId}`) as Wine;
@@ -19,7 +20,6 @@ export async function generateMetadata({ params }: WineDetailsPageProps): Promis
             description: "Wine details"
         }
     }
-
 }
 
 const WineDetailsPage = async ({ params }: WineDetailsPageProps) => {
