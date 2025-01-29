@@ -38,3 +38,16 @@ export interface CheckoutItem {
   wineId: string;
   quantity: number | undefined;
 }
+
+export type WineFormData = {
+  name: string;
+  category: string;
+  region: string;
+  producer: string;
+  vintage: string;
+  price: number;
+  stock: number;
+  description: string;
+  image: File | null;
+  imageUrl?: string;
+};
