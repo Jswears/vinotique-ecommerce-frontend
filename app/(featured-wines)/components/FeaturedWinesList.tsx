@@ -1,8 +1,10 @@
 'use client';
 
+import WineAlert from "@/app/components/ui/WineAlertComponent";
 import { api } from "@/app/lib/api";
 import { Wine } from "@/app/types";
 import WineCard from "@/app/wines/components/WineCard";
+import WineCardSkeleton from "@/app/wines/components/WinesCardSkeleton";
 import { useEffect, useState } from "react";
 
 const FeaturedWinesList = () => {
@@ -27,6 +29,14 @@ const FeaturedWinesList = () => {
     }, []);
 
     const featuredWines = wines.filter(wine => wine.isFeatured);
+
+    if (error) {
+        return <WineAlert title="No featured Wines available" error={error} />;
+    }
+
+    if (loading) {
+        return <WineCardSkeleton />;
+    }
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-center gap-6">
