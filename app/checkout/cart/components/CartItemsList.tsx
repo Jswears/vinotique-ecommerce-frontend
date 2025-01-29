@@ -49,13 +49,7 @@ const CartItemsList = () => {
         const newTotal = cart?.reduce((sum, item) => sum + item.price * (item.quantity ?? 0), 0);
         setTotal(newTotal);
     }, [cart, setTotal, updateCartQuantity]);
-    if (error) {
-        return (
-            <div className="text-center mt-20">
-                <p className="text-red-600 dark:text-red-400">{error}</p>
-            </div>
-        )
-    }
+
 
     const handleCheckout = async () => {
         try {
@@ -85,6 +79,13 @@ const CartItemsList = () => {
             }
         }
     };
+
+
+
+
+    if (error) {
+        return <WineAlert title="An error occurred" error={error} />
+    }
 
     if (loading) {
         return (

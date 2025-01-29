@@ -20,7 +20,6 @@ export const api = {
         "Error GET:",
         error.response ? error.response.data : error.message
       );
-      console.log(params);
       throw error.response ? error.response.data : error;
     }
   },

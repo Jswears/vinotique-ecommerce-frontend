@@ -20,6 +20,7 @@ export interface CartItem {
   quantity?: number;
   userId?: string;
   isAvailable?: boolean;
+  stock: number;
 }
 
 export interface OrderItem {

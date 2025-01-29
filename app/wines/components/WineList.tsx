@@ -12,22 +12,33 @@ const WineList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState<number | null>(null);
-    const [pageTokens, setPageTokens] = useState<(string | null)[]>([null]); // Array to store tokens for each page
+    const [pageTokens, setPageTokens] = useState<(string | null)[]>([null]); // [page1Token, page2Token,...]
+    const [totalItems, setTotalItems] = useState<number>(0);
     const pageSize = 3;
+
+    // Calculate total pages based on DynamoDB's total count
+    const totalPages = Math.ceil(totalItems / pageSize);
 
     useEffect(() => {
         const fetchWines = async () => {
             setLoading(true);
             try {
-                const data = await api.get('/wines', { params: { pageSize, nextToken: pageTokens[currentPage - 1] } });
-                setWines(data.items);
-                setTotalPages(data.totalCount ? Math.ceil(data.totalCount / pageSize) : 1);
+                const data = await api.get('/wines', {
+                    params: {
+                        pageSize,
+                        nextToken: pageTokens[currentPage - 1] || undefined
+                    }
+                });
 
-                // Update the tokens array with the nextToken
-                const updatedTokens = [...pageTokens];
-                if (!updatedTokens[currentPage]) updatedTokens[currentPage] = data.nextToken || null;
-                setPageTokens(updatedTokens);
+                setWines(data.items);
+                setTotalItems(data.totalCount);
+
+                // Update page tokens array
+                setPageTokens(prev => {
+                    const newTokens = [...prev];
+                    newTokens[currentPage] = data.nextToken || null;
+                    return newTokens;
+                });
             } catch (error: any) {
                 setError(error.message);
             } finally {
@@ -35,93 +46,81 @@ const WineList = () => {
             }
         };
         fetchWines();
-    }, [currentPage]); // Re-fetch wines whenever currentPage changes
+    }, [currentPage]);
 
     const handlePageChange = (newPage: number) => {
-        if (newPage < 1 || (totalPages && newPage > totalPages)) return; // Prevent invalid page navigation
+        if (newPage < 1 || newPage > totalPages) return;
+
+        // For pages > 1, ensure we have the previous page's token
+        if (newPage > 1 && !pageTokens[newPage - 1]) return;
+
         setCurrentPage(newPage);
     };
 
     const renderPaginationItems = () => {
-        const visiblePages = 5; // Number of visible page links
+        const visiblePages = 5;
         const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
-        const endPage = Math.min(totalPages || 1, startPage + visiblePages - 1);
+        const endPage = Math.min(totalPages, startPage + visiblePages - 1);
 
-        const pages = [];
-        for (let i = startPage; i <= endPage; i++) {
-            pages.push(
-                <PaginationItem key={i} className={`${i === currentPage ? 'font-bold underline' : ''} cursor-pointer`}>
-                    <PaginationLink onClick={() => handlePageChange(i)}>{i}</PaginationLink>
+        return Array.from({ length: endPage - startPage + 1 }, (_, i) => {
+            const pageNumber = startPage + i;
+            const isDisabled = pageNumber > 1 && !pageTokens[pageNumber - 1];
+
+            return (
+                <PaginationItem key={pageNumber}>
+                    <PaginationLink
+                        onClick={() => !isDisabled && handlePageChange(pageNumber)}
+                        isActive={pageNumber === currentPage}
+                        className={isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                    >
+                        {pageNumber}
+                    </PaginationLink>
                 </PaginationItem>
             );
-        }
-
-        return (
-            <>
-                {startPage > 1 && (
-                    <>
-                        <PaginationItem>
-                            <PaginationLink onClick={() => handlePageChange(1)}>1</PaginationLink>
-                        </PaginationItem>
-                        {startPage > 2 && <PaginationEllipsis />}
-                    </>
-                )}
-                {pages}
-                {endPage < (totalPages || 1) && (
-                    <>
-                        {endPage < (totalPages || 1) - 1 && <PaginationEllipsis />}
-                        <PaginationItem>
-                            <PaginationLink onClick={() => handlePageChange(totalPages || 1)}>
-                                {totalPages}
-                            </PaginationLink>
-                        </PaginationItem>
-                    </>
-                )}
-            </>
-        );
+        });
     };
 
     if (error) {
-        return (
-            <div className="text-center mt-20">
-                <p className="text-red-600 dark:text-red-400">{error}</p>
-            </div>
-        );
+        return <WineAlert title="An error occurred" error={error} />;
     }
 
     if (loading) return <WineCardSkeleton />;
 
-    if (wines.length === 0 && !loading) {
+    if (wines.length === 0) {
         return <WineAlert title="No wines available" error="There are no wines available at the moment" />;
     }
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">Our Wines</h1>
+            <h1 className="text-3xl font-bold mb-6">Our Wines</h1>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {wines?.map((wine) => (
+                {wines.map((wine) => (
                     <WineCard key={wine.wineId} wine={wine} />
                 ))}
             </div>
-            {totalPages && (
-                <Pagination className="mt-6 flex justify-center items-center">
+
+            {totalPages > 1 && (
+                <Pagination className="mt-8">
                     <PaginationContent>
                         <PaginationItem>
                             <PaginationPrevious
-                                className={currentPage === 1 ? 'cursor-not-allowed' : 'cursor-pointer'}
                                 onClick={() => handlePageChange(currentPage - 1)}
-                            >
-                                Previous
-                            </PaginationPrevious>
+                                className={currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                            />
                         </PaginationItem>
+
                         {renderPaginationItems()}
+
                         <PaginationItem>
                             <PaginationNext
-                                className={currentPage === totalPages ? 'cursor-not-allowed' : 'cursor-pointer'}
                                 onClick={() => handlePageChange(currentPage + 1)}
-                            >
-                                Next
-                            </PaginationNext>
+                                className={
+                                    currentPage === totalPages || !pageTokens[currentPage]
+                                        ? 'opacity-50 cursor-not-allowed'
+                                        : 'cursor-pointer'
+                                }
+                            />
                         </PaginationItem>
                     </PaginationContent>
                 </Pagination>

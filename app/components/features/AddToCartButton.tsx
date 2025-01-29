@@ -1,8 +1,9 @@
 import { getGuestUserId } from "@/app/lib/auth";
+import { Wine } from "@/app/types";
 import { AddToCartButtonProps } from "@/app/types/components";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cartStore";
-import { Check, ShoppingCart } from "lucide-react";
+import { Check, Plus, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 
 const AddToCartButton = ({ wine, type }: AddToCartButtonProps) => {
@@ -35,16 +36,14 @@ const AddToCartButton = ({ wine, type }: AddToCartButtonProps) => {
         )
     }
 
-
     return (
-        <Button disabled={!wine.isAvailable} variant={type === "simple" ? "secondary" : "default"} size={type === "simple" ? "icon" : undefined} className="w-full" onClick={handleAddToCart} >
+        <Button disabled={!wine.isAvailable || wine.stock <= 0 || (wine.quantity ?? 0) >= wine.stock} variant={type === "simple" ? "secondary" : "default"} size={type === "simple" ? "sm" : undefined} className="w-full" onClick={handleAddToCart} >
             {loading ? (
                 <>
-                    <Check className="mr-2 h-4 w-4" />
-                    {type !== "simple" ? "Added to Cart" : ""}
+                    {type !== "simple" ? "Added to Cart" : <Plus />}
                 </>
             ) : (
-                type === "simple" ? "+" : (
+                type === "simple" ? <Plus /> : (
                     <>
                         <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
                     </>

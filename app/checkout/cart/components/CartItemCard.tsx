@@ -5,6 +5,7 @@ import { priceConversor } from "@/app/utils/priceConversor";
 import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/stores/cartStore";
 import Image from "next/image";
+import RemoveFromCartButton from "./RemoveFromCartButton";
 
 const CartItemCard = ({ cartItem }: { cartItem: CartItem }) => {
     const { removeFromCart } = useCartStore();
@@ -31,14 +32,7 @@ const CartItemCard = ({ cartItem }: { cartItem: CartItem }) => {
                 <p className="text-gray-600 dark:text-gray-400">x{cartItem.quantity}</p>
             </div>
             <div className="flex items-center">
-                <Button
-                    onClick={handleRemoveFromCart}
-                    variant={"secondary"}
-                    size={"icon"}
-                    className="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded"
-                >
-                    -
-                </Button>
+                <RemoveFromCartButton wine={cartItem} type="simple" />
                 <span className="mx-2 text-gray-900 dark:text-gray-100">
                     {cartItem.quantity}
                 </span>

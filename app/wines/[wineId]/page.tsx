@@ -22,8 +22,8 @@ export async function generateMetadata({ params }: WineDetailsPageProps): Promis
 
 }
 
-const WineDetailsPage = ({ params }: WineDetailsPageProps) => {
-    const { wineId } = params;
+const WineDetailsPage = async ({ params }: WineDetailsPageProps) => {
+    const { wineId } = await params;
     return (
         <WineDetailsComponent wineId={wineId} />
     )
