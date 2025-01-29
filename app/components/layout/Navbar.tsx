@@ -5,6 +5,7 @@ import { Wine, User } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { CartIcon } from "@/app/components/layout/CartIcon"
 import { NavLink } from "./NavLink"
+import { ThemeToggle } from "./ThemeToggler"
 
 const Navbar = () => {
     const pathname = usePathname()
@@ -28,6 +29,7 @@ const Navbar = () => {
                         </div>
                     </div>
                     <div className="flex items-center space-x-4">
+                        <ThemeToggle />
                         <CartIcon />
                         <Button variant="ghost" size="icon" asChild>
                             <Link href="/account">
