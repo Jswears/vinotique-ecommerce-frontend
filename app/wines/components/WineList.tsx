@@ -14,7 +14,7 @@ const WineList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageTokens, setPageTokens] = useState<(string | null)[]>([null]); // [page1Token, page2Token,...]
     const [totalItems, setTotalItems] = useState<number>(0);
-    const pageSize = 3;
+    const pageSize = 12;
 
     // Calculate total pages based on DynamoDB's total count
     const totalPages = Math.ceil(totalItems / pageSize);
