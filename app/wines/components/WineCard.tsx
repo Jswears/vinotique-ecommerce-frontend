@@ -20,6 +20,9 @@ const WineCard = ({ wine }: WineCardProps) => {
                 <p className="text-sm text-muted-foreground line-clamp-2">{wine.description}</p>
                 <div className="flex items-center justify-start space-x-2">
                     <Badge variant="secondary">{wine.category.toUpperCase()}</Badge>
+                    {wine.isFeatured && (
+                        <Badge variant="default">FEATURED</Badge>
+                    )}
                     {!wine.isAvailable && (
                         <Badge variant="destructive">SOLD OUT</Badge>
                     )}

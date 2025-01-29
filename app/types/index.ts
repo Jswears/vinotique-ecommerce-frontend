@@ -10,6 +10,7 @@ export interface Wine {
   category: string;
   stock: number;
   isAvailable: boolean;
+  isFeatured?: boolean;
 }
 
 export interface CartItem {
