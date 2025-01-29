@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Wine, User } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { CartIcon } from "@/app/components/layout/CartIcon"
+import { NavLink } from "./NavLink"
 
 const Navbar = () => {
     const pathname = usePathname()
@@ -41,15 +42,7 @@ const Navbar = () => {
     )
 }
 
-const NavLink = ({ href, children, active }: { href: string; children: React.ReactNode; active: boolean }) => (
-    <Link
-        href={href}
-        className={`text-sm font-medium transition-colors hover:text-primary ${active ? "text-foreground" : "text-muted-foreground"
-            }`}
-    >
-        {children}
-    </Link>
-)
+
 
 export default Navbar
 
