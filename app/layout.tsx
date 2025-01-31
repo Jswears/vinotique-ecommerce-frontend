@@ -4,6 +4,8 @@ import "./globals.css";
 import Footer from "./components/layout/Footer";
 import Navbar from "./components/layout/Navbar";
 import { ThemeProvider } from "./components/layout/ThemeProvider";
+import { Toaster } from "@/components/ui/toaster";
+import ConfigureAmplifyClientSide from "./components/ConfigureAmplifyClientSide";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +32,11 @@ export default function RootLayout({
       <body className={`font-sans antialiased min-h-screen flex flex-col`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Navbar />
-          <main className="flex-grow bg-background text-foreground">{children}</main>
+          <main className="flex-grow bg-background text-foreground">
+            <ConfigureAmplifyClientSide />
+            {children}
+          </main>
+          <Toaster />
           <Footer />
         </ThemeProvider>
       </body>
