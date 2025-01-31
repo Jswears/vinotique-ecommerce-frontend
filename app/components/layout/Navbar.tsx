@@ -6,11 +6,28 @@ import { usePathname } from "next/navigation"
 import { CartIcon } from "@/app/components/layout/CartIcon"
 import { NavLink } from "./NavLink"
 import { ThemeToggle } from "./ThemeToggler"
+import { isAuthenticatedAsAdmin } from "@/app/utils/isAuthenticated"
+import { useEffect, useState } from "react"
 
 const Navbar = () => {
     const pathname = usePathname()
+    const [isAdmin, setIsAdmin] = useState(false)
+
+    useEffect(() => {
+        const checkAdmin = async () => {
+            const result = await isAuthenticatedAsAdmin()
+            setIsAdmin(result)
+        }
+        checkAdmin()
+    }, [])
+
+    if (isAdmin) {
+        return null;
+    }
+
 
     return (
+
         <header className="border-b sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">

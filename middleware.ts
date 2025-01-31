@@ -26,8 +26,6 @@ export async function middleware(request: NextRequest) {
     session?.tokens?.accessToken !== undefined &&
     session?.tokens?.idToken !== undefined;
 
-  console.log("Is Authenticated:", isAuthenticated);
-
   const userGroups: string[] = Array.isArray(
     session?.tokens?.idToken?.payload?.["cognito:groups"]
   )
