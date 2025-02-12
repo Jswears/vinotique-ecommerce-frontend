@@ -52,6 +52,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/auth/login", request.url));
   }
 
+  // Restrict /account to users in the USERS group only
+  if (pathname === "/account" && !userGroups.includes("USERS")) {
+    return NextResponse.redirect(new URL("/admin", request.url));
+  }
+
   // Restrict /admin/* to users in the ADMINS group only
   if (pathname.startsWith("/admin") && !userGroups.includes("ADMINS")) {
     return NextResponse.redirect(new URL("/error/not-authorized", request.url));

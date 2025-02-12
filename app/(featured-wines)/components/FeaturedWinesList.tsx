@@ -17,8 +17,8 @@ const FeaturedWinesList = () => {
             setloading(true);
             try {
                 // Fetch wines
-                const data = await api.get('/wines');
-                setwines(data.items);
+                const response = await api.get('/wines');
+                setwines(response.wines);
             } catch (error: any) {
                 seterror(error.message);
             } finally {

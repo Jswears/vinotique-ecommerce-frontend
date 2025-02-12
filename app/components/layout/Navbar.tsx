@@ -21,7 +21,7 @@ const Navbar = () => {
         checkAdmin()
     }, [])
 
-    if (isAdmin) {
+    if (isAdmin && pathname.startsWith("/admin")) {
         return null;
     }
 
