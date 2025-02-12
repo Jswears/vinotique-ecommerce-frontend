@@ -23,20 +23,20 @@ const WineList = () => {
         const fetchWines = async () => {
             setLoading(true);
             try {
-                const data = await api.get('/wines', {
+                const response = await api.get('/wines', {
                     params: {
                         pageSize,
                         nextToken: pageTokens[currentPage - 1] || undefined
                     }
                 });
 
-                setWines(data.items);
-                setTotalItems(data.totalCount);
+                setWines(response.wines);
+                setTotalItems(response.totalCount);
 
                 // Update page tokens array
                 setPageTokens(prev => {
                     const newTokens = [...prev];
-                    newTokens[currentPage] = data.nextToken || null;
+                    newTokens[currentPage] = response.nextToken || null;
                     return newTokens;
                 });
             } catch (error: any) {
@@ -92,6 +92,7 @@ const WineList = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <button onClick={() => console.log(wines)}>Winos</button>
             <h1 className="text-3xl font-bold mb-6">Our Wines</h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -100,32 +101,34 @@ const WineList = () => {
                 ))}
             </div>
 
-            {totalPages > 1 && (
-                <Pagination className="mt-8">
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious
-                                onClick={() => handlePageChange(currentPage - 1)}
-                                className={currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-                            />
-                        </PaginationItem>
+            {
+                totalPages > 1 && (
+                    <Pagination className="mt-8">
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    className={currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                                />
+                            </PaginationItem>
 
-                        {renderPaginationItems()}
+                            {renderPaginationItems()}
 
-                        <PaginationItem>
-                            <PaginationNext
-                                onClick={() => handlePageChange(currentPage + 1)}
-                                className={
-                                    currentPage === totalPages || !pageTokens[currentPage]
-                                        ? 'opacity-50 cursor-not-allowed'
-                                        : 'cursor-pointer'
-                                }
-                            />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
-            )}
-        </div>
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    className={
+                                        currentPage === totalPages || !pageTokens[currentPage]
+                                            ? 'opacity-50 cursor-not-allowed'
+                                            : 'cursor-pointer'
+                                    }
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                )
+            }
+        </div >
     );
 };
 

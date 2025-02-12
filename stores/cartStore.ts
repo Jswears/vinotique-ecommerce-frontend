@@ -31,10 +31,11 @@ export const useCartStore = create<CartState>()(
       cartQuantity: 0,
       loading: false,
       error: null,
-      updateCartState: async (items: any) => {
+      updateCartState: async (cartItems: any) => {
         set({ loading: true, error: null });
         try {
-          const response = await api.post("/cart", { items });
+          console.log("cartaimtems", cartItems);
+          const response = await api.post("/cart", { cartItems });
           if (response && response.messages) {
             const data = (await api.get(`/cart/${getGuestUserId()}`)) || [];
             set({ cart: data, loading: false });
