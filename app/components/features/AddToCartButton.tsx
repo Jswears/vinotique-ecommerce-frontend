@@ -37,7 +37,7 @@ const AddToCartButton = ({ wine, type }: AddToCartButtonProps) => {
     }
 
     return (
-        <Button disabled={!wine.isAvailable || wine.stock <= 0 || (wine.quantity ?? 0) >= wine.stock} variant={type === "simple" ? "secondary" : "default"} size={type === "simple" ? "sm" : undefined} className="w-full" onClick={handleAddToCart} >
+        <Button disabled={!wine.isInStock} variant={type === "simple" ? "secondary" : "default"} size={type === "simple" ? "sm" : undefined} className="w-full" onClick={handleAddToCart} >
             {loading ? (
                 <>
                     {type !== "simple" ? "Added to Cart" : <Plus />}

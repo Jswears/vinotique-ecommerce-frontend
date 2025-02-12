@@ -1,27 +1,42 @@
 export interface Wine {
   wineId: string;
-  name: string;
-  price: number;
+  productName: string;
   description: string;
-  producer: string;
+  category: WineCategoryEnum;
   region: string;
-  imageUrl: string;
-  vintage: string;
-  category: string;
-  stock: number;
-  isAvailable: boolean;
+  country: string;
+  grapeVarietal?: string[];
+  vintage: number;
+  alcoholContent?: number;
+  sizeMl?: number;
+  price: number;
+  stockQuantity?: number;
+  isInStock?: boolean;
   isFeatured?: boolean;
+  imageUrl: string;
+  createdAt?: string;
+  updatedAt?: string;
+  rating?: number;
+  reviewCount?: number;
+}
+
+export enum WineCategoryEnum {
+  Red = "Red",
+  White = "White",
+  Rose = "Rose",
+  Sparkling = "Sparkling",
+  Dessert = "Dessert",
+  Fortified = "Fortified",
 }
 
 export interface CartItem {
   wineId: string;
-  name: string;
+  productName: string;
   price: number;
   imageUrl: string;
   quantity?: number;
   userId?: string;
-  isAvailable?: boolean;
-  stock: number;
+  isInStock?: boolean;
 }
 
 export interface OrderItem {
