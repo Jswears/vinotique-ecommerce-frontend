@@ -9,9 +9,9 @@ const HomePage = () => {
 
   return (
     <div className="container mx-auto px-4 py-12 space-y-16">
-      <Button onClick={() => isAuthenticatedAsAdmin()} className="mb-4">
+      {/* <Button onClick={() => isAuthenticatedAsAdmin()} className="mb-4">
         Test
-      </Button>
+      </Button> */}
       <section className="text-center space-y-6 flex flex-col gap-2">
         <div className="flex gap-4 justify-center">
         </div>

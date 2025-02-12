@@ -12,6 +12,7 @@ import { Loader2 } from "lucide-react"
 import { Amplify } from "aws-amplify"
 
 import outputs from "../../../amplify_outputs.json"
+import { isAuthenticatedAsAdmin } from "@/app/utils/isAuthenticated"
 Amplify.configure(outputs)
 
 
@@ -32,12 +33,17 @@ export default function LoginPage() {
 
             if (isSignedIn) {
                 console.log("Sign-in complete")
+                const isAdmin = await isAuthenticatedAsAdmin()
                 toast({
                     title: "Login successful",
                     description: "You have been successfully logged in.",
                 })
-                // Redirect to home page after successful login
-                router.push("/")
+
+                if (isAdmin) {
+                    router.push("/admin")
+                } else {
+                    router.push("/")
+                }
             } else {
                 console.log("Next step:", nextStep)
                 if (nextStep.signInStep === "CONFIRM_SIGN_UP") {

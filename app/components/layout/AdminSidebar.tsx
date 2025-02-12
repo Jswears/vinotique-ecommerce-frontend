@@ -1,7 +1,6 @@
 'use client'
-
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Wine, PlusCircle, Edit, Users, ShoppingBag, Home, LogOut } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/app/components/layout/ThemeToggler"
@@ -14,9 +13,33 @@ import {
     SidebarMenuItem,
     SidebarMenuButton,
 } from "@/components/ui/sidebar"
+import { signOut } from 'aws-amplify/auth'
+import { useToast } from '@/hooks/use-toast'
+
+
+
 
 export function AdminSidebar() {
     const pathname = usePathname()
+    const router = useRouter()
+    const { toast } = useToast()
+    const handleSignOut = async () => {
+        try {
+            await signOut()
+            toast({
+                title: "Signed out",
+                description: "You have been signed out successfully.",
+            })
+            router.push("/")
+        } catch (error) {
+            console.error("Error signing out:", error)
+            toast({
+                title: "Error signing out",
+                description: "An error occurred while signing out. Please try again.",
+                variant: "destructive",
+            })
+        }
+    }
 
     return (
         <Sidebar>
@@ -73,11 +96,9 @@ export function AdminSidebar() {
             <SidebarFooter>
                 <div className="flex items-center justify-between px-4 py-2">
                     <ThemeToggle />
-                    <Button variant="ghost" size="icon" asChild>
-                        <Link href="/logout">
-                            <LogOut className="h-5 w-5" />
-                            <span className="sr-only">Log Out</span>
-                        </Link>
+                    <Button onClick={handleSignOut} variant="ghost" size="icon">
+                        <LogOut className="h-5 w-5" />
+                        <span className="sr-only">Log Out</span>
                     </Button>
                 </div>
             </SidebarFooter>
