@@ -11,8 +11,8 @@ export async function generateMetadata(props: WineDetailsPageProps): Promise<Met
         const { wineId } = params;
         const wine = await api.get(`/wines/${wineId}`) as Wine;
         return {
-            title: `${wine.vintage} ${wine.name} - ${wine.producer}`,
-            description: `Details about ${wine.name}`
+            title: `${wine.vintage} ${wine.productName} - ${wine.producer}`,
+            description: `Details about ${wine.productName}`
         }
     } catch (error) {
         return {
