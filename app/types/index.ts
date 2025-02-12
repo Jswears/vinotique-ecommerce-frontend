@@ -1,6 +1,7 @@
 export interface Wine {
   wineId: string;
   productName: string;
+  producer: string;
   description: string;
   category: WineCategoryEnum;
   region: string;

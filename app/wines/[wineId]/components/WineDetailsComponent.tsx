@@ -43,11 +43,11 @@ const WineDetailsComponent = ({ wineId }: WineDetailsComponentProps) => {
             <Card className="overflow-hidden">
                 <div className="md:flex">
                     <div className="md:w-1/2 relative h-[500px] flex items-center justify-center">
-                        <Image src={wine.imageUrl || "/placeholder.svg"} alt={wine.name} width={800} height={800} className="h-96 w-fit" />
+                        <Image src={wine.imageUrl || "/placeholder.svg"} alt={wine.productName} width={800} height={800} className="h-96 w-fit" />
                     </div>
                     <div className="md:w-1/2 p-6">
                         <CardHeader>
-                            <CardTitle className="text-3xl font-bold">{wine.name}</CardTitle>
+                            <CardTitle className="text-3xl font-bold">{wine.productName}</CardTitle>
                             <CardDescription className="text-lg">{wine.producer}</CardDescription>
                             <div className="flex items-center mt-2 space-x-2">
                                 <Badge variant="secondary">{wine.vintage}</Badge>
