@@ -18,43 +18,23 @@ import CartItemCard from "./CartItemCard";
 import { Button } from "@/components/ui/button";
 import { priceConversor } from "@/app/utils/priceConversor";
 import { getGuestUserId } from "@/app/lib/auth";
-import { useCartStore } from "@/stores/cartStore";
+import useCartStore from "@/stores/cartStore";
+import ClearCartButton from "./ClearCartButton";
 
 const CartItemsList = () => {
-    const [cartItems, setCartItems] = useState<CartItem[]>();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [total, setTotal] = useState<number | undefined>(undefined);
 
-    const { updateCartQuantity, cart } = useCartStore();
+    const { cartItems, getTotalPrice } = useCartStore()
+    const totalPrice = getTotalPrice();
 
-    useEffect(() => {
-        const fetchCart = async () => {
-            setLoading(true);
-            try {
-                const data = await api.get(`/cart/${getGuestUserId()}`)
-                setCartItems(data)
-                updateCartQuantity(data.reduce((total: number, item: CartItem) => total + (item.quantity ?? 0), 0))
-            } catch (error: any) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchCart();
-    }, [updateCartQuantity, setCartItems, setLoading, setError]);
-
-
-    useEffect(() => {
-        const newTotal = cart?.reduce((sum, item) => sum + item.price * (item.quantity ?? 0), 0);
-        setTotal(newTotal);
-    }, [cart, setTotal, updateCartQuantity]);
 
 
     const handleCheckout = async () => {
         try {
-            const cartItems: CheckoutItem[] = cart.map((item): CheckoutItem => ({
-                name: item.name,
+            const checkoutItems: CheckoutItem[] = cartItems.map((item): CheckoutItem => ({
+                name: item.productName,
                 price: item.price,
                 currency: "eur",
                 quantity: item.quantity,
@@ -110,10 +90,10 @@ const CartItemsList = () => {
                 </CardHeader>
                 <CardContent>
                     <ScrollArea className="h-[50vh] pr-6">
-                        {cart?.map((cartItem, index) => (
+                        {cartItems?.map((cartItem, index) => (
                             <div key={cartItem.wineId}>
                                 <CartItemCard cartItem={cartItem} />
-                                {index < cart.length - 1 && <Separator className="my-4" />}
+                                {index < cartItems.length - 1 && <Separator className="my-4" />}
                             </div>
                         ))}
                     </ScrollArea>
@@ -122,14 +102,11 @@ const CartItemsList = () => {
                     <div>
                         <p className="text-lg font-semibold">Total:</p>
                         <p className="text-2xl font-bold text-primary">
-                            {total && priceConversor(total)}
+                            {totalPrice && priceConversor(totalPrice)}
                         </p>
                     </div>
-                    <div className="space-x-2">
-                        <Button variant="outline">
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Clear Cart
-                        </Button>
+                    <div className="flex gap-2">
+                        <ClearCartButton />
                         <Button variant="default" onClick={handleCheckout}>
                             <CreditCard className="mr-2 h-4 w-4" />
                             Checkout

@@ -1,21 +1,29 @@
 import { getGuestUserId } from "@/app/lib/auth";
-import { RemoveFromCartButtonProps } from "@/app/types/components";
+import { Wine } from "@/app/types";
+import { AddToCartButtonProps } from "@/app/types/components";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import useCartStore from "@/stores/cartStore";
-import { Minus, } from "lucide-react";
+import { Minus, Trash2, } from "lucide-react";
 import { useState } from "react";
 
-const RemoveFromCartButton = ({ wine, type }: RemoveFromCartButtonProps) => {
+const ClearCartButton = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const { removeFromCart } = useCartStore();
+    const { clearCart } = useCartStore();
+    const { toast } = useToast()
 
-    const handleRemoveFromCart = async () => {
+    const handleClearCart = async () => {
         setLoading(true);
         const userId = getGuestUserId();
         try {
-            await removeFromCart(userId, wine.wineId, 1);
+            await clearCart(userId);
+            toast({
+                title: "Cart Cleared",
+                description: "Your cart has been cleared successfully.",
+                variant: "default",
+            })
         } catch (error) {
             if (error instanceof Error) {
                 setError(error.message);
@@ -37,10 +45,11 @@ const RemoveFromCartButton = ({ wine, type }: RemoveFromCartButtonProps) => {
     }
 
     return (
-        <Button disabled={loading} variant={type === "simple" ? "secondary" : "default"} size={type === "simple" ? "sm" : undefined} className="w-full" onClick={handleRemoveFromCart} >
-            <Minus />
+        <Button disabled={loading} variant="outline" className="w-full" onClick={handleClearCart}>
+            <Trash2 className="mr-2 h-4 w-4" />
+            Clear Cart
         </Button>
     )
 }
 
-export default RemoveFromCartButton;
+export default ClearCartButton;

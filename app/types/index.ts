@@ -31,13 +31,12 @@ export enum WineCategoryEnum {
 }
 
 export interface CartItem {
+  addedAt: string;
   wineId: string;
+  quantity: number;
   productName: string;
   price: number;
   imageUrl: string;
-  quantity?: number;
-  userId?: string;
-  isInStock?: boolean;
 }
 
 export interface OrderItem {
