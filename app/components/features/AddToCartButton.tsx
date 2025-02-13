@@ -3,7 +3,7 @@ import { CartItem, Wine } from "@/app/types";
 import { AddToCartButtonProps } from "@/app/types/components";
 import { Button } from "@/components/ui/button";
 import useCartStore from "@/stores/cartStore";
-import { Check, Plus, ShoppingCart } from "lucide-react";
+import { Check, CheckCheckIcon, Plus, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 
 interface WineProps {
@@ -50,7 +50,7 @@ const AddToCartButton: React.FC<WineProps> = ({ wine, type }) => {
         <Button variant={type === "simple" ? "secondary" : "default"} size={type === "simple" ? "sm" : undefined} className="w-full" onClick={handleAddToCart} >
             {loading ? (
                 <>
-                    {type !== "simple" ? "Added to Cart" : <Plus />}
+                    {type !== "simple" ? <><CheckCheckIcon /> Added to Cart</> : <Plus />}
                 </>
             ) : (
                 type === "simple" ? <Plus /> : (
