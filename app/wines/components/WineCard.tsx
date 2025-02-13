@@ -30,7 +30,7 @@ const WineCard = ({ wine }: WineCardProps) => {
                 </div>
             </CardContent>
             <CardFooter className="p-4 pt-0 flex gap-2">
-                <AddToCartButton type='detailed' wine={wine} />
+                <AddToCartButton type='default' wine={wine} />
             </CardFooter>
             <Link href={`/wines/${wine.wineId}`} passHref className="w-full">
                 <Button variant="secondary" className="w-full">

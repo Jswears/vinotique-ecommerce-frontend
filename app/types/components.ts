@@ -18,3 +18,7 @@ export interface AddToCartButtonProps {
   wine: CartItem;
   type: "simple" | "detailed";
 }
+export interface RemoveFromCartButtonProps {
+  wine: CartItem;
+  type: "simple" | "detailed";
+}
