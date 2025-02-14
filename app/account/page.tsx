@@ -18,8 +18,8 @@ export default function AccountPage() {
     const [user, setUser] = useState<any>(null)
     const router = useRouter()
     const { toast } = useToast()
-    const { setUserId, logout } = useAuthStore()
-    const { fetchCart, clearCart } = useCartStore();
+    const { logout } = useAuthStore()
+    const { fetchCart } = useCartStore();
 
     const handleSignOut = async () => {
         try {

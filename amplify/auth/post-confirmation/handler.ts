@@ -15,6 +15,6 @@ export const handler: PostConfirmationTriggerHandler = async (event) => {
     UserPoolId: event.userPoolId,
   });
   const response = await client.send(command);
-  console.log("processed", response.$metadata.requestId);
+  // console.log("processed", response.$metadata.requestId);
   return event;
 };

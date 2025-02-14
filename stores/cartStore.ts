@@ -56,12 +56,10 @@ const useCartStore = create<CartStoreState>((set, get) => ({
   // Fetch the cart from the backend
   fetchCart: async () => {
     set({ loading: true });
-    console.log("trying to fetch cart");
     const userId = useAuthStore.getState().getUserId();
     try {
       // Use the custom API library
       const data = (await api.get(`/cart/${userId}`)) as CartResponse;
-      console.log("cositas", data);
       set({
         cartItems: data.cartItems,
         totalPrice: data.totalPrice,
@@ -92,10 +90,8 @@ const useCartStore = create<CartStoreState>((set, get) => ({
           } as CartPostItem,
         ],
       };
-      console.log("payload", payload);
       // Use the custom API library
       const response = await api.post(`/cart/${userId}`, payload);
-      console.log("response", response);
       // Refresh the cart after adding an item.
       await get().fetchCart();
     } catch (error: any) {
@@ -123,10 +119,8 @@ const useCartStore = create<CartStoreState>((set, get) => ({
           } as CartPostItem,
         ],
       };
-      console.log("payload", payload);
       // Use the custom API library
       const response = await api.post(`/cart/${userId}`, payload);
-      console.log("response", response);
       // Refresh the cart after removing an item.
       await get().fetchCart();
     } catch (error: any) {
@@ -143,7 +137,6 @@ const useCartStore = create<CartStoreState>((set, get) => ({
   // Clear cart and refresh the cart state
   clearCart: async () => {
     set({ loading: true });
-    console.log("CLEARING CART");
     const userId = useAuthStore.getState().getUserId();
     try {
       await api.post(`/cart/${userId}`, {
@@ -177,7 +170,6 @@ const useCartStore = create<CartStoreState>((set, get) => ({
             },
           ],
         };
-        console.log("transferring item payload", payload);
         await api.post(`/cart/${authUserId}`, payload);
       }
       // Clear guest cart
