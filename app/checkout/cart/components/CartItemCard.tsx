@@ -1,5 +1,4 @@
 import AddToCartButton from "@/app/components/features/AddToCartButton";
-import { getGuestUserId } from "@/app/lib/auth";
 import { CartItem } from "@/app/types";
 import { priceConversor } from "@/app/utils/priceConversor";
 import { Button } from "@/components/ui/button";

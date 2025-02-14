@@ -6,7 +6,6 @@ import { Wine } from '@/app/types';
 import WineCardSkeleton from './WinesCardSkeleton';
 import WineAlert from '@/app/components/ui/WineAlertComponent';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
-
 const WineList = () => {
     const [wines, setWines] = useState<Wine[]>([]);
     const [loading, setLoading] = useState(true);
@@ -18,7 +17,6 @@ const WineList = () => {
 
     // Calculate total pages based on DynamoDB's total count
     const totalPages = Math.ceil(totalItems / pageSize);
-
     useEffect(() => {
         const fetchWines = async () => {
             setLoading(true);
@@ -92,7 +90,6 @@ const WineList = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <button onClick={() => console.log(wines)}>Winos</button>
             <h1 className="text-3xl font-bold mb-6">Our Wines</h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

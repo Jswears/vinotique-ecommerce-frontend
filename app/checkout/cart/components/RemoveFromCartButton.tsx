@@ -1,4 +1,3 @@
-import { getGuestUserId } from "@/app/lib/auth";
 import { RemoveFromCartButtonProps } from "@/app/types/components";
 import { Button } from "@/components/ui/button";
 import useCartStore from "@/stores/cartStore";
@@ -13,9 +12,8 @@ const RemoveFromCartButton = ({ wine, type }: RemoveFromCartButtonProps) => {
 
     const handleRemoveFromCart = async () => {
         setLoading(true);
-        const userId = getGuestUserId();
         try {
-            await removeFromCart(userId, wine.wineId, 1);
+            await removeFromCart(wine.wineId, 1);
         } catch (error) {
             if (error instanceof Error) {
                 setError(error.message);
