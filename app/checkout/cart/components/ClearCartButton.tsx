@@ -1,4 +1,3 @@
-import { getGuestUserId } from "@/app/lib/auth";
 import { Wine } from "@/app/types";
 import { AddToCartButtonProps } from "@/app/types/components";
 import { Button } from "@/components/ui/button";
@@ -16,9 +15,8 @@ const ClearCartButton = () => {
 
     const handleClearCart = async () => {
         setLoading(true);
-        const userId = getGuestUserId();
         try {
-            await clearCart(userId);
+            await clearCart();
             toast({
                 title: "Cart Cleared",
                 description: "Your cart has been cleared successfully.",

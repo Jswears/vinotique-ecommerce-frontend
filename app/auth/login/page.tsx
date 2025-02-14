@@ -29,10 +29,10 @@ export default function LoginPage() {
 
         try {
             const { isSignedIn, nextStep } = await signIn({ username: email, password })
-            console.log("Sign-in response:", { isSignedIn, nextStep })
+            console.log("Login response:", { isSignedIn, nextStep })
 
             if (isSignedIn) {
-                console.log("Sign-in complete")
+                console.log("Login complete")
                 const isAdmin = await isAuthenticatedAsAdmin()
                 toast({
                     title: "Login successful",

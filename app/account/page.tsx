@@ -9,6 +9,8 @@ import { useToast } from "@/hooks/use-toast"
 import { Amplify } from "aws-amplify"
 
 import outputs from "@/amplify_outputs.json"
+import { useAuthStore } from "@/stores/authStore"
+import useCartStore from "@/stores/cartStore"
 Amplify.configure(outputs)
 
 
@@ -16,10 +18,13 @@ export default function AccountPage() {
     const [user, setUser] = useState<any>(null)
     const router = useRouter()
     const { toast } = useToast()
+    const { setUserId, logout } = useAuthStore()
+    const { fetchCart, clearCart } = useCartStore();
 
     const handleSignOut = async () => {
         try {
             await signOut()
+            logout() // Reset authentication state
             toast({
                 title: "Signed out",
                 description: "You have been signed out successfully.",
@@ -39,8 +44,9 @@ export default function AccountPage() {
         async function fetchUser() {
             try {
                 const currentUser = await getCurrentUser()
-                console.log(currentUser)
                 setUser(currentUser)
+
+                await fetchCart()
             } catch (error) {
                 console.error("Error fetching user:", error)
                 toast({

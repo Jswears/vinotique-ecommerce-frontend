@@ -1,9 +1,9 @@
 'use client'
 import { api } from "@/app/lib/api";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CartItemsSkeleton from "./CartItemsSkeleton";
 import WineAlert from "@/app/components/ui/WineAlertComponent";
-import { CartItem, CheckoutItem } from "@/app/types";
+import { CheckoutItem } from "@/app/types";
 import {
     Card,
     CardContent,
@@ -17,7 +17,6 @@ import { Separator } from "@/components/ui/separator";
 import CartItemCard from "./CartItemCard";
 import { Button } from "@/components/ui/button";
 import { priceConversor } from "@/app/utils/priceConversor";
-import { getGuestUserId } from "@/app/lib/auth";
 import useCartStore from "@/stores/cartStore";
 import ClearCartButton from "./ClearCartButton";
 
@@ -46,7 +45,7 @@ const CartItemsList = () => {
                 successUrl: `${window.location.origin}/checkout/payment/success`,
                 cancelUrl: `${window.location.origin}/checkout/payment/cancel`,
                 metadata: {
-                    userId: getGuestUserId(), // Consider fetching user ID dynamically
+                    // userId
                 },
             });
             const { sessionUrl } = data;

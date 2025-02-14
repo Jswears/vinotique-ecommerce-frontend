@@ -1,4 +1,3 @@
-import { getGuestUserId } from "@/app/lib/auth";
 import { CartItem, Wine } from "@/app/types";
 import { AddToCartButtonProps } from "@/app/types/components";
 import { Button } from "@/components/ui/button";
@@ -23,9 +22,8 @@ const AddToCartButton: React.FC<WineProps> = ({ wine, type }) => {
 
     const handleAddToCart = async () => {
         setLoading(true);
-        const userId = getGuestUserId();
         try {
-            await addToCart(userId, wine.wineId, 1);
+            await addToCart(wine.wineId, 1);
         } catch (error) {
             if (error instanceof Error) {
                 setError(error.message);

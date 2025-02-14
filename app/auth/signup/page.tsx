@@ -22,8 +22,6 @@ const SignUpPage = () => {
     const { toast } = useToast()
     const router = useRouter()
 
-    const { setToken } = useAuthStore()
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsLoading(true)
