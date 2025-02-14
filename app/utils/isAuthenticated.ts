@@ -25,7 +25,6 @@ export async function isAuthenticatedAsAdmin() {
       : [];
 
     if (isAuthenticated && userGroups.includes("ADMINS")) {
-      console.log("User is authenticated as an admin.");
       const userId = session?.tokens?.idToken?.payload?.["cognito:username"];
       if (typeof userId === "string") {
         authStore.setUserId(userId);
@@ -39,7 +38,6 @@ export async function isAuthenticatedAsAdmin() {
       }
       return true;
     } else if (isAuthenticated && userGroups.includes("USERS")) {
-      console.log("User is authenticated as a user.");
       authStore.setIsAuthenticated(true);
       // Use authenticated userSub as id for USERS
       const userId = session?.userSub;
@@ -54,7 +52,6 @@ export async function isAuthenticatedAsAdmin() {
       }
       return false;
     } else if (!isAuthenticated) {
-      console.log("User is not authenticated.");
       authStore.setIsAuthenticated(false);
       // authStore.logout();
       const identityId = session?.identityId;
@@ -62,7 +59,6 @@ export async function isAuthenticatedAsAdmin() {
         authStore.setUserId(identityId);
       }
       await useCartStore.getState().fetchCart();
-      console.log(session);
       return false;
     }
   } catch (error) {

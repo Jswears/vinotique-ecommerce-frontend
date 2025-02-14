@@ -6,17 +6,13 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const { pathname } = new URL(request.url);
 
-  console.log("Request URL:", request.url);
-
   const session = await runWithAmplifyServerContext({
     nextServerContext: { request, response },
     operation: async (contextSpec) => {
       try {
         const session = await fetchAuthSession(contextSpec);
-        console.log("Session:", session);
         return session;
       } catch (error) {
-        console.log("Error fetching session:", error);
         return null;
       }
     },
