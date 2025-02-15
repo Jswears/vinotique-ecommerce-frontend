@@ -8,7 +8,6 @@ import { NavLink } from "./NavLink"
 import { ThemeToggle } from "./ThemeToggler"
 import { isAuthenticatedAsAdmin } from "@/app/utils/isAuthenticated"
 import { useEffect, useState } from "react"
-import useCartStore from "@/stores/cartStore"
 
 const Navbar = () => {
     const pathname = usePathname()
@@ -18,7 +17,9 @@ const Navbar = () => {
     useEffect(() => {
         const checkAdmin = async () => {
             const result = await isAuthenticatedAsAdmin()
-            setIsAdmin(result)
+            if (result) {
+                setIsAdmin(true)
+            }
         }
         checkAdmin()
     }, [])
