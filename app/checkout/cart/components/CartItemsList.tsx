@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { priceConversor } from "@/app/utils/priceConversor";
 import useCartStore from "@/stores/cartStore";
 import ClearCartButton from "./ClearCartButton";
+import { useAuthStore } from "@/stores/authStore";
 
 const CartItemsList = () => {
     const [loading, setLoading] = useState(false);
@@ -26,7 +27,9 @@ const CartItemsList = () => {
     const [total, setTotal] = useState<number | undefined>(undefined);
 
     const { cartItems, getTotalPrice } = useCartStore()
+    const { getUserId } = useAuthStore()
     const totalPrice = getTotalPrice();
+    const userId = getUserId();
 
 
 
@@ -45,7 +48,7 @@ const CartItemsList = () => {
                 successUrl: `${window.location.origin}/checkout/payment/success`,
                 cancelUrl: `${window.location.origin}/checkout/payment/cancel`,
                 metadata: {
-                    // userId
+                    userId
                 },
             });
             const { sessionUrl } = data;
