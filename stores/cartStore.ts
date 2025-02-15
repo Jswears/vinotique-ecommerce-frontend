@@ -57,6 +57,10 @@ const useCartStore = create<CartStoreState>((set, get) => ({
   fetchCart: async () => {
     set({ loading: true });
     const userId = useAuthStore.getState().getUserId();
+    if (!userId) {
+      set({ loading: false });
+      return;
+    }
     try {
       // Use the custom API library
       const data = (await api.get(`/cart/${userId}`)) as CartResponse;
@@ -73,6 +77,7 @@ const useCartStore = create<CartStoreState>((set, get) => ({
         set({ loading: false, error: null });
         return;
       }
+      set({ loading: false, error: errMsg });
     }
   },
 
