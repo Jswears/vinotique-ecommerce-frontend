@@ -6,10 +6,11 @@ import { Wine } from '@/app/types';
 import WineCardSkeleton from './WinesCardSkeleton';
 import WineAlert from '@/app/components/ui/WineAlertComponent';
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import { useWinesStore } from '@/stores/winesStore';
 const WineList = () => {
-    const [wines, setWines] = useState<Wine[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    // const [wines, setWines] = useState<Wine[]>([]);
+    // const [loading, setLoading] = useState(true);
+    // const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageTokens, setPageTokens] = useState<(string | null)[]>([null]); // [page1Token, page2Token,...]
     const [totalItems, setTotalItems] = useState<number>(0);
@@ -17,34 +18,12 @@ const WineList = () => {
 
     // Calculate total pages based on DynamoDB's total count
     const totalPages = Math.ceil(totalItems / pageSize);
+
+    const { fetchWines, wines, loading, error } = useWinesStore();
+
     useEffect(() => {
-        const fetchWines = async () => {
-            setLoading(true);
-            try {
-                const response = await api.get('/wines', {
-                    params: {
-                        pageSize,
-                        nextToken: pageTokens[currentPage - 1] || undefined
-                    }
-                });
-
-                setWines(response.wines);
-                setTotalItems(response.totalCount);
-
-                // Update page tokens array
-                setPageTokens(prev => {
-                    const newTokens = [...prev];
-                    newTokens[currentPage] = response.nextToken || null;
-                    return newTokens;
-                });
-            } catch (error: any) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchWines();
-    }, [currentPage]);
+    }, []);
 
     const handlePageChange = (newPage: number) => {
         if (newPage < 1 || newPage > totalPages) return;
@@ -84,14 +63,13 @@ const WineList = () => {
 
     if (loading) return <WineCardSkeleton />;
 
-    if (wines.length === 0) {
+    if (wines.length === 0 && loading) {
         return <WineAlert title="No wines available" error="There are no wines available at the moment" />;
     }
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <h1 className="text-3xl font-bold mb-6">Our Wines</h1>
-
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {wines.map((wine) => (
                     <WineCard key={wine.wineId} wine={wine} />

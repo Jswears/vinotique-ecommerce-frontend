@@ -1,25 +1,30 @@
-export interface Wine {
-  wineId: string;
-  productName: string;
+// ---- Wine Types ----
+export type Wine = {
+  isInStock: boolean;
   producer: string;
-  description: string;
-  category: WineCategoryEnum;
-  region: string;
+  rating: number;
+  reviewCount: number;
+  sizeMl: number;
+  createdAt: string;
   country: string;
-  grapeVarietal?: string[];
-  vintage: number;
-  alcoholContent?: number;
-  sizeMl?: number;
-  price: number;
-  stockQuantity?: number;
-  isInStock?: boolean;
-  isFeatured?: boolean;
+  isFeatured: boolean;
   imageUrl: string;
-  createdAt?: string;
-  updatedAt?: string;
-  rating?: number;
-  reviewCount?: number;
-}
+  alcoholContent: number;
+  vintage: number;
+  updatedAt: string;
+  wineId: string;
+  category: string;
+  region: string;
+  price: number;
+  grapeVarietal: string[];
+  productName: string;
+};
+
+export type WinesResponse = {
+  wines: Wine[];
+  totalCount: number;
+  nextToken: string | null;
+};
 
 export enum WineCategoryEnum {
   Red = "Red",

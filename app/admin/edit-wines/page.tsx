@@ -1,25 +1,29 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Pencil, Trash2 } from "lucide-react"
+import { useWinesStore } from "@/stores/winesStore"
+import { priceConversor } from "@/app/utils/priceConversor"
 
-// This is a placeholder. Replace with actual data fetching logic.
-const mockWines = [
-    { id: 1, name: "Chateau Margaux", year: 2015, price: 599.99 },
-    { id: 2, name: "Opus One", year: 2018, price: 399.99 },
-    { id: 3, name: "Sassicaia", year: 2017, price: 249.99 },
-]
 
 export default function EditWinesPage() {
-    const [wines, setWines] = useState(mockWines)
     const [searchTerm, setSearchTerm] = useState("")
 
+    const { fetchWines, wines } = useWinesStore()
+
+    // Fetch wines on page load
+    useEffect(() => {
+        if (wines.length === 0) {
+            fetchWines()
+        }
+    }, [fetchWines, wines.length])
+
     // Implement actual search logic
-    const filteredWines = wines.filter((wine) => wine.name.toLowerCase().includes(searchTerm.toLowerCase()))
+    const filteredWines = wines.filter((wine) => wine.productName.toLowerCase().includes(searchTerm.toLowerCase()))
 
     return (
         <div className="space-y-6">
@@ -48,10 +52,10 @@ export default function EditWinesPage() {
                         </TableHeader>
                         <TableBody>
                             {filteredWines.map((wine) => (
-                                <TableRow key={wine.id}>
-                                    <TableCell>{wine.name}</TableCell>
-                                    <TableCell>{wine.year}</TableCell>
-                                    <TableCell>${wine.price.toFixed(2)}</TableCell>
+                                <TableRow key={wine.wineId}>
+                                    <TableCell>{wine.productName}</TableCell>
+                                    <TableCell>{wine.vintage}</TableCell>
+                                    <TableCell>{priceConversor(wine.price)}</TableCell>
                                     <TableCell>
                                         <Button variant="ghost" size="icon" className="mr-2">
                                             <Pencil className="h-4 w-4" />
