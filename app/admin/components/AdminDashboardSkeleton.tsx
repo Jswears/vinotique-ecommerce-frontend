@@ -1,29 +1,8 @@
-'use client';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { useWinesStore } from "@/stores/winesStore";
-import { Wine, Users, ShoppingBag } from "lucide-react"
-import { useEffect } from "react";
-import WineAlert from "../components/ui/WineAlertComponent";
-import AdminDashboardSkeleton from "./components/AdminDashboardSkeleton";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Wine, Users, ShoppingBag } from "lucide-react";
 
 export default function AdminDashboard() {
-    const { totalCount, fetchWines, wines, error, loading } = useWinesStore();
-
-    useEffect(() => {
-        if (wines.length === 0) {
-            fetchWines();
-        }
-    }, [fetchWines, wines.length]);
-
-    if (error) {
-        return <WineAlert title="An error occurred" error={error} />;
-    }
-
-    if (loading) return <AdminDashboardSkeleton />;
-
-    if (wines.length === 0 && loading) {
-        return <WineAlert title="No wines available" error="There are no wines available at the moment" />;
-    }
     return (
         <div className="space-y-6">
             <h1 className="text-3xl font-bold">Admin Dashboard</h1>
@@ -34,7 +13,7 @@ export default function AdminDashboard() {
                         <Wine className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">{totalCount}</div>
+                        <Skeleton className="h-6 w-16" />
                     </CardContent>
                 </Card>
                 <Card>
@@ -43,7 +22,7 @@ export default function AdminDashboard() {
                         <Users className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">1,234</div>
+                        <Skeleton className="h-6 w-16" />
                     </CardContent>
                 </Card>
                 <Card>
@@ -52,11 +31,10 @@ export default function AdminDashboard() {
                         <ShoppingBag className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">432</div>
+                        <Skeleton className="h-6 w-16" />
                     </CardContent>
                 </Card>
             </div>
         </div>
-    )
+    );
 }
-
