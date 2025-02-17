@@ -32,26 +32,23 @@ const useCartStore = create<CartStoreState>((set, get) => ({
     set({ loading: true });
     const userId = useAuthStore.getState().getUserId();
     if (!userId) {
-      set({ loading: false });
+      set({ loading: false, cartItems: [], totalPrice: 0, error: null });
       return;
     }
     try {
-      // Use the custom API library
-      const data = (await api.get(`/cart/${userId}`)) as CartResponse;
-      set({
-        cartItems: data.cartItems,
-        totalPrice: data.totalPrice,
-        loading: false,
-        error: null,
-      });
-    } catch (error: any) {
-      const errMsg = error?.message || String(error);
-      if (errMsg.toLowerCase().includes("no cart found")) {
-        console.warn("Cart not found, keeping existing cart state.");
-        set({ loading: false, error: null, totalPrice: 0, cartItems: [] });
-        return;
+      const data = (await api.get(`/cart/${userId}`)) as CartResponse | null;
+      if (data) {
+        set({
+          cartItems: data.cartItems,
+          totalPrice: data.totalPrice,
+          loading: false,
+          error: null,
+        });
+      } else {
+        set({ loading: false, cartItems: [], totalPrice: 0, error: null });
       }
-      set({ loading: false, error: errMsg });
+    } catch (error: any) {
+      set({ loading: false, error: error?.message || String(error) });
     }
   },
 
