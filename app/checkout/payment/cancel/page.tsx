@@ -1,12 +1,11 @@
 "use client"
 
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { XCircle, ArrowLeft, ShoppingCart } from "lucide-react"
+import Link from "next/link"
 
 const PaymentCancelPage = () => {
-    const router = useRouter()
     return (
         <div className="container mx-auto px-4 py-16 flex items-center justify-center min-h-screen">
             <Card className="w-full max-w-md">
@@ -24,15 +23,19 @@ const PaymentCancelPage = () => {
                         If you encountered any issues during the payment process, please try again or contact our support team.
                     </p>
                 </CardContent>
-                <CardFooter className="flex justify-between">
-                    <Button variant="outline" onClick={() => router.push("/")} className="w-1/2 mr-2">
-                        <ArrowLeft className="mr-2 h-4 w-4" />
-                        Home
-                    </Button>
-                    <Button onClick={() => router.push("/checkout/cart")} className="w-1/2 ml-2">
-                        <ShoppingCart className="mr-2 h-4 w-4" />
-                        Return to Cart
-                    </Button>
+                <CardFooter className="flex justify-evenly items-center">
+                    <Link href="/">
+                        <Button variant="outline">
+                            <ArrowLeft className="mr-2 h-4 w-4" />
+                            Home
+                        </Button>
+                    </Link>
+                    <Link href="/checkout/cart">
+                        <Button variant="default">
+                            <ShoppingCart className="mr-2 h-4 w-4" />
+                            Return to Cart
+                        </Button>
+                    </Link>
                 </CardFooter>
             </Card>
         </div>

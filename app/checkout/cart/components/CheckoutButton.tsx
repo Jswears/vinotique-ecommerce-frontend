@@ -20,7 +20,7 @@ const CheckoutButton = ({ cartItems }: { cartItems: CartItem[] }) => {
             //     wineId: item.wineId,
             // }));
 
-            const data = await api.post(`/payment`, {
+            const data = await api.post("/payment", {
                 cartItems,
                 successUrl: `${window.location.origin}/checkout/payment/success`,
                 cancelUrl: `${window.location.origin}/checkout/payment/cancel`,
@@ -29,6 +29,12 @@ const CheckoutButton = ({ cartItems }: { cartItems: CartItem[] }) => {
                 },
             });
             const { sessionUrl } = data;
+
+            // Set a cookie to indicate that the user has performed a checkout action
+            const expirationDate = new Date();
+            expirationDate.setMinutes(expirationDate.getMinutes() + 30); // Set cookie to expire in 30 minutes
+            document.cookie = `checkoutPerformed=true; path=/; expires=${expirationDate.toUTCString()}`;
+
             window.location.href = sessionUrl;
         } catch (error) {
             if (error instanceof Error) {
