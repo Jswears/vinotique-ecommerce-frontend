@@ -2,6 +2,12 @@ import { fetchAuthSession } from "aws-amplify/auth/server";
 import { NextRequest, NextResponse } from "next/server";
 import { runWithAmplifyServerContext } from "@/app/utils/amplifyServerUtils";
 
+// Add a new function to check if the user has performed a checkout action
+const hasPerformedCheckout = (request: NextRequest): boolean => {
+  const checkoutPerformed = request.cookies.get("checkoutPerformed");
+  return checkoutPerformed?.value === "true";
+};
+
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const { pathname } = new URL(request.url);
@@ -58,6 +64,16 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/error/not-authorized", request.url));
   }
 
+  // Restrict /checkout/payment/success and /checkout/payment/cancel to users who have performed a checkout action
+  if (
+    ["/checkout/payment/success", "/checkout/payment/cancel"].includes(
+      pathname
+    ) &&
+    !hasPerformedCheckout(request)
+  ) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   return response;
 }
 
@@ -68,5 +84,7 @@ export const config = {
     "/auth/login",
     "/auth/signup",
     "/auth/confirm-email",
+    "/checkout/payment/success",
+    "/checkout/payment/cancel",
   ],
 };
