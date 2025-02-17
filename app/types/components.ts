@@ -2,6 +2,7 @@ import { CartItem, Wine } from ".";
 
 export interface WineCardProps {
   wine: Wine;
+  isFeatured: boolean;
 }
 
 export interface WineDetailsComponentProps {
