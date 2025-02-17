@@ -18,6 +18,7 @@ export type Wine = {
   price: number;
   grapeVarietal: string[];
   productName: string;
+  description: string;
 };
 
 export type WinesResponse = {

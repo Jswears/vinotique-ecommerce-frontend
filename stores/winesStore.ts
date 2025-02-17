@@ -5,7 +5,7 @@ import { create } from "zustand";
 // Define the store state and actions
 interface WinesStoreState {
   wines: Wine[];
-  loading: boolean;
+  loadingState: "idle" | "loading" | "error" | "success";
   error: string | null;
   totalWinesCount: number;
   fetchWines: () => Promise<void>;
@@ -15,24 +15,26 @@ interface WinesStoreState {
 export const useWinesStore = create<WinesStoreState>((set, get) => ({
   // Initial state
   wines: [],
-  loading: false,
+  loadingState: "idle", // Possible values: 'idle', 'loading', 'error', 'success'
   totalWinesCount: 0,
   error: null,
 
   // Fetch the wines from the backend
   fetchWines: async () => {
-    set({ loading: true });
+    set({ loadingState: "loading", error: null, wines: [] }); // Clear wines and set loading state
     try {
       const response = (await api.get("/wines")) as WinesResponse;
-      set({ wines: response.wines, totalWinesCount: response.totalCount });
+      set({
+        wines: response.wines,
+        totalWinesCount: response.totalCount,
+        loadingState: "success",
+      }); // Set wines and success state
     } catch (error) {
-      set({ error: (error as Error).message });
-    } finally {
-      set({ loading: false });
+      set({ error: (error as Error).message, loadingState: "error" }); // Set error state
     }
   },
   deleteWine: async (wineId: string) => {
-    set({ loading: true });
+    set({ loadingState: "loading", error: null });
     try {
       await api.delete(`/wines/${wineId}`);
       const wines = get().wines.filter((wine) => wine.wineId !== wineId);
@@ -40,9 +42,9 @@ export const useWinesStore = create<WinesStoreState>((set, get) => ({
       // Optionally refetch wines to ensure data consistency
       await get().fetchWines();
     } catch (error) {
-      set({ error: (error as Error).message });
+      set({ error: (error as Error).message, loadingState: "error" });
     } finally {
-      set({ loading: false });
+      set({ loadingState: "idle" });
     }
   },
 }));
