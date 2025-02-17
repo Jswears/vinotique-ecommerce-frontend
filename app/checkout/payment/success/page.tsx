@@ -10,20 +10,21 @@ import useCartStore from "@/stores/cartStore"
 
 const PaymentSuccessPage = () => {
     const router = useRouter()
-    const { clearCart, fetchCart } = useCartStore()
+    const { clearCart, clearCartLocally, fetchCart } = useCartStore()
     const { toast } = useToast()
 
     useEffect(() => {
         // Clean the cart
-        clearCart()
-        fetchCart()
-        // Show a success toast
-        toast({
-            title: "Payment Successful",
-            description: "Thank you for your purchase!",
-            duration: 5000,
-        })
-    }, [clearCart, toast]) // Add clearItemsCount to dependencies
+        clearCart().then(() => {
+            clearCartLocally();
+            // Show a success toast
+            toast({
+                title: "Payment Successful",
+                description: "Thank you for your purchase!",
+                duration: 5000,
+            });
+        });
+    }, [clearCart, clearCartLocally, toast]);
 
     return (
         <div className="container mx-auto px-4 py-16 flex items-center justify-center min-h-screen">
