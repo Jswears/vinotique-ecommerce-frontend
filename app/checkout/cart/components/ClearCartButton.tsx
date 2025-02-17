@@ -43,7 +43,7 @@ const ClearCartButton = () => {
     }
 
     return (
-        <Button disabled={loading} variant="outline" className="w-full" onClick={handleClearCart}>
+        <Button disabled={loading} variant="destructive" className="w-full text-white" onClick={handleClearCart}>
             <Trash2 className="mr-2 h-4 w-4" />
             Clear Cart
         </Button>

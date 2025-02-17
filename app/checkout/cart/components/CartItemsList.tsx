@@ -1,9 +1,6 @@
 'use client'
-import { api } from "@/app/lib/api";
-import { useState } from "react";
 import CartItemsSkeleton from "./CartItemsSkeleton";
 import WineAlert from "@/app/components/ui/WineAlertComponent";
-import { CheckoutItem } from "@/app/types";
 import {
     Card,
     CardContent,
@@ -11,53 +8,18 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { ShoppingCart, Trash2, CreditCard } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import CartItemCard from "./CartItemCard";
-import { Button } from "@/components/ui/button";
 import { priceConversor } from "@/app/utils/priceConversor";
 import useCartStore from "@/stores/cartStore";
 import ClearCartButton from "./ClearCartButton";
-import { useAuthStore } from "@/stores/authStore";
+import CheckoutButton from "./CheckoutButton";
 
 const CartItemsList = () => {
     const { cartItems, getTotalPrice, loading, error } = useCartStore()
-    const { getUserId } = useAuthStore()
     const totalPrice = getTotalPrice();
-    const userId = getUserId();
-
-
-
-    const handleCheckout = async () => {
-        try {
-            // const checkoutItems: CheckoutItem[] = cartItems.map((item): CheckoutItem => ({
-            //     name: item.productName,
-            //     price: item.price,
-            //     currency: "eur",
-            //     quantity: item.quantity,
-            //     wineId: item.wineId,
-            // }));
-
-            const data = await api.post(`/payment`, {
-                cartItems,
-                successUrl: `${window.location.origin}/checkout/payment/success`,
-                cancelUrl: `${window.location.origin}/checkout/payment/cancel`,
-                metadata: {
-                    userId
-                },
-            });
-            const { sessionUrl } = data;
-            window.location.href = sessionUrl;
-        } catch (error) {
-            if (error instanceof Error) {
-                console.error(error.message);
-            } else {
-                console.error(error);
-            }
-        }
-    };
-
 
 
 
@@ -105,10 +67,7 @@ const CartItemsList = () => {
                     </div>
                     <div className="flex gap-2">
                         <ClearCartButton />
-                        <Button variant="default" onClick={handleCheckout}>
-                            <CreditCard className="mr-2 h-4 w-4" />
-                            Checkout
-                        </Button>
+                        <CheckoutButton cartItems={cartItems} />
                     </div>
                 </CardFooter>
             </Card>
