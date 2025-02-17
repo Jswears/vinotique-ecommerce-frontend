@@ -18,14 +18,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   setUserId: (userId) => set({ userId }),
 
   // Helper function to get the userId
-  getUserId: (): string => {
-    const userId = get().userId;
-    if (!userId) {
-      console.error("userId is not set in authStore");
-      return "";
-    }
-    return userId;
-  },
+  getUserId: (): string => get().userId || "",
 
   logout: async () => {
     set({ isAuthenticated: false, userId: "" });
