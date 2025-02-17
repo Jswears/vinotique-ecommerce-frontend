@@ -8,7 +8,7 @@ import AdminDashboardSkeleton from "./components/AdminDashboardSkeleton";
 import { useOrdersStore } from "@/stores/ordersStore";
 
 export default function AdminDashboard() {
-    const { totalWinesCount, fetchWines, wines, error, loading } = useWinesStore();
+    const { totalWinesCount, fetchWines, wines, error, loadingState } = useWinesStore();
     const { totalOrdersCount, fetchOrders } = useOrdersStore();
 
     useEffect(() => {
@@ -18,18 +18,20 @@ export default function AdminDashboard() {
     }, [fetchWines, wines.length]);
 
     useEffect(() => {
-        if (totalOrdersCount === 0) {
-            fetchOrders();
+        if (loadingState === 'idle') {
+            fetchWines();
         }
-    }, []);
+    }, [fetchWines, loadingState]);
 
-    if (error) {
-        return <WineAlert title="An error occurred" error={error} />;
+    if (loadingState === "loading") {
+        <AdminDashboardSkeleton />;
     }
 
-    if (loading) return <AdminDashboardSkeleton />;
+    if (loadingState === "error") {
+        return <WineAlert title="An error occurred" error={error!} />;
+    }
 
-    if (wines.length === 0 && loading) {
+    if (loadingState === "success" && wines.length === 0) {
         return <WineAlert title="No wines available" error="There are no wines available at the moment" />;
     }
     return (
