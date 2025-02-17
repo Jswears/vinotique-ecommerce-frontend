@@ -16,6 +16,9 @@ export const api = {
       const response = await axiosClient.get(url, { params });
       return response.data;
     } catch (error: any) {
+      if (error.response && error.response.status === 404) {
+        return null; // Return null if the resource is not found
+      }
       console.error(
         "Error GET:",
         error.response ? error.response.data : error.message
