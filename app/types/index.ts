@@ -49,7 +49,6 @@ export type WineFormData = {
 };
 
 // ---- Cart Types ----
-
 export interface CartItem {
   addedAt: string;
   wineId: string;
@@ -57,6 +56,18 @@ export interface CartItem {
   productName: string;
   price: number;
   imageUrl: string;
+}
+// Type for the cart item sent in POST /cart
+export interface CartPostItem {
+  wineId: string;
+  quantity: number;
+  action: "add" | "remove" | "clear";
+}
+
+// Type for the GET /cart response
+export interface CartResponse {
+  cartItems: CartItem[];
+  totalPrice: number;
 }
 
 export interface CheckoutItem {

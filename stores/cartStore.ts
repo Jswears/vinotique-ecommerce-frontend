@@ -1,33 +1,7 @@
 import { api } from "@/app/lib/api";
 import { create } from "zustand";
 import { useAuthStore } from "@/stores/authStore";
-
-//
-// Define Types
-//
-
-// Type for the cart item returned from GET /cart
-export interface CartItem {
-  addedAt: string;
-  wineId: string;
-  quantity: number;
-  productName: string;
-  price: number;
-  imageUrl: string;
-}
-
-// Type for the cart item sent in POST /cart
-export interface CartPostItem {
-  wineId: string;
-  quantity: number;
-  action: "add" | "remove" | "clear";
-}
-
-// Type for the GET /cart response
-interface CartResponse {
-  cartItems: CartItem[];
-  totalPrice: number;
-}
+import { CartItem, CartPostItem, CartResponse } from "@/app/types";
 
 // Define the store state and actions
 interface CartStoreState {
@@ -148,6 +122,7 @@ const useCartStore = create<CartStoreState>((set, get) => ({
         cartItems: [{ action: "clear" }],
       });
       set({ cartItems: [], totalPrice: 0, error: null }); // ✅ Reset cart state
+      get().clearCartLocally(); // Clear local cart state
     } catch (error: any) {
       set({ error: error?.message || "Unknown error" });
     } finally {
