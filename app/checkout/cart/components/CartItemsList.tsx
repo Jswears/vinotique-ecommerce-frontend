@@ -22,11 +22,7 @@ import ClearCartButton from "./ClearCartButton";
 import { useAuthStore } from "@/stores/authStore";
 
 const CartItemsList = () => {
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [total, setTotal] = useState<number | undefined>(undefined);
-
-    const { cartItems, getTotalPrice } = useCartStore()
+    const { cartItems, getTotalPrice, loading, error } = useCartStore()
     const { getUserId } = useAuthStore()
     const totalPrice = getTotalPrice();
     const userId = getUserId();
@@ -35,13 +31,13 @@ const CartItemsList = () => {
 
     const handleCheckout = async () => {
         try {
-            const checkoutItems: CheckoutItem[] = cartItems.map((item): CheckoutItem => ({
-                name: item.productName,
-                price: item.price,
-                currency: "eur",
-                quantity: item.quantity,
-                wineId: item.wineId,
-            }));
+            // const checkoutItems: CheckoutItem[] = cartItems.map((item): CheckoutItem => ({
+            //     name: item.productName,
+            //     price: item.price,
+            //     currency: "eur",
+            //     quantity: item.quantity,
+            //     wineId: item.wineId,
+            // }));
 
             const data = await api.post(`/payment`, {
                 cartItems,
