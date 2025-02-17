@@ -48,7 +48,7 @@ const useCartStore = create<CartStoreState>((set, get) => ({
       const errMsg = error?.message || String(error);
       if (errMsg.toLowerCase().includes("no cart found")) {
         console.warn("Cart not found, keeping existing cart state.");
-        set({ loading: false, error: null });
+        set({ loading: false, error: null, totalPrice: 0, cartItems: [] });
         return;
       }
       set({ loading: false, error: errMsg });
@@ -102,6 +102,10 @@ const useCartStore = create<CartStoreState>((set, get) => ({
       const response = await api.post(`/cart/${userId}`, payload);
       // Refresh the cart after removing an item.
       await get().fetchCart();
+      // If the cart is empty, clear the local cart state
+      if (get().cartItems.length === 0) {
+        get().clearCartLocally();
+      }
     } catch (error: any) {
       let errorMessage = "Unknown error";
       if (error?.message) {

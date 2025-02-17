@@ -65,7 +65,7 @@ const CartItemsList = () => {
         return <WineAlert title="An error occurred" error={error} />
     }
 
-    if (loading) {
+    if (loading && !cartItems) {
         return (
             <CartItemsSkeleton />
         )
