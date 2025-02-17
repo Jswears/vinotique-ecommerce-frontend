@@ -9,6 +9,7 @@ Amplify.configure(outputs);
 export async function isAuthenticatedAsAdmin() {
   try {
     const authStore = useAuthStore.getState();
+    authStore.setLoading(true);
     const previousUserId = authStore.userId; // store guest/previous id
     const session = await fetchAuthSession();
 
@@ -32,6 +33,8 @@ export async function isAuthenticatedAsAdmin() {
         if (previousUserId && previousUserId !== userId) {
           await useCartStore.getState().transferCart(previousUserId, userId);
         }
+        authStore.setIsAuthenticatedAsAdmin(true);
+        authStore.setLoading(false);
         await useCartStore.getState().fetchCart();
       } else {
         console.error("userId is not a string:", userId);
@@ -50,9 +53,11 @@ export async function isAuthenticatedAsAdmin() {
       } else {
         console.error("userId is not a string:", userId);
       }
+      authStore.setLoading(false);
       return false;
     } else if (!isAuthenticated) {
       authStore.setIsAuthenticated(false);
+      authStore.setLoading(false);
       // authStore.logout();
       const identityId = session?.identityId;
       if (typeof identityId === "string") {
