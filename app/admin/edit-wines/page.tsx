@@ -8,12 +8,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Pencil, Trash2 } from "lucide-react"
 import { useWinesStore } from "@/stores/winesStore"
 import { priceConversor } from "@/app/utils/priceConversor"
+import Spinner from "@/components/ui/spinner"
 
 
 export default function EditWinesPage() {
     const [searchTerm, setSearchTerm] = useState("")
 
-    const { fetchWines, wines } = useWinesStore()
+    const { fetchWines, wines, deleteWine } = useWinesStore()
+    const [loadingWineId, setLoadingWineId] = useState<string | null>(null)
 
     // Fetch wines on page load
     useEffect(() => {
@@ -59,9 +61,17 @@ export default function EditWinesPage() {
                                     <TableCell>
                                         <Button variant="ghost" size="icon" className="mr-2">
                                             <Pencil className="h-4 w-4" />
-                                        </Button>
-                                        <Button variant="ghost" size="icon">
-                                            <Trash2 className="h-4 w-4" />
+                                            <Button
+                                                onClick={async () => {
+                                                    setLoadingWineId(wine.wineId)
+                                                    await deleteWine(wine.wineId)
+                                                    setLoadingWineId(null)
+                                                }}
+                                                variant="ghost"
+                                                size="icon"
+                                            >
+                                                {loadingWineId === wine.wineId ? <Spinner /> : <Trash2 className="h-4 w-4" />}
+                                            </Button>
                                         </Button>
                                     </TableCell>
                                 </TableRow>

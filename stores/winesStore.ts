@@ -9,6 +9,7 @@ interface WinesStoreState {
   error: string | null;
   totalWinesCount: number;
   fetchWines: () => Promise<void>;
+  deleteWine: (wineId: string) => Promise<void>;
 }
 
 export const useWinesStore = create<WinesStoreState>((set, get) => ({
@@ -24,6 +25,20 @@ export const useWinesStore = create<WinesStoreState>((set, get) => ({
     try {
       const response = (await api.get("/wines")) as WinesResponse;
       set({ wines: response.wines, totalWinesCount: response.totalCount });
+    } catch (error) {
+      set({ error: (error as Error).message });
+    } finally {
+      set({ loading: false });
+    }
+  },
+  deleteWine: async (wineId: string) => {
+    set({ loading: true });
+    try {
+      await api.delete(`/wines/${wineId}`);
+      const wines = get().wines.filter((wine) => wine.wineId !== wineId);
+      set({ wines });
+      // Optionally refetch wines to ensure data consistency
+      await get().fetchWines();
     } catch (error) {
       set({ error: (error as Error).message });
     } finally {
