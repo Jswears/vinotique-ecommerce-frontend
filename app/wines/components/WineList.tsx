@@ -1,36 +1,29 @@
 "use client"
 import { useState, useEffect } from 'react';
 import WineCard from './WineCard';
-import { api } from '@/app/lib/api';
-import { Wine } from '@/app/types';
 import WineCardSkeleton from './WinesCardSkeleton';
 import WineAlert from '@/app/components/ui/WineAlertComponent';
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { useWinesStore } from '@/stores/winesStore';
+
 const WineList = () => {
-    // const [wines, setWines] = useState<Wine[]>([]);
-    // const [loading, setLoading] = useState(true);
-    // const [error, setError] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageTokens, setPageTokens] = useState<(string | null)[]>([null]); // [page1Token, page2Token,...]
+    const [pageTokens, setPageTokens] = useState<(string | null)[]>([null]);
     const [totalItems, setTotalItems] = useState<number>(0);
     const pageSize = 12;
-
-    // Calculate total pages based on DynamoDB's total count
     const totalPages = Math.ceil(totalItems / pageSize);
 
-    const { fetchWines, wines, loading, error } = useWinesStore();
+    const { fetchWines, wines, loadingState, error } = useWinesStore();
 
     useEffect(() => {
-        fetchWines();
-    }, []);
+        if (loadingState === 'idle') {
+            fetchWines();
+        }
+    }, [fetchWines, loadingState]);
 
     const handlePageChange = (newPage: number) => {
         if (newPage < 1 || newPage > totalPages) return;
-
-        // For pages > 1, ensure we have the previous page's token
         if (newPage > 1 && !pageTokens[newPage - 1]) return;
-
         setCurrentPage(newPage);
     };
 
@@ -57,13 +50,15 @@ const WineList = () => {
         });
     };
 
-    if (error) {
-        return <WineAlert title="An error occurred" error={error} />;
+    if (loadingState === 'loading') {
+        return <WineCardSkeleton />;
     }
 
-    if (loading) return <WineCardSkeleton />;
+    if (loadingState === 'error') {
+        return <WineAlert title="An error occurred" error={error!} />;
+    }
 
-    if (wines.length === 0 && loading) {
+    if (loadingState === 'success' && wines.length === 0) {
         return <WineAlert title="No wines available" error="There are no wines available at the moment" />;
     }
 
@@ -75,35 +70,30 @@ const WineList = () => {
                     <WineCard key={wine.wineId} wine={wine} />
                 ))}
             </div>
-
-            {
-                totalPages > 1 && (
-                    <Pagination className="mt-8">
-                        <PaginationContent>
-                            <PaginationItem>
-                                <PaginationPrevious
-                                    onClick={() => handlePageChange(currentPage - 1)}
-                                    className={currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-                                />
-                            </PaginationItem>
-
-                            {renderPaginationItems()}
-
-                            <PaginationItem>
-                                <PaginationNext
-                                    onClick={() => handlePageChange(currentPage + 1)}
-                                    className={
-                                        currentPage === totalPages || !pageTokens[currentPage]
-                                            ? 'opacity-50 cursor-not-allowed'
-                                            : 'cursor-pointer'
-                                    }
-                                />
-                            </PaginationItem>
-                        </PaginationContent>
-                    </Pagination>
-                )
-            }
-        </div >
+            {totalPages > 1 && (
+                <Pagination className="mt-8">
+                    <PaginationContent>
+                        <PaginationItem>
+                            <PaginationPrevious
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                className={currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                            />
+                        </PaginationItem>
+                        {renderPaginationItems()}
+                        <PaginationItem>
+                            <PaginationNext
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                className={
+                                    currentPage === totalPages || !pageTokens[currentPage]
+                                        ? 'opacity-50 cursor-not-allowed'
+                                        : 'cursor-pointer'
+                                }
+                            />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
+            )}
+        </div>
     );
 };
 
