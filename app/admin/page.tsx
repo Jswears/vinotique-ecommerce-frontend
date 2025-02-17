@@ -5,15 +5,23 @@ import { Wine, Users, ShoppingBag } from "lucide-react"
 import { useEffect } from "react";
 import WineAlert from "../components/ui/WineAlertComponent";
 import AdminDashboardSkeleton from "./components/AdminDashboardSkeleton";
+import { useOrdersStore } from "@/stores/ordersStore";
 
 export default function AdminDashboard() {
-    const { totalCount, fetchWines, wines, error, loading } = useWinesStore();
+    const { totalWinesCount, fetchWines, wines, error, loading } = useWinesStore();
+    const { totalOrdersCount, fetchOrders } = useOrdersStore();
 
     useEffect(() => {
         if (wines.length === 0) {
             fetchWines();
         }
     }, [fetchWines, wines.length]);
+
+    useEffect(() => {
+        if (totalOrdersCount === 0) {
+            fetchOrders();
+        }
+    }, []);
 
     if (error) {
         return <WineAlert title="An error occurred" error={error} />;
@@ -34,7 +42,7 @@ export default function AdminDashboard() {
                         <Wine className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">{totalCount}</div>
+                        <div className="text-2xl font-bold">{totalWinesCount}</div>
                     </CardContent>
                 </Card>
                 <Card>
@@ -52,7 +60,7 @@ export default function AdminDashboard() {
                         <ShoppingBag className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">432</div>
+                        <div className="text-2xl font-bold">{totalOrdersCount}</div>
                     </CardContent>
                 </Card>
             </div>

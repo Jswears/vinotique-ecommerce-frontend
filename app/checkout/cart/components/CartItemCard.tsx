@@ -9,13 +9,14 @@ import useCartStore from "@/stores/cartStore";
 const CartItemCard = ({ cartItem }: { cartItem: CartItem }) => {
     return (
         <div className="flex items-center border-b dark:border-gray-700 py-4">
-            <Image
+            {/* TODO: RE-IMPLEMENT LATER */}
+            {/* <Image
                 src={cartItem.imageUrl}
                 alt={cartItem.productName}
                 width={80}
                 height={80}
                 className="w-fit h-fit object-cover mr-4"
-            />
+            /> */}
             <div className="flex-grow">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
                     {cartItem.productName}

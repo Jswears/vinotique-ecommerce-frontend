@@ -7,55 +7,24 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Eye } from "lucide-react";
-import { api } from "@/app/lib/api";
 import { priceConversor } from "@/app/utils/priceConversor";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatDate } from "@/app/utils/formatDate";
+import { useOrdersStore } from "@/stores/ordersStore";
+import { Order } from "@/app/types";
 
-interface Order {
-    totalAmount: number;
-    customer: string;
-    userId: string;
-    orderId: string;
-    status: string;
-    orderStatus: string;
-    createdAt: string;
-    shippingAddress?: {
-        address: string;
-        city: string;
-        country: string;
-        postalCode: string;
-    };
-    items?: {
-        name: string;
-        price: number;
-        quantity: number;
-    }[];
-}
 
 export default function OrdersList() {
-    const [orders, setOrders] = useState<Order[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-    useEffect(() => {
-        const fetchOrders = async () => {
-            setLoading(true);
-            try {
-                const data = await api.get("/orders");
-                setOrders(data.items);
-                console.log(data);
-            } catch (error: any) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchOrders();
-    }, []);
+    const { orders, fetchOrders, loading, error } = useOrdersStore();
 
+    useEffect(() => {
+        if (orders.length === 0) {
+            fetchOrders();
+        }
+    }, [fetchOrders, orders.length]);
 
     const getStatusVariant = (status: string) => {
         switch (status.toLowerCase()) {
@@ -97,6 +66,9 @@ export default function OrdersList() {
                     ) : error ? (
                         <p className="text-red-500">Error: {error}</p>
                     ) : (
+                        // {wines.map((wine) => (
+                        //     <WineCard key={wine.wineId} wine={wine} />
+                        // ))}
                         <Table>
                             <TableHeader>
                                 <TableRow>
@@ -156,23 +128,23 @@ export default function OrdersList() {
                             <p><strong>Customer:</strong> {selectedOrder.customer}</p>
                             <p><strong>Order ID:</strong> {selectedOrder.orderId}</p>
                             <p><strong>Total:</strong> €{selectedOrder.totalAmount}</p>
-                            <p><strong>Status:</strong> {selectedOrder.status}</p>
+                            <p><strong>Status:</strong> {selectedOrder.orderStatus}</p>
                             <p><strong>Date:</strong> {formatDate(selectedOrder.createdAt)}</p>
 
-                            {selectedOrder.shippingAddress && (
+                            {selectedOrder.shippingDetails && (
                                 <div>
                                     <h3 className="font-semibold">Shipping Address:</h3>
-                                    <p>{selectedOrder.shippingAddress.address}, {selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.country}, {selectedOrder.shippingAddress.postalCode}</p>
+                                    <p>{selectedOrder.shippingDetails.address.line1}, {selectedOrder.shippingDetails.address.city}, {selectedOrder.shippingDetails.address.country}, {selectedOrder.shippingDetails.address.postal_code}</p>
                                 </div>
                             )}
 
-                            {selectedOrder.items && selectedOrder.items.length > 0 && (
+                            {selectedOrder.cartItems && selectedOrder.cartItems.length > 0 && (
                                 <div>
                                     <h3 className="font-semibold">Items:</h3>
                                     <ul className="list-disc pl-5">
-                                        {selectedOrder.items.map((item, index) => (
-                                            <li key={index}>
-                                                {item.name} - {item.quantity} x {priceConversor(item.price)}
+                                        {selectedOrder.cartItems.map((cartItem) => (
+                                            <li key={cartItem.wineId}>
+                                                {cartItem.productName} - {cartItem.quantity} x {priceConversor(cartItem.price)}
                                             </li>
                                         ))}
                                     </ul>
