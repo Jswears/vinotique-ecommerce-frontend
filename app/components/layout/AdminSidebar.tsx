@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { Wine, PlusCircle, Edit, Users, ShoppingBag, Home, LogOut } from 'lucide-react'
+import { Wine, PlusCircle, Edit, Users, ShoppingBag, Home, LogOut, BarChart } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/app/components/layout/ThemeToggler"
 import {
@@ -56,6 +56,14 @@ export function AdminSidebar() {
                             <Link href="/admin">
                                 <Home className="mr-2 h-4 w-4" />
                                 Dashboard
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild isActive={pathname === '/admin/statistics'}>
+                            <Link href="/admin/statistics">
+                                <BarChart className="mr-2 h-4 w-4" />
+                                Statistics
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
