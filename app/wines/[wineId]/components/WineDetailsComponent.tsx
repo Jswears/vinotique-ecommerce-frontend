@@ -1,4 +1,3 @@
-// app/wines/[wineId]/components/WineDetailsComponent.tsx
 'use client'
 import { useEffect, useState } from 'react';
 import { api } from '../../../lib/api';
@@ -72,7 +71,7 @@ const WineDetailsComponent = ({ wineId }: WineDetailsComponentProps) => {
                                 </div>
                             </div>
                             <div className="mt-8">
-                                <AddToCartButton wine={wine} type='detailed' />
+                                <AddToCartButton wine={wine} type='default' />
                             </div>
                         </CardContent>
                     </div>

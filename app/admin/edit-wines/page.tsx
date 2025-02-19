@@ -9,23 +9,25 @@ import { Pencil, Trash2 } from "lucide-react"
 import { useWinesStore } from "@/stores/winesStore"
 import { priceConversor } from "@/app/utils/priceConversor"
 import Spinner from "@/components/ui/spinner"
-
+import Link from "next/link"
+import { Badge } from "@/components/ui/badge"
 
 export default function EditWinesPage() {
     const [searchTerm, setSearchTerm] = useState("")
-
     const { fetchWines, wines, deleteWine } = useWinesStore()
     const [loadingWineId, setLoadingWineId] = useState<string | null>(null)
 
-    // Fetch wines on page load
     useEffect(() => {
         if (wines.length === 0) {
             fetchWines()
         }
     }, [fetchWines, wines.length])
 
-    // Implement actual search logic
-    const filteredWines = wines.filter((wine) => wine.productName.toLowerCase().includes(searchTerm.toLowerCase()))
+    const filteredWines = wines.filter(
+        (wine) =>
+            wine.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            wine.producer.toLowerCase().includes(searchTerm.toLowerCase()),
+    )
 
     return (
         <div className="space-y-6">
@@ -41,14 +43,19 @@ export default function EditWinesPage() {
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="max-w-sm"
                         />
-                        <Button>Add New Wine</Button>
+                        <Link href="/admin/add-wine">
+                            <Button>Add New Wine</Button>
+                        </Link>
                     </div>
                     <Table>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Name</TableHead>
-                                <TableHead>Year</TableHead>
+                                <TableHead>Producer</TableHead>
+                                <TableHead>Category</TableHead>
+                                <TableHead>Vintage</TableHead>
                                 <TableHead>Price</TableHead>
+                                <TableHead>Stock</TableHead>
                                 <TableHead>Actions</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -56,22 +63,30 @@ export default function EditWinesPage() {
                             {filteredWines.map((wine) => (
                                 <TableRow key={wine.wineId}>
                                     <TableCell>{wine.productName}</TableCell>
+                                    <TableCell>{wine.producer}</TableCell>
+                                    <TableCell>
+                                        <Badge variant="secondary">{wine.category}</Badge>
+                                    </TableCell>
                                     <TableCell>{wine.vintage}</TableCell>
                                     <TableCell>{priceConversor(wine.price)}</TableCell>
+                                    <TableCell>{wine.stockQuantity}</TableCell>
                                     <TableCell>
-                                        <Button variant="ghost" size="icon" className="mr-2">
-                                            <Pencil className="h-4 w-4" />
-                                            <Button
-                                                onClick={async () => {
-                                                    setLoadingWineId(wine.wineId)
-                                                    await deleteWine(wine.wineId)
-                                                    setLoadingWineId(null)
-                                                }}
-                                                variant="ghost"
-                                                size="icon"
-                                            >
-                                                {loadingWineId === wine.wineId ? <Spinner /> : <Trash2 className="h-4 w-4" />}
+                                        <Link href={`/admin/edit-wines/${wine.wineId}`}>
+                                            <Button variant="ghost" size="icon" className="mr-2">
+                                                <Pencil className="h-4 w-4" />
                                             </Button>
+                                        </Link>
+                                        <Button
+                                            onClick={async (e) => {
+                                                e.preventDefault()
+                                                setLoadingWineId(wine.wineId)
+                                                await deleteWine(wine.wineId)
+                                                setLoadingWineId(null)
+                                            }}
+                                            variant="ghost"
+                                            size="icon"
+                                        >
+                                            {loadingWineId === wine.wineId ? <Spinner /> : <Trash2 className="h-4 w-4" />}
                                         </Button>
                                     </TableCell>
                                 </TableRow>
