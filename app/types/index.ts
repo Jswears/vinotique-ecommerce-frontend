@@ -19,6 +19,7 @@ export type Wine = {
   grapeVarietal: string[];
   productName: string;
   description: string;
+  stockQuantity: number;
 };
 
 export type WinesResponse = {

@@ -9,6 +9,7 @@ interface WinesStoreState {
   error: string | null;
   totalWinesCount: number;
   fetchWines: () => Promise<void>;
+  fetchWine: (wineId: string) => Promise<void>;
   deleteWine: (wineId: string) => Promise<void>;
 }
 
@@ -31,6 +32,17 @@ export const useWinesStore = create<WinesStoreState>((set, get) => ({
       }); // Set wines and success state
     } catch (error) {
       set({ error: (error as Error).message, loadingState: "error" }); // Set error state
+    }
+  },
+  fetchWine: async (wineId: string) => {
+    set({ loadingState: "loading", error: null });
+    try {
+      const wine = (await api.get(`/wines/${wineId}`)) as Wine;
+      set({ wines: [...get().wines, wine] });
+    } catch (error) {
+      set({ error: (error as Error).message, loadingState: "error" });
+    } finally {
+      set({ loadingState: "idle" });
     }
   },
   deleteWine: async (wineId: string) => {
