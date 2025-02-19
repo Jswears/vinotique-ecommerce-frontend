@@ -37,16 +37,21 @@ export enum WineCategoryEnum {
 }
 
 export type WineFormData = {
-  name: string;
-  category: string;
-  region: string;
+  productName: string;
   producer: string;
-  vintage: string;
-  price: number;
-  stock: number;
   description: string;
+  category: WineCategoryEnum;
+  region: string;
+  country: string;
+  grapeVarietal: string[];
+  vintage: number;
+  alcoholContent: number;
+  sizeMl: number;
+  price: number;
+  stockQuantity: number;
+  isFeatured: boolean;
   image: File | null;
-  imageUrl?: string;
+  grapeVarietalInput: string;
 };
 
 // ---- Cart Types ----

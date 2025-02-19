@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { WineFormData } from "../types";
+import { WineCategoryEnum, WineFormData } from "../types";
 import { api } from "../lib/api";
 import axios from "axios";
 import { z } from "zod";
@@ -7,28 +7,39 @@ import { z } from "zod";
 const CLOUDFRONT_URL = process.env.NEXT_PUBLIC_CLOUDFRONT_URL;
 
 const wineFormSchema = z.object({
-    name: z.string().min(1, { message: "Name is required" }),
+    productName: z.string().min(1, { message: "Product name is required" }),
+    producer: z.string().min(1, { message: "Producer is required" }),
+    description: z.string().min(1, { message: "Description is required" }),
     category: z.string().min(1, { message: "Category is required" }),
     region: z.string().min(1, { message: "Region is required" }),
-    producer: z.string().min(1, { message: "Producer is required" }),
-    vintage: z.string().min(1, { message: "Vintage is required" }),
-    price: z.number({ invalid_type_error: 'Price must be a number' }).min(0, { message: "Price cannot be negative" }),
-    stock: z.number({ invalid_type_error: 'Stock must be a number' }).min(0, { message: "Stock cannot be negative" }),
-    description: z.string().min(1, { message: "Description is required" }),
+    country: z.string().min(1, { message: "Country is required" }),
+    grapeVarietal: z.array(z.string()).min(1, { message: "At least one grape varietal is required" }),
+    vintage: z.number().min(0, { message: "Invalid vintage" }),
+    alcoholContent: z.number().min(0, { message: "Invalid alcohol content" }),
+    sizeMl: z.number().min(0, { message: "Invalid bottle size" }),
+    price: z.number().min(0, { message: "Price cannot be negative" }),
+    stockQuantity: z.number().min(0, { message: "Stock cannot be negative" }),
     imageUrl: z.string().url({ message: "Invalid image URL" }).optional(),
+    isFeatured: z.boolean().optional(),
     image: z.instanceof(File).nullable()
 });
 
 export const useWineForm = () => {
     const [formData, setFormData] = useState<WineFormData>({
-        name: "",
-        category: "red",
-        region: "",
+        productName: "",
         producer: "",
-        vintage: "",
-        price: 0,
-        stock: 0,
         description: "",
+        category: WineCategoryEnum.Red,
+        region: "",
+        country: "",
+        grapeVarietal: [],
+        grapeVarietalInput: "", // Initialize grapeVarietalInput
+        vintage: 0,
+        alcoholContent: 0,
+        sizeMl: 750,
+        price: 0,
+        stockQuantity: 0,
+        isFeatured: false,
         image: null,
     });
 
@@ -36,12 +47,9 @@ export const useWineForm = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string>("");
 
-    const handleChange = (
-        e: React.ChangeEvent<
-            HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-        >
-    ) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
+        const checked = (e.target as HTMLInputElement).checked;
 
         if (type === "file") {
             const fileInput = e.target as HTMLInputElement;
@@ -56,25 +64,48 @@ export const useWineForm = () => {
             }
         } else if (type === "number") {
             setFormData((prev) => ({ ...prev, [name]: Number.parseFloat(value) }));
+        } else if (type === "checkbox") {
+            setFormData((prev) => ({ ...prev, [name]: checked }));
+        } else if (name === "grapeVarietalInput") {
+            setFormData((prev) => ({ ...prev, grapeVarietalInput: value }));
         } else {
             setFormData((prev) => ({ ...prev, [name]: value }));
         }
     };
 
-    const getPresignedUrlForImage = async (fileKey: string) => {
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === " " || e.key === "Enter") {
+            e.preventDefault();
+            const value = (e.target as HTMLInputElement).value.trim();
+            if (value && !formData.grapeVarietal.includes(value)) {
+                setFormData((prev) => ({
+                    ...prev,
+                    grapeVarietal: [...prev.grapeVarietal, value],
+                    grapeVarietalInput: "",
+                }));
+            }
+        }
+    };
+
+    const removeGrapeVarietal = (varietal: string) => {
+        setFormData((prev) => ({
+            ...prev,
+            grapeVarietal: prev.grapeVarietal.filter((item) => item !== varietal),
+        }));
+    };
+
+    const getPresignedUrlForImage = async (fileName: string, fileType: string) => {
         try {
-            const response = await api.post("/presignedUrl", { fileKey });
-            return response.signedUrl
+            const response = await api.post("/wines/presignedUrl", { fileName, fileType });
+            return response.presignedUrl;
         } catch (error) {
             throw error;
         }
     };
 
-    const uploadImageToS3 = async (image: File, signedUrl: string) => {
+    const uploadImageToS3 = async (image: File, presignedUrl: string) => {
         try {
-            await axios.put(signedUrl, image, {
-                headers: { "Content-Type": image.type }
-            });
+            await axios.put(presignedUrl, image, { headers: { "Content-Type": image.type } });
         } catch (error) {
             throw error;
         }
@@ -83,13 +114,23 @@ export const useWineForm = () => {
     const submitWineData = async (publicUrl: string) => {
         try {
             const wineData = {
-                ...formData,
-                price: Number(formData.price * 100),
-                stock: Number(formData.stock),
+                productName: formData.productName,
+                producer: formData.producer,
+                description: formData.description,
+                category: formData.category,
+                region: formData.region,
+                country: formData.country,
+                grapeVarietal: formData.grapeVarietal,
+                vintage: formData.vintage,
+                alcoholContent: formData.alcoholContent,
+                sizeMl: formData.sizeMl,
+                price: formData.price,
+                stockQuantity: formData.stockQuantity,
                 imageUrl: publicUrl,
+                isFeatured: formData.isFeatured,
             };
-            const response = await api.post("/wines", wineData)
-            return response
+            const response = await api.post("/wines", wineData);
+            return response;
         } catch (error) {
             throw error;
         }
@@ -103,15 +144,15 @@ export const useWineForm = () => {
         try {
             // Validate form data
             wineFormSchema.parse(formData);
-
+            console.log("dataform", formData)
             const { name } = formData.image;
-            const fileKey = `${formData.category}/${name}`;
+            const fileName = `${formData.category}/${name}`;
 
-            const signedUrl = await getPresignedUrlForImage(fileKey);
+            const signedUrl = await getPresignedUrlForImage(fileName, formData.image.type);
 
             await uploadImageToS3(formData.image, signedUrl);
 
-            const publicUrl = `${typeof CLOUDFRONT_URL !== "undefined" ? CLOUDFRONT_URL : "https://example"}${fileKey}`;
+            const publicUrl = `${CLOUDFRONT_URL || "https://example"}/${fileName}`;
 
             await submitWineData(publicUrl);
         } catch (error: any) {
@@ -122,6 +163,24 @@ export const useWineForm = () => {
             }
         } finally {
             setIsLoading(false);
+            setFormData({
+                productName: "",
+                producer: "",
+                description: "",
+                category: WineCategoryEnum.Red,
+                region: "",
+                country: "",
+                grapeVarietal: [],
+                grapeVarietalInput: "",
+                vintage: 0,
+                alcoholContent: 0,
+                sizeMl: 750,
+                price: 0,
+                stockQuantity: 0,
+                isFeatured: false,
+                image: null,
+            });
+            setPreviewUrl(null);
         }
     };
 
@@ -130,7 +189,9 @@ export const useWineForm = () => {
         previewUrl,
         isLoading,
         handleChange,
+        handleKeyDown,
         handleSubmit,
+        removeGrapeVarietal,
         error,
         setFormData,
     };

@@ -9,7 +9,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 
-const WineCard = ({ wine, isFeatured }: WineCardProps) => {
+const WineCard = ({ wine }: WineCardProps) => {
     return (
         <Card className="overflow-hidden transition-all hover:shadow-lg">
             <CardHeader className="p-0 flex items-center justify-center">
@@ -29,7 +29,7 @@ const WineCard = ({ wine, isFeatured }: WineCardProps) => {
                     <span className="font-bold">{priceConversor(wine.price)}</span>
                 </div>
             </CardContent>
-            {isFeatured ? (
+            {wine.isFeatured ? (
                 ""
             ) : (
                 <CardFooter className="p-4 pt-0 flex gap-2">
@@ -38,7 +38,7 @@ const WineCard = ({ wine, isFeatured }: WineCardProps) => {
             )}
 
             <Link href={`/wines/${wine.wineId}`} passHref className="w-full">
-                <Button variant="secondary" className={`w-full ${isFeatured ? "rounded-b-lg p-6" : ""}`}>
+                <Button variant="secondary" className={`w-full ${wine.isFeatured ? "rounded-b-lg p-6" : ""}`}>
                     View Details
                 </Button>
             </Link>

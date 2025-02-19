@@ -10,7 +10,7 @@ const WineList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [pageTokens, setPageTokens] = useState<(string | null)[]>([null]);
     const [totalItems, setTotalItems] = useState<number>(0);
-    const pageSize = 12;
+    const pageSize = 20;
     const totalPages = Math.ceil(totalItems / pageSize);
 
     const { fetchWines, wines, loadingState, error } = useWinesStore();
