@@ -5,43 +5,41 @@ import { api } from "@/app/lib/api";
 import { Wine } from "@/app/types";
 import WineCard from "@/app/wines/components/WineCard";
 import WineCardSkeleton from "@/app/wines/components/WinesCardSkeleton";
+import { Button } from "@/components/ui/button";
+import { useWinesStore } from "@/stores/winesStore";
 import { useEffect, useState } from "react";
 
 const FeaturedWinesList = () => {
-    const [loading, setloading] = useState<boolean>(false);
-    const [error, seterror] = useState<string | null>(null);
-    const [wines, setwines] = useState<Wine[]>([]);
+
+
+    const { fetchWines, wines, loadingState, error } = useWinesStore();
 
     useEffect(() => {
-        const fetchWines = async () => {
-            setloading(true);
-            try {
-                // Fetch wines
-                const response = await api.get('/wines');
-                setwines(response.wines);
-            } catch (error: any) {
-                seterror(error.message);
-            } finally {
-                setloading(false);
-            }
+        if (loadingState === 'idle') {
+            fetchWines();
         }
-        fetchWines();
-    }, []);
+    }, [fetchWines, loadingState]);
 
-    const featuredWines = wines.filter(wine => wine.isFeatured);
-
-    if (error) {
-        return <WineAlert title="No featured Wines available" error={error} />;
-    }
-
-    if (loading) {
+    if (loadingState === 'loading') {
         return <WineCardSkeleton />;
     }
 
+    if (loadingState === 'error') {
+        return <WineAlert title="An error occurred" error={error!} />;
+    }
+
+    if (loadingState === 'success' && wines.length === 0) {
+        return <WineAlert title="No wines available" error="There are no wines available at the moment" />;
+    }
+
+    const featuredWines = wines.filter(wine => wine.isFeatured);
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-center gap-6">
+            <Button onClick={(e) => console.log(wines)} variant="secondary" className="col-span-full">
+                Click
+            </Button>
             {featuredWines.map((featuredWine) => (
-                <WineCard key={featuredWine.wineId} wine={featuredWine} isFeatured={featuredWine.isFeatured} />
+                <WineCard key={featuredWine.wineId} wine={featuredWine} />
             ))}
         </div>
     );

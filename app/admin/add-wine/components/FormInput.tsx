@@ -9,9 +9,11 @@ interface FormInputProps {
     value?: string | number
     required?: boolean
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void
+    step?: string
 }
 
-export default function FormInput({ label, type, name, value, required = false, onChange }: FormInputProps) {
+export default function FormInput({ label, type, name, value, required = false, onChange, onKeyDown }: FormInputProps) {
     return (
         <div className="space-y-2">
             <Label htmlFor={name}>{label}</Label>
@@ -34,6 +36,7 @@ export default function FormInput({ label, type, name, value, required = false, 
                     value={value as string | number}
                     required={required}
                     onChange={onChange}
+                    onKeyDown={onKeyDown}
                 />
             )}
         </div>

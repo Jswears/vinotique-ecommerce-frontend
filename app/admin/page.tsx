@@ -23,6 +23,12 @@ export default function AdminDashboard() {
         }
     }, [fetchWines, loadingState]);
 
+
+    useEffect(() => {
+        if (totalOrdersCount === 0) {
+            fetchOrders();
+        }
+    }, [fetchOrders, totalOrdersCount]);
     if (loadingState === "loading") {
         <AdminDashboardSkeleton />;
     }
