@@ -9,7 +9,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 
-const WineCard = ({ wine }: WineCardProps) => {
+const WineCard = ({ wine, isFeatured }: WineCardProps) => {
     return (
         <Card className="overflow-hidden transition-all hover:shadow-lg">
             <CardHeader className="p-0 flex items-center justify-center">
@@ -20,7 +20,7 @@ const WineCard = ({ wine }: WineCardProps) => {
                 <p className="text-sm text-muted-foreground line-clamp-2">{wine.description}</p>
                 <div className="flex items-center justify-start space-x-2">
                     <Badge variant="secondary">{wine.category.toUpperCase()}</Badge>
-                    {wine.isFeatured && (
+                    {isFeatured && (
                         <Badge variant="default">FEATURED</Badge>
                     )}
                     {!wine.isInStock && (
@@ -29,7 +29,7 @@ const WineCard = ({ wine }: WineCardProps) => {
                     <span className="font-bold">{priceConversor(wine.price)}</span>
                 </div>
             </CardContent>
-            {wine.isFeatured ? (
+            {isFeatured ? (
                 ""
             ) : (
                 <CardFooter className="p-4 pt-0 flex gap-2">
@@ -37,8 +37,8 @@ const WineCard = ({ wine }: WineCardProps) => {
                 </CardFooter>
             )}
 
-            <Link href={`/wines/${wine.wineId}`} passHref className="w-full">
-                <Button variant="secondary" className={`w-full ${wine.isFeatured ? "rounded-b-lg p-6" : ""}`}>
+            <Link href={`/wines/${wine.wineId}`} passHref>
+                <Button variant="secondary" className="p-6 w-full">
                     View Details
                 </Button>
             </Link>

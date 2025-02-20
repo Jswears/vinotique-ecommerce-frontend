@@ -228,7 +228,8 @@ const EditWineComponent = ({ wineId }: { wineId: string }) => {
                                 required
                             />
                         </div>
-                        <div className="space-y-2">
+                        {/* TODO: Implement image upload-update and preview */}
+                        {/* <div className="space-y-2">
                             <Label htmlFor="imageUrl">Image URL</Label>
                             <Input
                                 id="imageUrl"
@@ -238,7 +239,7 @@ const EditWineComponent = ({ wineId }: { wineId: string }) => {
                                 onChange={handleInputChange}
                                 required
                             />
-                        </div>
+                        </div> */}
                         <div className="flex items-center space-x-2">
                             <Checkbox
                                 id="isFeatured"

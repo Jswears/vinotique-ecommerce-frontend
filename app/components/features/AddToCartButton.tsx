@@ -11,6 +11,7 @@ interface WineProps {
         productName: string;
         price: number;
         imageUrl: string;
+        isInStock: boolean;
     }
     type?: "simple" | "default";
 }
@@ -45,7 +46,7 @@ const AddToCartButton: React.FC<WineProps> = ({ wine, type }) => {
     }
 
     return (
-        <Button variant={type === "simple" ? "secondary" : "default"} size={type === "simple" ? "sm" : undefined} className="w-full" onClick={handleAddToCart} >
+        <Button disabled={!wine.isInStock} variant={type === "simple" ? "secondary" : "default"} size={type === "simple" ? "sm" : undefined} className="w-full" onClick={handleAddToCart} >
             {loading ? (
                 <>
                     {type !== "simple" ? <><CheckCheckIcon /> Added to Cart</> : <Plus />}
