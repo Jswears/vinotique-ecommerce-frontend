@@ -8,6 +8,8 @@ import ImagePreview from "./components/ImagePreview"
 import { useWineForm } from "@/app/hooks/useWineForm"
 import SubmitButton from "./components/SubmitButton"
 import { useRouter } from "next/navigation"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
 
 export default function AdminPanel() {
     const { formData, previewUrl, isLoading, handleChange, handleKeyDown, handleSubmit, removeGrapeVarietal, error } = useWineForm()
@@ -22,9 +24,8 @@ export default function AdminPanel() {
         }
     }
 
-    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, checked } = e.target
-        handleChange({ target: { name, value: checked } } as any)
+    const handleCheckboxChange = (checked: boolean) => {
+        handleChange({ target: { name: "isFeatured", value: checked } } as any)
     };
 
     return (
@@ -89,8 +90,12 @@ export default function AdminPanel() {
                         </div>
 
                         <div className="flex items-center space-x-2">
-                            <input type="checkbox" name="isFeatured" checked={formData.isFeatured} onChange={handleCheckboxChange} />
-                            <label className="text-sm font-medium">Feature this wine</label>
+                            <Checkbox
+                                id="isFeatured"
+                                checked={formData.isFeatured}
+                                onCheckedChange={handleCheckboxChange}
+                            />
+                            <Label htmlFor="isFeatured">Featured</Label>
                         </div>
 
                         <ImagePreview previewUrl={previewUrl} />

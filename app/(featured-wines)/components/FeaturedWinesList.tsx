@@ -36,7 +36,7 @@ const FeaturedWinesList = () => {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 justify-center gap-6">
             {featuredWines.map((featuredWine) => (
-                <WineCard key={featuredWine.wineId} wine={featuredWine} />
+                <WineCard key={featuredWine.wineId} wine={featuredWine} isFeatured={true} />
             ))}
         </div>
     );
