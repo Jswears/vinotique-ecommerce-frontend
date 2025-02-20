@@ -56,8 +56,8 @@
                             "autoVerifiedAttributes": [
                               "email"
                             ],
-                            "emailVerificationMessage": "The verification code to your new account is {####}",
-                            "emailVerificationSubject": "Welcome to Vinotique! Confirm your email",
+                            "emailVerificationMessage": "Use this code to confirm your account: {####}",
+                            "emailVerificationSubject": "Welcome to Vinotique!🍷 Confirm your email",
                             "lambdaConfig": {
                               "postConfirmation": {
                                 "Fn::GetAtt": [
@@ -82,13 +82,9 @@
                                 "required": true
                               },
                               {
-                                "name": "username",
-                                "attributeDataType": "String",
-                                "stringAttributeConstraints": {
-                                  "minLength": "3",
-                                  "maxLength": "50"
-                                },
-                                "mutable": true
+                                "name": "preferred_username",
+                                "mutable": true,
+                                "required": false
                               }
                             ],
                             "smsVerificationMessage": "The verification code to your new account is {####}",
@@ -110,8 +106,8 @@
                             },
                             "verificationMessageTemplate": {
                               "defaultEmailOption": "CONFIRM_WITH_CODE",
-                              "emailMessage": "The verification code to your new account is {####}",
-                              "emailSubject": "Welcome to Vinotique! Confirm your email",
+                              "emailMessage": "Use this code to confirm your account: {####}",
+                              "emailSubject": "Welcome to Vinotique!🍷 Confirm your email",
                               "smsMessage": "The verification code to your new account is {####}"
                             }
                           }
@@ -811,7 +807,7 @@
                           "s3Bucket": {
                             "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
                           },
-                          "s3Key": "7bbb4fae938d7f03a169082bdefb89f71006669fc922d9be60f57b1f7ffcce51.zip"
+                          "s3Key": "23df3e5cebb2bc17281b8fff488251eeb103d6af117052543efd923b1ea9040f.zip"
                         },
                         "environment": {
                           "variables": {
@@ -1036,7 +1032,7 @@
                           {
                             "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
                           },
-                          "/e1e4d4c62d993c0fbe2da356873e98f7176a32f13ea8551a08d283e5beb289bd.json"
+                          "/f62e5c4b5b8c0c67f6b6aeedc924f33c06d5abbdeddde4532e3ecf864f899eb8.json"
                         ]
                       ]
                     }

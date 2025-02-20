@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { getCurrentUser, signOut } from "@aws-amplify/auth"
+import { signOut, fetchUserAttributes } from "@aws-amplify/auth"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
@@ -15,7 +15,7 @@ Amplify.configure(outputs)
 
 
 export default function AccountPage() {
-    const [user, setUser] = useState<any>(null)
+    const [userAttributes, setUserAttributes] = useState<any>(null);
     const router = useRouter()
     const { toast } = useToast()
     const { logout } = useAuthStore()
@@ -43,8 +43,9 @@ export default function AccountPage() {
     useEffect(() => {
         async function fetchUser() {
             try {
-                const currentUser = await getCurrentUser()
-                setUser(currentUser)
+                const userAttributes = await fetchUserAttributes()
+                setUserAttributes(userAttributes)
+                console.log("User attributes:", userAttributes)
 
                 await fetchCart()
             } catch (error) {
@@ -61,7 +62,7 @@ export default function AccountPage() {
         fetchUser()
     }, [router, toast])
 
-    if (!user) {
+    if (!userAttributes) {
         return <div>Loading...</div>
     }
 
@@ -73,10 +74,10 @@ export default function AccountPage() {
                 </CardHeader>
                 <CardContent>
                     <p>
-                        <strong>Username:</strong> {user.username}
+                        <strong>Username:</strong> {userAttributes.preferred_username}
                     </p>
                     <p>
-                        <strong>Email:</strong> {user.signInDetails.loginId}
+                        <strong>Email:</strong> {userAttributes.email}
                     </p>
                     <div className="flex flex-col gap-2 mt-4 ">
                         <Button onClick={() => router.push("/")}>

@@ -18,6 +18,7 @@ Amplify.configure(outputs)
 const SignUpPage = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [username, setUsername] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const { toast } = useToast()
     const router = useRouter()
@@ -28,13 +29,14 @@ const SignUpPage = () => {
         console.log("Sign-up form submitted")
 
         try {
-            console.log("Attempting to sign up with email:", email)
+            console.log("Attempting to sign up with username:", username, "and email:", email)
             const { isSignUpComplete, userId, nextStep } = await signUp({
                 username: email,
                 password,
                 options: {
                     userAttributes: {
                         email,
+                        preferred_username: username,
                     },
                 },
             })
@@ -88,6 +90,17 @@ const SignUpPage = () => {
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="username">Username</Label>
+                            <Input
+                                id="username"
+                                type="text"
+                                placeholder="yourusername"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                            />
+                        </div>
                         <div className="space-y-2">
                             <Label htmlFor="email">Email</Label>
                             <Input

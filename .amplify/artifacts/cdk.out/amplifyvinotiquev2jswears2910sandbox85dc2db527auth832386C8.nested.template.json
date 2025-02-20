@@ -18,8 +18,8 @@
     "AutoVerifiedAttributes": [
      "email"
     ],
-    "EmailVerificationMessage": "The verification code to your new account is {####}",
-    "EmailVerificationSubject": "Welcome to Vinotique! Confirm your email",
+    "EmailVerificationMessage": "Use this code to confirm your account: {####}",
+    "EmailVerificationSubject": "Welcome to Vinotique!🍷 Confirm your email",
     "LambdaConfig": {
      "PostConfirmation": {
       "Fn::GetAtt": [
@@ -44,13 +44,9 @@
       "Required": true
      },
      {
-      "AttributeDataType": "String",
       "Mutable": true,
-      "Name": "username",
-      "StringAttributeConstraints": {
-       "MaxLength": "50",
-       "MinLength": "3"
-      }
+      "Name": "preferred_username",
+      "Required": false
      }
     ],
     "SmsVerificationMessage": "The verification code to your new account is {####}",
@@ -72,8 +68,8 @@
     },
     "VerificationMessageTemplate": {
      "DefaultEmailOption": "CONFIRM_WITH_CODE",
-     "EmailMessage": "The verification code to your new account is {####}",
-     "EmailSubject": "Welcome to Vinotique! Confirm your email",
+     "EmailMessage": "Use this code to confirm your account: {####}",
+     "EmailSubject": "Welcome to Vinotique!🍷 Confirm your email",
      "SmsMessage": "The verification code to your new account is {####}"
     }
    },
@@ -576,7 +572,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "7bbb4fae938d7f03a169082bdefb89f71006669fc922d9be60f57b1f7ffcce51.zip"
+     "S3Key": "23df3e5cebb2bc17281b8fff488251eeb103d6af117052543efd923b1ea9040f.zip"
     },
     "Environment": {
      "Variables": {
@@ -620,7 +616,7 @@
    "DeletionPolicy": "Delete",
    "Metadata": {
     "aws:cdk:path": "amplify-vinotiquev2-jswears2910-sandbox-85dc2db527/auth/post-confirmation-lambda/Resource",
-    "aws:asset:path": "asset.7bbb4fae938d7f03a169082bdefb89f71006669fc922d9be60f57b1f7ffcce51",
+    "aws:asset:path": "asset.23df3e5cebb2bc17281b8fff488251eeb103d6af117052543efd923b1ea9040f",
     "aws:asset:is-bundled": true,
     "aws:asset:property": "Code"
    }

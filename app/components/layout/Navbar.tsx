@@ -24,7 +24,7 @@ const Navbar = () => {
         checkAdmin()
     }, [setLoading])
 
-    if (loading) {
+    if (loading && !isAdmin) {
         return null; // or a loading spinner
     }
 
