@@ -11,7 +11,7 @@ export const auth = defineAuth({
       verificationEmailStyle: "CODE",
       verificationEmailSubject: "Welcome to Vinotique!🍷 Confirm your email",
       verificationEmailBody: (createCode) =>
-        `Your verification code is ${createCode}`,
+        `Use this code to confirm your account: ${createCode()}`,
     },
   },
   userAttributes: {
@@ -19,11 +19,9 @@ export const auth = defineAuth({
       mutable: true,
       required: true,
     },
-    "custom:username": {
-      dataType: "String",
+    preferredUsername: {
       mutable: true,
-      maxLen: 50,
-      minLen: 3,
+      required: false,
     },
   },
   groups: ["ADMINS", "USERS"],
