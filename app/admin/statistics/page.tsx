@@ -34,7 +34,7 @@ export default function AdminStatisticsPage() {
             }
         };
         fetchData();
-    }, [fetchWines, fetchOrders]);
+    }, [fetchWines, fetchOrders, wines.length, orders.length]);
 
     if (isLoading) {
         return (

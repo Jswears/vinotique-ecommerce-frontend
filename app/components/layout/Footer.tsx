@@ -9,7 +9,7 @@ const Footer = () => {
 
     useEffect(() => {
         const checkAdmin = async () => {
-            const result = await isAuthenticatedAsAdmin()
+            const result = await isAuthenticatedAsAdmin() ?? false
             setIsAdmin(result)
         }
         checkAdmin()

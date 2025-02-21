@@ -21,7 +21,7 @@ export async function isAuthenticatedAsAdmin() {
       session?.tokens?.idToken?.payload?.["cognito:groups"]
     )
       ? session?.tokens?.idToken?.payload?.["cognito:groups"].filter(
-          (group: any) => typeof group === "string"
+          (group) => typeof group === "string"
         )
       : [];
 

@@ -1,6 +1,4 @@
 "use client";
-
-import * as React from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import type { Order, Wine } from "@/app/types";
 import {
@@ -16,6 +14,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useState } from "react";
 
 interface SalesByCategoryDashboardProps {
     orders: Order[];
@@ -37,12 +36,15 @@ const categoryTheme: Record<
 };
 
 export default function SalesByCategoryDashboard({ orders, wines }: SalesByCategoryDashboardProps) {
+    // Get unique categories from the wines.
+    const categories = Array.from(new Set(wines.map((wine) => wine.category)));
+
+    // State for the active category.
+    const [activeCategory, setActiveCategory] = useState<string>(categories[0]);
+
     if (orders.length === 0 || wines.length === 0) {
         return <p className="text-red-500">No orders or wines available.</p>;
     }
-
-    // Get unique categories from the wines.
-    const categories = Array.from(new Set(wines.map((wine) => wine.category)));
 
     // Compute total sales per category (converting cents to dollars).
     const categoryTotals: Record<string, number> = categories.reduce((acc, category) => {
@@ -71,9 +73,6 @@ export default function SalesByCategoryDashboard({ orders, wines }: SalesByCateg
     const overallMonthlyData = Object.entries(overallMonthlySales)
         .map(([month, sales]) => ({ month, sales: sales / 100 }))
         .sort((a, b) => a.month.localeCompare(b.month));
-
-    // State for the active category.
-    const [activeCategory, setActiveCategory] = React.useState<string>(categories[0]);
 
     // Compute monthly sales for the selected category.
     const monthlySalesRaw: Record<string, number> = {};

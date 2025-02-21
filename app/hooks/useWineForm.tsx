@@ -96,7 +96,7 @@ export const useWineForm = () => {
 
     const getPresignedUrlForImage = async (fileName: string, fileType: string) => {
         try {
-            const response = await api.post("/wines/presignedUrl", { fileName, fileType });
+            const response = await api.post<{ presignedUrl: string }>("/wines/presignedUrl", { fileName, fileType });
             return response.presignedUrl;
         } catch (error) {
             throw error;
@@ -155,7 +155,7 @@ export const useWineForm = () => {
             const publicUrl = `${CLOUDFRONT_URL || "https://example"}/${fileName}`;
 
             await submitWineData(publicUrl);
-        } catch (error: any) {
+        } catch (error: unknown) { // Specify the type as unknown
             if (error instanceof z.ZodError) {
                 setError(error.errors.map(err => err.message).join(", "));
             } else {

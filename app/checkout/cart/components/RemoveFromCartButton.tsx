@@ -8,7 +8,7 @@ const RemoveFromCartButton = ({ wine, type }: RemoveFromCartButtonProps) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const { removeFromCart, fetchCart } = useCartStore();
+    const { removeFromCart } = useCartStore();
 
     const handleRemoveFromCart = async () => {
         setLoading(true);

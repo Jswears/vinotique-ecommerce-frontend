@@ -1,9 +1,7 @@
-import { Wine } from "@/app/types";
-import { AddToCartButtonProps } from "@/app/types/components";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import useCartStore from "@/stores/cartStore";
-import { Minus, Trash2, } from "lucide-react";
+import { Trash2, } from "lucide-react";
 import { useState } from "react";
 
 const ClearCartButton = () => {

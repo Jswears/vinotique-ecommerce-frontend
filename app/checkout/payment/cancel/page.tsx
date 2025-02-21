@@ -15,7 +15,7 @@ const PaymentCancelPage = () => {
                     </div>
                     <CardTitle className="text-2xl font-bold text-center">Payment Cancelled</CardTitle>
                     <CardDescription className="text-center">
-                        Your payment was not processed. Don't worry, your cart items are still saved.
+                        Your payment was not processed. Don&#39;t worry, your cart items are still saved.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>

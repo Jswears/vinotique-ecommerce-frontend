@@ -1,32 +1,46 @@
-import { api } from "@/app/lib/api";
-import { Wine } from "@/app/types";
-import { Metadata } from "next";
-import WineDetailsComponent from "./components/WineDetailsComponent";
-import { WineDetailsPageProps } from "@/app/types/components";
+import type { Metadata, ResolvingMetadata } from "next"
+import { api } from "@/app/lib/api"
+import type { Wine } from "@/app/types"
+import WineDetailsComponent from "./components/WineDetailsComponent"
 
+type Props = {
+    params: Promise<{ wineId: string }>
+}
 
-export async function generateMetadata(props: WineDetailsPageProps): Promise<Metadata> {
-    const params = await props.params;
+export async function generateMetadata(
+    { params }: Props,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const { wineId } = await params
+
     try {
-        const { wineId } = params;
-        const wine = await api.get(`/wines/${wineId}`) as Wine;
+        const wine = (await api.get(`/wines/${wineId}`)) as Wine
+        const previousImages = (await parent).openGraph?.images || []
+
         return {
             title: `${wine.vintage} ${wine.productName} - ${wine.producer}`,
-            description: `Details about ${wine.productName}`
+            description: `Details about ${wine.productName}`,
+            openGraph: {
+                images: [wine.imageUrl, ...previousImages],
+            },
         }
-    } catch (error) {
+    } catch {
         return {
             title: "Wine Details",
-            description: "Wine details"
+            description: "Wine details",
         }
     }
 }
 
-const WineDetailsPage = async ({ params }: WineDetailsPageProps) => {
-    const { wineId } = await params;
+const WineDetailsPage = async ({ params }: Props) => {
+    const { wineId } = await params
+
     return (
-        <WineDetailsComponent wineId={wineId} />
+        <div className="container mx-auto px-4 py-8">
+            <h1 className="text-3xl font-bold mb-6">Edit Wine</h1>
+            <WineDetailsComponent wineId={wineId} />
+        </div>
     )
 }
 
-export default WineDetailsPage;
+export default WineDetailsPage

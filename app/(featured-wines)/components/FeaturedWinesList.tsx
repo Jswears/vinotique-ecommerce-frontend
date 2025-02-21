@@ -1,13 +1,9 @@
 'use client';
-
 import WineAlert from "@/app/components/ui/WineAlertComponent";
-import { api } from "@/app/lib/api";
-import { Wine } from "@/app/types";
 import WineCard from "@/app/wines/components/WineCard";
 import WineCardSkeleton from "@/app/wines/components/WinesCardSkeleton";
-import { Button } from "@/components/ui/button";
 import { useWinesStore } from "@/stores/winesStore";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const FeaturedWinesList = () => {
 
