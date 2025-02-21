@@ -87,7 +87,7 @@ export default function OrdersList() {
                                             <TableCell>{order.orderId}</TableCell>
                                             <TableCell>{order.customer}</TableCell>
                                             <TableCell>{formatDate(order.createdAt)}</TableCell>
-                                            <TableCell>€{order.totalAmount}</TableCell>
+                                            <TableCell>{priceConversor(order.totalAmount)}</TableCell>
                                             <TableCell>
                                                 <Badge variant={getStatusVariant(order.orderStatus)}>
                                                     {order.orderStatus}
