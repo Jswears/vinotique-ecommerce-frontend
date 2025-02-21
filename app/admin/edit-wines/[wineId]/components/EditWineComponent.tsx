@@ -14,10 +14,33 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
+import { Wine } from "@/app/types"
 
-const EditWineComponent = ({ wineId }: { wineId: string }) => {
+interface EditWineComponentProps {
+    wineId: string
+}
+
+interface FormData {
+    productName: string
+    producer: string
+    description: string
+    category: string
+    region: string
+    country: string
+    grapeVarietal: string[]
+    vintage: string
+    alcoholContent: string
+    sizeMl: string
+    price: string
+    stockQuantity: string
+    imageUrl: string
+    isFeatured: boolean
+    wineId?: string
+}
+
+const EditWineComponent: React.FC<EditWineComponentProps> = ({ wineId }) => {
     const { wines, fetchWine, fetchWines } = useWinesStore()
-    const [formData, setFormData] = useState<any>({
+    const [formData, setFormData] = useState<FormData>({
         productName: "",
         producer: "",
         description: "",
@@ -33,7 +56,7 @@ const EditWineComponent = ({ wineId }: { wineId: string }) => {
         imageUrl: "",
         isFeatured: false,
     })
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const router = useRouter()
     const { toast } = useToast()
 
@@ -42,7 +65,7 @@ const EditWineComponent = ({ wineId }: { wineId: string }) => {
             if (wines.length === 0) {
                 await fetchWine(wineId)
             }
-            const wine = wines.find((wine) => wine.wineId === wineId)
+            const wine = wines.find((wine: Wine) => wine.wineId === wineId)
             if (wine) {
                 setFormData({
                     productName: wine.productName || "",
@@ -52,11 +75,11 @@ const EditWineComponent = ({ wineId }: { wineId: string }) => {
                     region: wine.region || "",
                     country: wine.country || "",
                     grapeVarietal: wine.grapeVarietal || [],
-                    vintage: wine.vintage || "",
-                    alcoholContent: wine.alcoholContent || "",
-                    sizeMl: wine.sizeMl || "",
-                    price: wine.price || "",
-                    stockQuantity: wine.stockQuantity || "",
+                    vintage: wine.vintage?.toString() || "",
+                    alcoholContent: wine.alcoholContent?.toString() || "",
+                    sizeMl: wine.sizeMl?.toString() || "",
+                    price: wine.price?.toString() || "",
+                    stockQuantity: wine.stockQuantity?.toString() || "",
                     imageUrl: wine.imageUrl || "",
                     isFeatured: wine.isFeatured || false,
                     wineId: wine.wineId, // Ensure wineId is set
@@ -70,15 +93,15 @@ const EditWineComponent = ({ wineId }: { wineId: string }) => {
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target
-        setFormData((prev: any) => ({ ...prev, [name]: value }))
+        setFormData((prev: FormData) => ({ ...prev, [name]: value }))
     }
 
     const handleSelectChange = (name: string) => (value: string) => {
-        setFormData((prev: any) => ({ ...prev, [name]: value }))
+        setFormData((prev: FormData) => ({ ...prev, [name]: value }))
     }
 
     const handleCheckboxChange = (name: string) => (checked: boolean) => {
-        setFormData((prev: any) => ({ ...prev, [name]: checked }))
+        setFormData((prev: FormData) => ({ ...prev, [name]: checked }))
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -168,7 +191,7 @@ const EditWineComponent = ({ wineId }: { wineId: string }) => {
                                 id="grapeVarietal"
                                 name="grapeVarietal"
                                 value={formData.grapeVarietal.join(", ")}
-                                onChange={(e) => setFormData((prev: any) => ({ ...prev, grapeVarietal: e.target.value.split(", ") }))}
+                                onChange={(e) => setFormData((prev: FormData) => ({ ...prev, grapeVarietal: e.target.value.split(", ") }))}
                                 required
                             />
                         </div>
@@ -213,7 +236,7 @@ const EditWineComponent = ({ wineId }: { wineId: string }) => {
                                 name="price"
                                 type="number"
                                 value={formData.price}
-                                onChange={(e) => setFormData((prev: any) => ({ ...prev, price: Number(e.target.value) }))}
+                                onChange={(e) => setFormData((prev: FormData) => ({ ...prev, price: e.target.value }))}
                                 required
                             />
                         </div>
@@ -224,7 +247,7 @@ const EditWineComponent = ({ wineId }: { wineId: string }) => {
                                 name="stockQuantity"
                                 type="number"
                                 value={formData.stockQuantity}
-                                onChange={(e) => setFormData((prev: any) => ({ ...prev, stockQuantity: Number(e.target.value) }))}
+                                onChange={(e) => setFormData((prev: FormData) => ({ ...prev, stockQuantity: e.target.value }))}
                                 required
                             />
                         </div>

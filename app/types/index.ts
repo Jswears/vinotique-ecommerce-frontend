@@ -63,6 +63,7 @@ export interface CartItem {
   productName: string;
   price: number;
   imageUrl: string;
+  isInStock: boolean;
 }
 // Type for the cart item sent in POST /cart
 export interface CartPostItem {

@@ -25,7 +25,7 @@ export default function AdminPanel() {
     }
 
     const handleCheckboxChange = (checked: boolean) => {
-        handleChange({ target: { name: "isFeatured", value: checked } } as any)
+        handleChange({ target: { name: "isFeatured", value: checked } } as unknown as React.ChangeEvent<HTMLInputElement>)
     };
 
     return (
@@ -55,7 +55,7 @@ export default function AdminPanel() {
                             label="Select a category"
                             name="category"
                             value={formData.category || ""}
-                            onChange={(value) => handleChange({ target: { name: "category", value } } as any)}
+                            onChange={(value) => handleChange({ target: { name: "category", value } } as unknown as React.ChangeEvent<HTMLSelectElement>)}
                             options={[
                                 { value: "Red", label: "Red" },
                                 { value: "White", label: "White" },

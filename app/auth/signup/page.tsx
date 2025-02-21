@@ -11,7 +11,6 @@ import { useToast } from "@/hooks/use-toast"
 import { Loader2 } from "lucide-react"
 import outputs from "../../../amplify_outputs.json"
 import { Amplify } from "aws-amplify"
-import { useAuthStore } from "@/stores/authStore"
 
 Amplify.configure(outputs)
 

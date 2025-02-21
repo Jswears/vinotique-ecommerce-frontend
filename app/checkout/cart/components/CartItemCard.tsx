@@ -1,10 +1,7 @@
 import AddToCartButton from "@/app/components/features/AddToCartButton";
 import { CartItem } from "@/app/types";
 import { priceConversor } from "@/app/utils/priceConversor";
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import RemoveFromCartButton from "./RemoveFromCartButton";
-import useCartStore from "@/stores/cartStore";
 
 const CartItemCard = ({ cartItem }: { cartItem: CartItem }) => {
     return (

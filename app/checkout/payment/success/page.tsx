@@ -10,7 +10,7 @@ import useCartStore from "@/stores/cartStore"
 
 const PaymentSuccessPage = () => {
     const router = useRouter()
-    const { cartItems, clearCart, clearCartLocally, fetchCart } = useCartStore()
+    const { cartItems, clearCart, clearCartLocally } = useCartStore()
     const { toast } = useToast()
 
     useEffect(() => {

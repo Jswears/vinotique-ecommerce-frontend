@@ -34,6 +34,7 @@ export default function LoginPage() {
             if (isSignedIn) {
                 console.log("Login complete")
                 const isAdmin = await isAuthenticatedAsAdmin()
+                console.log(isAdmin)
                 toast({
                     title: "Login successful",
                     description: "You have been successfully logged in.",
@@ -110,7 +111,7 @@ export default function LoginPage() {
                 </CardContent>
                 <CardFooter className="flex justify-center">
                     <p className="text-sm text-muted-foreground">
-                        Don't have an account?{" "}
+                        Don&apos;t have an account?{" "}
                         <a href="/auth/signup" className="text-primary hover:underline">
                             Sign up
                         </a>

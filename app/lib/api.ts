@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosResponse } from "axios";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_BASE_API_URL;
 
@@ -11,55 +11,75 @@ const axiosClient: AxiosInstance = axios.create({
 });
 
 export const api = {
-  get: async (url: string, params = {}) => {
+  get: async <T>(url: string, params = {}): Promise<T | null> => {
     try {
-      const response = await axiosClient.get(url, { params });
+      const response: AxiosResponse<T> = await axiosClient.get(url, { params });
       return response.data;
-    } catch (error: any) {
-      if (error.response && error.response.status === 404) {
+    } catch (error) {
+      if (
+        axios.isAxiosError(error) &&
+        error.response &&
+        error.response.status === 404
+      ) {
         return null; // Return null if the resource is not found
       }
       console.error(
         "Error GET:",
-        error.response ? error.response.data : error.message
+        axios.isAxiosError(error) && error.response
+          ? error.response.data
+          : error
       );
-      throw error.response ? error.response.data : error;
+      throw axios.isAxiosError(error) && error.response
+        ? error.response.data
+        : error;
     }
   },
-  post: async (url: string, data = {}) => {
+  post: async <T>(url: string, data = {}): Promise<T> => {
     try {
-      const response = await axiosClient.post(url, data);
+      const response: AxiosResponse<T> = await axiosClient.post(url, data);
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
       console.error(
         "Error POST:",
-        error.response ? error.response.data : error.message
+        axios.isAxiosError(error) && error.response
+          ? error.response.data
+          : error
       );
-      throw error.response ? error.response.data : error;
+      throw axios.isAxiosError(error) && error.response
+        ? error.response.data
+        : error;
     }
   },
-  put: async (url: string, data = {}) => {
+  put: async <T>(url: string, data = {}): Promise<T> => {
     try {
-      const response = await axiosClient.put(url, data);
+      const response: AxiosResponse<T> = await axiosClient.put(url, data);
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
       console.error(
         "Error PUT:",
-        error.response ? error.response.data : error.message
+        axios.isAxiosError(error) && error.response
+          ? error.response.data
+          : error
       );
-      throw error.response ? error.response.data : error;
+      throw axios.isAxiosError(error) && error.response
+        ? error.response.data
+        : error;
     }
   },
-  delete: async (url: string) => {
+  delete: async <T>(url: string): Promise<T> => {
     try {
-      const response = await axiosClient.delete(url);
+      const response: AxiosResponse<T> = await axiosClient.delete(url);
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
       console.error(
         "Error DELETE:",
-        error.response ? error.response.data : error.message
+        axios.isAxiosError(error) && error.response
+          ? error.response.data
+          : error
       );
-      throw error.response ? error.response.data : error;
+      throw axios.isAxiosError(error) && error.response
+        ? error.response.data
+        : error;
     }
   },
 };

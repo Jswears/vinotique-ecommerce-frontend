@@ -43,7 +43,7 @@ export default function ConfirmEmailPage() {
             }
         } catch (error) {
             console.error("Error confirming sign up:", error)
-            if (error instanceof Error && (error as any).name === "ExpiredCodeException") {
+            if (error instanceof Error && (error as { name: string }).name === "ExpiredCodeException") {
                 toast({
                     title: "Code Expired",
                     description: "The confirmation code has expired. Please request a new one.",
@@ -131,7 +131,7 @@ export default function ConfirmEmailPage() {
                 </CardContent>
                 <CardFooter className="flex justify-center">
                     <p className="text-sm text-muted-foreground">
-                        Didn't receive the code?{" "}
+                        Didn&apos;t receive the code?{" "}
                         <Link href="#" onClick={handleResendCode} className="text-primary hover:underline">
                             Resend code
                         </Link>

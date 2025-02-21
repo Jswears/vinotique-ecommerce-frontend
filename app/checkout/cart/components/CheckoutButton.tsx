@@ -20,7 +20,7 @@ const CheckoutButton = ({ cartItems }: { cartItems: CartItem[] }) => {
             //     wineId: item.wineId,
             // }));
 
-            const data = await api.post("/payment", {
+            const data: { sessionUrl: string } = await api.post("/payment", {
                 cartItems,
                 successUrl: `${window.location.origin}/checkout/payment/success`,
                 cancelUrl: `${window.location.origin}/checkout/payment/cancel`,

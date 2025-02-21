@@ -1,8 +1,6 @@
-import { CartItem, Wine } from "@/app/types";
-import { AddToCartButtonProps } from "@/app/types/components";
 import { Button } from "@/components/ui/button";
 import useCartStore from "@/stores/cartStore";
-import { Check, CheckCheckIcon, Plus, ShoppingCart } from "lucide-react";
+import { CheckCheckIcon, Plus, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 
 interface WineProps {

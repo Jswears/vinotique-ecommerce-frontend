@@ -13,9 +13,13 @@ import { useAuthStore } from "@/stores/authStore"
 import useCartStore from "@/stores/cartStore"
 Amplify.configure(outputs)
 
+type UserAttributesType = {
+    preferred_username: string
+    email: string
+}
 
 export default function AccountPage() {
-    const [userAttributes, setUserAttributes] = useState<any>(null);
+    const [userAttributes, setUserAttributes] = useState<UserAttributesType | null>(null);
     const router = useRouter()
     const { toast } = useToast()
     const { logout } = useAuthStore()
@@ -44,7 +48,10 @@ export default function AccountPage() {
         async function fetchUser() {
             try {
                 const userAttributes = await fetchUserAttributes()
-                setUserAttributes(userAttributes)
+                setUserAttributes({
+                    preferred_username: userAttributes.preferred_username || "",
+                    email: userAttributes.email || ""
+                })
                 console.log("User attributes:", userAttributes)
 
                 await fetchCart()
@@ -60,7 +67,7 @@ export default function AccountPage() {
         }
 
         fetchUser()
-    }, [router, toast])
+    }, [fetchCart, router, toast])
 
     if (!userAttributes) {
         return <div>Loading...</div>

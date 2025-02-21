@@ -24,8 +24,12 @@ const WineDetailsComponent = ({ wineId }: WineDetailsComponentProps) => {
             try {
                 const data = await api.get(`/wines/${wineId}`) as Wine;
                 setWine(data)
-            } catch (error: any) {
-                setError(error.message)
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    setError(error.message);
+                } else {
+                    setError('An unknown error occurred');
+                }
             } finally {
                 setLoading(false)
             }
