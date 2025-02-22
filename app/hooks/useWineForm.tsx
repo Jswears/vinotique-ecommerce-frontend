@@ -54,14 +54,12 @@ export const useWineForm = () => {
         if (type === "file") {
             const fileInput = e.target as HTMLInputElement;
             const file = fileInput.files?.[0] || null;
-            setFormData((prev) => ({ ...prev, [name]: file }));
-            if (file) {
+            if (file && typeof window !== "undefined") {
                 const reader = new FileReader();
                 reader.onloadend = () => setPreviewUrl(reader.result as string);
                 reader.readAsDataURL(file);
-            } else {
-                setPreviewUrl(null);
             }
+            setFormData((prev) => ({ ...prev, [name]: file }));
         } else if (type === "number") {
             setFormData((prev) => ({ ...prev, [name]: Number.parseFloat(value) }));
         } else if (type === "checkbox") {
