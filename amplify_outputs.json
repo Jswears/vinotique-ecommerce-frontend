@@ -5,15 +5,9 @@
     "user_pool_client_id": "6t158mhhkciu1uvdis1a5s5ju1",
     "identity_pool_id": "eu-central-1:e787011c-3cd4-4b43-8f84-ce2ee9986bca",
     "mfa_methods": [],
-    "standard_required_attributes": [
-      "email"
-    ],
-    "username_attributes": [
-      "email"
-    ],
-    "user_verification_types": [
-      "email"
-    ],
+    "standard_required_attributes": ["email"],
+    "username_attributes": ["email"],
+    "user_verification_types": ["email"],
     "groups": [
       {
         "ADMINS": {

@@ -9,10 +9,6 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { Loader2 } from "lucide-react"
-import outputs from "../../../amplify_outputs.json"
-import { Amplify } from "aws-amplify"
-
-Amplify.configure(outputs)
 
 const SignUpPage = () => {
     const [email, setEmail] = useState("")

@@ -6,29 +6,18 @@ import { usePathname } from "next/navigation"
 import { CartIcon } from "@/app/components/layout/CartIcon"
 import { NavLink } from "./NavLink"
 import { ThemeToggle } from "./ThemeToggler"
-import { isAuthenticatedAsAdmin } from "@/app/utils/isAuthenticated"
-import { useEffect } from "react"
 import { useAuthStore } from "@/stores/authStore"
+import { useEffect } from "react"
 
 const Navbar = () => {
     const pathname = usePathname()
-    const isAdmin = useAuthStore((state) => state.isAuthenticatedAsAdmin)
-    const loading = useAuthStore((state) => state.loading)
-    const setLoading = useAuthStore((state) => state.setLoading)
+    const { user, initAuth } = useAuthStore()
 
     useEffect(() => {
-        const checkAdmin = async () => {
-            await isAuthenticatedAsAdmin()
-            setLoading(false)
-        }
-        checkAdmin()
-    }, [setLoading])
+        initAuth();
+    }, [initAuth]);
 
-    if (loading && !isAdmin) {
-        return null; // or a loading spinner
-    }
-
-    if (isAdmin && pathname.startsWith("/admin")) {
+    if (user?.isAdmin && pathname.startsWith("/admin")) {
         return null;
     }
 
@@ -48,6 +37,11 @@ const Navbar = () => {
                             <NavLink href="/wines" active={pathname.startsWith("/wines")}>
                                 Wines
                             </NavLink>
+                            {user?.isAdmin && (
+                                <NavLink href="/admin" active={pathname.startsWith("/admin")}>
+                                    Admin
+                                </NavLink>
+                            )}
                         </div>
                     </div>
                     <div className="flex items-center space-x-4">

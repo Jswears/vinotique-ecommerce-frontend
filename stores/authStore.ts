@@ -1,46 +1,53 @@
 import { create } from "zustand";
-import useCartStore from "@/stores/cartStore";
-import { fetchAuthSession } from "aws-amplify/auth";
+import {
+  fetchAuthSession,
+  fetchUserAttributes,
+  getCurrentUser,
+  signOut,
+} from "aws-amplify/auth";
 
 interface AuthStore {
-  isAuthenticated: boolean;
-  isAuthenticatedAsAdmin: boolean;
-  setIsAuthenticated: (isAuthenticated: boolean) => void;
-  setIsAuthenticatedAsAdmin: (isAuthenticatedAsAdmin: boolean) => void;
-  userId: string;
-  getUserId: () => string;
-  setUserId: (userId: string) => void;
-  logout: () => void; // New logout action
-  loading: boolean;
-  setLoading: (loading: boolean) => void;
+  user?: Record<string, any>;
+  fetchUser: () => Promise<void>;
+  logout: () => Promise<void>;
+  initAuth: () => void;
 }
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
-  isAuthenticated: false,
-  isAuthenticatedAsAdmin: false,
-  userId: "",
-  loading: true,
-  setIsAuthenticated: (isAuthenticated) => set({ isAuthenticated }),
-  setIsAuthenticatedAsAdmin: (isAuthenticatedAsAdmin) =>
-    set({ isAuthenticatedAsAdmin }),
-  setUserId: (userId) => set({ userId }),
-  setLoading: (loading) => set({ loading }),
-
-  // Helper function to get the userId
-  getUserId: (): string => get().userId || "",
-
+  user: undefined,
+  fetchUser: async () => {
+    try {
+      const session = await fetchAuthSession();
+      if (!session.tokens) {
+        return;
+      }
+      const rawToken = session.tokens.accessToken.payload;
+      const user = {
+        ...(await getCurrentUser()),
+        ...(await fetchUserAttributes()),
+        isAdmin: false,
+        accessToken: rawToken,
+      };
+      console.log(user);
+      const groups = session.tokens.accessToken.payload["cognito:groups"];
+      // @ts-ignore
+      user.isAdmin = Boolean(groups && groups.includes("ADMINS"));
+      set({ user });
+    } catch (error) {
+      console.error("Error fetching user", error);
+    }
+  },
   logout: async () => {
-    set({ isAuthenticated: false, userId: "", loading: true });
-
-    //clear cart locally
-    useCartStore.getState().clearCartLocally();
-    // Get new guest identityId after logout
-    const session = await fetchAuthSession();
-    const identityId = session?.identityId;
-
-    if (typeof identityId === "string") {
-      set({ userId: identityId }); // ✅ Set guest user identity
-      await useCartStore.getState().fetchCart(); // ✅ Refresh cart for guest
+    try {
+      await signOut();
+      set({ user: undefined });
+    } catch (error) {
+      console.error("Error logging out", error);
+    }
+  },
+  initAuth: () => {
+    if (!get().user) {
+      get().fetchUser();
     }
   },
 }));
