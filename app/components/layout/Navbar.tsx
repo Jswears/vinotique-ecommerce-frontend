@@ -1,19 +1,20 @@
-"use client"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Wine, User } from "lucide-react"
-import { usePathname } from "next/navigation"
-import { CartIcon } from "@/app/components/layout/CartIcon"
-import { NavLink } from "./NavLink"
-import { ThemeToggle } from "./ThemeToggler"
-import { useAuthStore } from "@/stores/authStore"
-import { useEffect } from "react"
+"use client";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Wine, User } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { CartIcon } from "@/app/components/layout/CartIcon";
+import { NavLink } from "./NavLink";
+import { ThemeToggle } from "./ThemeToggler";
+import { useAuthStore } from "@/stores/authStore";
+import { useEffect, useMemo } from "react";
 
 const Navbar = () => {
-    const pathname = usePathname()
-    const { user, initAuth } = useAuthStore()
+    const pathname = usePathname();
+    const { user, initAuth } = useAuthStore();
 
-    useEffect(() => {
+    // Memoize auth initialization to prevent unnecessary re-renders
+    useMemo(() => {
         initAuth();
     }, [initAuth]);
 
@@ -22,28 +23,33 @@ const Navbar = () => {
     }
 
     return (
-        <header className="border-b sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-16">
-                    <div className="flex items-center">
-                        <Link href="/" className="flex-shrink-0 flex items-center">
+        <header className="border-b sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-md">
+            <nav className="container mx-auto px-6 py-4">
+                <div className="flex justify-between items-center">
+                    {/* Logo */}
+                    <div className="flex items-center space-x-3">
+                        <Link href="/" className="flex items-center hover:text-primary">
                             <Wine className="h-8 w-8 text-primary" />
                             <span className="ml-2 text-xl font-bold text-primary">Vinotique.</span>
                         </Link>
-                        <div className="hidden sm:ml-6 sm:flex sm:space-x-4">
-                            <NavLink href="/" active={pathname === "/"}>
-                                Home
-                            </NavLink>
-                            <NavLink href="/wines" active={pathname.startsWith("/wines")}>
-                                Wines
-                            </NavLink>
-                            {user?.isAdmin && (
-                                <NavLink href="/admin" active={pathname.startsWith("/admin")}>
-                                    Admin
-                                </NavLink>
-                            )}
-                        </div>
                     </div>
+
+                    {/* Navigation Links */}
+                    <div className="hidden sm:flex sm:space-x-6">
+                        <NavLink href="/" active={pathname === "/"}>
+                            Home
+                        </NavLink>
+                        <NavLink href="/wines" active={pathname.startsWith("/wines")}>
+                            Wines
+                        </NavLink>
+                        {user?.isAdmin && (
+                            <NavLink href="/admin" active={pathname.startsWith("/admin")}>
+                                Admin
+                            </NavLink>
+                        )}
+                    </div>
+
+                    {/* Right-side Controls */}
                     <div className="flex items-center space-x-4">
                         <ThemeToggle />
                         <CartIcon />
@@ -57,8 +63,7 @@ const Navbar = () => {
                 </div>
             </nav>
         </header>
-    )
-}
+    );
+};
 
-export default Navbar
-
+export default Navbar;
