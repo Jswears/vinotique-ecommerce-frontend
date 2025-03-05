@@ -9,11 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { Loader2 } from "lucide-react"
-import { Amplify } from "aws-amplify"
-
-import outputs from "../../../amplify_outputs.json"
-import { isAuthenticatedAsAdmin } from "@/app/utils/isAuthenticated"
-Amplify.configure(outputs)
+import { useAuthStore } from "@/stores/authStore"
 
 
 export default function LoginPage() {
@@ -22,6 +18,8 @@ export default function LoginPage() {
     const [isLoading, setIsLoading] = useState(false)
     const { toast } = useToast()
     const router = useRouter()
+
+    const { fetchUser, user } = useAuthStore()
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -32,15 +30,15 @@ export default function LoginPage() {
             console.log("Login response:", { isSignedIn, nextStep })
 
             if (isSignedIn) {
+                await fetchUser()
                 console.log("Login complete")
-                const isAdmin = await isAuthenticatedAsAdmin()
-                console.log(isAdmin)
+                console.log(user?.isAdmin)
                 toast({
                     title: "Login successful",
                     description: "You have been successfully logged in.",
                 })
 
-                if (isAdmin) {
+                if (user?.isAdmin) {
                     router.push("/admin")
                 } else {
                     router.push("/")

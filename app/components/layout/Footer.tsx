@@ -1,21 +1,14 @@
 'use client';
-import { isAuthenticatedAsAdmin } from "@/app/utils/isAuthenticated"
+import { useAuthStore } from "@/stores/authStore";
 import { usePathname } from "next/navigation"
-import { useEffect, useState } from "react"
 
 const Footer = () => {
     const pathname = usePathname()
-    const [isAdmin, setIsAdmin] = useState(false)
 
-    useEffect(() => {
-        const checkAdmin = async () => {
-            const result = await isAuthenticatedAsAdmin() ?? false
-            setIsAdmin(result)
-        }
-        checkAdmin()
-    }, [])
+    const { user } = useAuthStore()
 
-    if (isAdmin && pathname.startsWith("/admin")) {
+
+    if (user?.isAdmin && pathname.startsWith("/admin")) {
         return null;
     }
     return (

@@ -6,13 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
-import { Amplify } from "aws-amplify"
-
-import outputs from "@/amplify_outputs.json"
-import { useAuthStore } from "@/stores/authStore"
 import useCartStore from "@/stores/cartStore"
-Amplify.configure(outputs)
-
+import LogoutButton from "./components/LogoutButton"
 type UserAttributesType = {
     preferred_username: string
     email: string
@@ -22,34 +17,15 @@ export default function AccountPage() {
     const [userAttributes, setUserAttributes] = useState<UserAttributesType | null>(null);
     const router = useRouter()
     const { toast } = useToast()
-    const { logout } = useAuthStore()
     const { fetchCart } = useCartStore();
 
-    const handleSignOut = async () => {
-        try {
-            await signOut()
-            logout() // Reset authentication state
-            toast({
-                title: "Signed out",
-                description: "You have been signed out successfully.",
-            })
-            router.push("/")
-        } catch (error) {
-            console.error("Error signing out:", error)
-            toast({
-                title: "Error signing out",
-                description: "An error occurred while signing out. Please try again.",
-                variant: "destructive",
-            })
-        }
-    }
 
     useEffect(() => {
         async function fetchUser() {
             try {
                 const userAttributes = await fetchUserAttributes()
                 setUserAttributes({
-                    preferred_username: userAttributes.preferred_username || "",
+                    preferred_username: userAttributes.preferred_username || "None",
                     email: userAttributes.email || ""
                 })
                 console.log("User attributes:", userAttributes)
@@ -62,7 +38,6 @@ export default function AccountPage() {
                     description: "Please log in to view this page.",
                     variant: "destructive",
                 })
-                router.push("/login")
             }
         }
 
@@ -72,6 +47,7 @@ export default function AccountPage() {
     if (!userAttributes) {
         return <div>Loading...</div>
     }
+
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -90,9 +66,8 @@ export default function AccountPage() {
                         <Button onClick={() => router.push("/")}>
                             Back to Home
                         </Button>
-                        <Button variant="destructive" onClick={handleSignOut}>
-                            Sign Out
-                        </Button>
+                        <LogoutButton />
+
                     </div>
                 </CardContent>
             </Card>

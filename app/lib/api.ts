@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/stores/authStore";
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_BASE_API_URL;
@@ -7,6 +8,7 @@ const axiosClient: AxiosInstance = axios.create({
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
+    Authorization: `Bearer `,
   },
 });
 

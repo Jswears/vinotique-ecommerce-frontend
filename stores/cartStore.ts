@@ -20,6 +20,8 @@ interface CartStoreState {
   transferCart: (guestUserId: string, authUserId: string) => Promise<void>;
 }
 
+const userId = useAuthStore.getState().userId;
+
 const useCartStore = create<CartStoreState>((set, get) => ({
   // Initial state
   cartItems: [],
@@ -30,7 +32,7 @@ const useCartStore = create<CartStoreState>((set, get) => ({
   // Fetch the cart from the backend
   fetchCart: async () => {
     set({ loading: true });
-    const userId = useAuthStore.getState().getUserId();
+
     if (!userId) {
       set({ loading: false, cartItems: [], totalPrice: 0, error: null });
       return;
@@ -55,7 +57,6 @@ const useCartStore = create<CartStoreState>((set, get) => ({
   // Add an item to the cart and refresh the cart state
   addToCart: async (wineId: string, quantity: number) => {
     set({ loading: true });
-    const userId = useAuthStore.getState().getUserId();
     try {
       const payload = {
         cartItems: [
@@ -84,7 +85,6 @@ const useCartStore = create<CartStoreState>((set, get) => ({
   // Remove an item to the cart and refresh the cart state
   removeFromCart: async (wineId: string, quantity: number) => {
     set({ loading: true });
-    const userId = useAuthStore.getState().getUserId();
     try {
       const payload = {
         cartItems: [
@@ -117,7 +117,6 @@ const useCartStore = create<CartStoreState>((set, get) => ({
   // Clear cart and refresh the cart state
   clearCart: async () => {
     set({ loading: true });
-    const userId = useAuthStore.getState().getUserId();
     try {
       await api.post(`/cart/${userId}`, {
         cartItems: [{ action: "clear" }],

@@ -1,7 +1,7 @@
 import { api } from "@/app/lib/api";
 import { Wine, WinesResponse } from "@/app/types";
 import { create } from "zustand";
-
+import { useAuthStore } from "./authStore";
 // Define the store state and actions
 interface WinesStoreState {
   wines: Wine[];
@@ -23,13 +23,18 @@ export const useWinesStore = create<WinesStoreState>((set, get) => ({
   // Fetch the wines from the backend
   fetchWines: async () => {
     set({ loadingState: "loading", error: null, wines: [] }); // Clear wines and set loading state
+    const initAuth = useAuthStore.getState().initAuth;
+    initAuth();
+
+    const user = useAuthStore.getState().user;
     try {
       const response = (await api.get("/wines")) as WinesResponse;
       set({
         wines: response.wines,
         totalWinesCount: response.totalCount,
         loadingState: "success",
-      }); // Set wines and success state
+      });
+      console.log(response);
     } catch (error) {
       set({ error: (error as Error).message, loadingState: "error" }); // Set error state
     }
