@@ -8,7 +8,7 @@ import ConfigureAmplifyClientSide from "./components/ConfigureAmplifyClientSide"
 import ConfigureAmplify from "@/utils/configureAmplify";
 
 export const metadata: Metadata = {
-  title: "Vinotique",
+  title: "Vinotique Wine Shop",
   description: "The best wine store in the world",
 };
 
