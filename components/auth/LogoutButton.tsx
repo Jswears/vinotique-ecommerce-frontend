@@ -1,14 +1,17 @@
 import { Button } from "@/components/ui/button"
 import { toast } from "@/hooks/use-toast"
 import { useAuthStore } from "@/stores/authStore"
+import useCartStore from "@/stores/cartStore"
 import { useRouter } from "next/navigation"
 
 const LogoutButton = () => {
     const router = useRouter()
     const { logout } = useAuthStore()
+    const { clearCartLocally } = useCartStore()
     const handleSignOut = async () => {
         try {
             await logout();
+            clearCartLocally();
             toast({
                 title: "Signed out",
                 description: "You have been signed out successfully.",

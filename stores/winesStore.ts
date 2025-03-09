@@ -34,7 +34,6 @@ export const useWinesStore = create<WinesStoreState>((set, get) => ({
         totalWinesCount: response.totalCount,
         loadingState: "success",
       });
-      console.log(response);
     } catch (error) {
       set({ error: (error as Error).message, loadingState: "error" }); // Set error state
     }

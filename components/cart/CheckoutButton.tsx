@@ -6,10 +6,10 @@ import { CreditCard, LogIn } from "lucide-react";
 import Link from "next/link";
 
 const CheckoutButton = ({ cartItems }: { cartItems: CartItem[] }) => {
-    const { getUserId, isAuthenticated } = useAuthStore()
-    const handleCheckout = async () => {
+    const userId = useAuthStore.getState().user?.userId;
+    const isAuthenticated = !!userId;
 
-        const userId = getUserId();
+    const handleCheckout = async () => {
 
         try {
             // const checkoutItems: CheckoutItem[] = cartItems.map((item): CheckoutItem => ({
@@ -48,10 +48,6 @@ const CheckoutButton = ({ cartItems }: { cartItems: CartItem[] }) => {
     if (!isAuthenticated) {
         return (
             <div className="flex flex-col gap-2">
-                <Button onClick={handleCheckout} variant="default">
-                    <CreditCard className="mr-2 h-4 w-4" />
-                    Checkout as Guest User
-                </Button>
                 <Link href="/auth/login" className="flex justify-end">
                     <Button variant={"link"}>
                         <LogIn className="mr-2 h-4 w-4" />
@@ -63,7 +59,7 @@ const CheckoutButton = ({ cartItems }: { cartItems: CartItem[] }) => {
     }
     return (
         <Button variant="default" onClick={handleCheckout}>
-            <CreditCard className="mr-2 h-4 w-4" />
+            <CreditCard className="mr-2 h-4 w-4 self-end" />
             Checkout
         </Button>
     );

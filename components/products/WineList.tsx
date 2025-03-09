@@ -5,6 +5,8 @@ import WineCardSkeleton from './WinesCardSkeleton';
 import WineAlert from '@/components/ui/WineAlertComponent';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { useWinesStore } from '@/stores/winesStore';
+import { useAuthStore } from '@/stores/authStore';
+import { Button } from '../ui/button';
 
 const WineList = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -14,6 +16,7 @@ const WineList = () => {
     const totalPages = Math.ceil(totalItems / pageSize);
 
     const { fetchWines, wines, loadingState, error } = useWinesStore();
+    const { fetchUser } = useAuthStore();
 
     useEffect(() => {
         if (loadingState === 'idle') {

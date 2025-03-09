@@ -11,7 +11,7 @@ export function CartIcon() {
     // Fetch cart useEffect
     useEffect(() => {
         fetchCart()
-    }, [fetchCart])
+    }, [])
 
     const totalQuantity = getTotalQuantity()
 

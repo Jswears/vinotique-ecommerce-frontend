@@ -22,7 +22,6 @@ const CartItemsList = () => {
     const totalPrice = getTotalPrice();
 
 
-
     if (error) {
         return <WineAlert title="An error occurred" error={error} />
     }

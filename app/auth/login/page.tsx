@@ -1,69 +1,78 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { signIn } from "aws-amplify/auth"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import { useToast } from "@/hooks/use-toast"
-import { Loader2 } from "lucide-react"
-import { useAuthStore } from "@/stores/authStore"
-
+import { useState } from "react";
+import { signIn } from "aws-amplify/auth";
+import { useRouter } from "next/navigation";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
+import { useAuthStore } from "@/stores/authStore";
+import useCartStore from "@/stores/cartStore";
 
 export default function LoginPage() {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [isLoading, setIsLoading] = useState(false)
-    const { toast } = useToast()
-    const router = useRouter()
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const { toast } = useToast();
+    const router = useRouter();
 
-    const { fetchUser, user } = useAuthStore()
+    const { fetchUser, user } = useAuthStore();
+    const { transferGuestCart } = useCartStore();
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        setIsLoading(true)
-
+        e.preventDefault();
+        setIsLoading(true);
         try {
-            const { isSignedIn, nextStep } = await signIn({ username: email, password })
-            console.log("Login response:", { isSignedIn, nextStep })
-
+            const { isSignedIn, nextStep } = await signIn({ username: email, password });
+            console.log("Login response:", { isSignedIn, nextStep });
             if (isSignedIn) {
-                await fetchUser()
-                console.log("Login complete")
-                console.log(user?.isAdmin)
+                // Load authenticated user details.
+                await fetchUser();
+                // Merge the guest cart into the authenticated cart.
+                await transferGuestCart();
                 toast({
                     title: "Login successful",
                     description: "You have been successfully logged in.",
-                })
-
+                });
+                // Route based on the user's role.
                 if (user?.isAdmin) {
-                    router.push("/admin")
+                    router.push("/admin");
                 } else {
-                    router.push("/")
+                    router.push("/");
                 }
             } else {
-                console.log("Next step:", nextStep)
+                console.log("Next step:", nextStep);
                 if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
                     toast({
                         title: "Confirmation required",
-                        description: "Please check your email for a confirmation code or request a new one.",
-                    })
-                    router.push("/auth/confirm-email")
+                        description:
+                            "Please check your email for a confirmation code or request a new one.",
+                    });
+                    router.push("/auth/confirm-email");
                 }
             }
         } catch (error) {
-            console.error("Error signing in:", error)
+            console.error("Error signing in:", error);
             toast({
                 title: "Login failed",
-                description: "There was an error logging in. Please check your credentials and try again.",
+                description:
+                    "There was an error logging in. Please check your credentials and try again.",
                 variant: "destructive",
-            })
+            });
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
-    }
+    };
 
     return (
         <div className="container mx-auto px-4 py-8 flex justify-center items-center min-h-screen">
@@ -117,6 +126,5 @@ export default function LoginPage() {
                 </CardFooter>
             </Card>
         </div>
-    )
+    );
 }
-
