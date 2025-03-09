@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import TotalStats from "./components/TotalStats";
-import TopSellingWines from "./components/TopSellingWines";
-import OrderStatusChart from "./components/OrderStatusChart";
-import RecentOrders from "./components/RecentOrders";
+import TotalStats from "@/components/admin/statistics/TotalStats";
+import TopSellingWines from "@/components/admin/statistics/TopSellingWines";
+import OrderStatusChart from "@/components/admin/statistics/OrderStatusChart";
+import RecentOrders from "@/components/admin/statistics/RecentOrders";
 import { useWinesStore } from "@/stores/winesStore";
 import { useOrdersStore } from "@/stores/ordersStore";
-import SalesByCategoryDashboard from "./components/SalesByCategoryChart";
+import SalesByCategoryDashboard from "@/components/admin/statistics/SalesByCategoryChart";
 
 export default function AdminStatisticsPage() {
     const { wines, fetchWines } = useWinesStore();

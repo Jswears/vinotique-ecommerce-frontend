@@ -3,8 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useWinesStore } from "@/stores/winesStore";
 import { Wine, Users, ShoppingBag, Loader } from "lucide-react"
 import { useEffect } from "react";
-import WineAlert from "../components/ui/WineAlertComponent";
-import AdminDashboardSkeleton from "./components/AdminDashboardSkeleton";
+import WineAlert from "../../components/ui/WineAlertComponent";
+import AdminDashboardSkeleton from "../../components/admin/AdminDashboardSkeleton";
 import { useOrdersStore } from "@/stores/ordersStore";
 
 export default function AdminDashboard() {

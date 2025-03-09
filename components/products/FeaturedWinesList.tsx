@@ -1,9 +1,9 @@
 'use client';
-import WineAlert from "@/app/components/ui/WineAlertComponent";
-import WineCard from "@/app/wines/components/WineCard";
-import WineCardSkeleton from "@/app/wines/components/WinesCardSkeleton";
+import WineAlert from "@/components/ui/WineAlertComponent";
 import { useWinesStore } from "@/stores/winesStore";
 import { useEffect } from "react";
+import WineCardSkeleton from "./WinesCardSkeleton";
+import WineCard from "./WineCard";
 
 const FeaturedWinesList = () => {
     const { fetchWines, wines, loadingState, error } = useWinesStore();

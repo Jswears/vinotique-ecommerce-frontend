@@ -1,7 +1,7 @@
-import { api } from "@/app/lib/api";
+import { api } from "@/lib/api";
 import { create } from "zustand";
 import { useAuthStore } from "@/stores/authStore";
-import { CartItem, CartPostItem, CartResponse } from "@/app/types";
+import { CartItem, CartPostItem, CartResponse } from "@/types";
 
 // Define the store state and actions
 interface CartStoreState {

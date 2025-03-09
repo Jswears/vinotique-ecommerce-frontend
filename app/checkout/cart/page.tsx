@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import CartItemsList from "./components/CartItemsList";
+import CartItemsList from "@/components/cart/CartItemsList";
 
 export const metadata: Metadata = {
     title: "Cart | Vinotique Wine Shop",

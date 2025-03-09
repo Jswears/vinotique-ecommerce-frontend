@@ -1,7 +1,7 @@
 "use client";
-import AddToCartButton from "@/app/components/features/AddToCartButton";
-import { WineCardProps } from "@/app/types/components";
-import { priceConversor } from "@/app/utils/priceConversor";
+import AddToCartButton from "@/components/cart/AddToCartButton";
+import { WineCardProps } from "@/types/components";
+import { priceConversor } from "@/utils/priceConversor";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";

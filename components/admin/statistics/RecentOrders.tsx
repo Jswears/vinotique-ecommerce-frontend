@@ -1,6 +1,6 @@
-import type { Order } from "@/app/types";
+import type { Order } from "@/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { priceConversor } from "@/app/utils/priceConversor";
+import { priceConversor } from "@/utils/priceConversor";
 
 interface RecentOrdersProps {
     orders: Order[];

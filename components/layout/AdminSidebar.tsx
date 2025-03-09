@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Wine, PlusCircle, Edit, ShoppingBag, Home, LogOut, BarChart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/app/components/layout/ThemeToggler";
+import { ThemeToggle } from "@/components/providers/ThemeToggler";
 import {
     Sidebar,
     SidebarContent,

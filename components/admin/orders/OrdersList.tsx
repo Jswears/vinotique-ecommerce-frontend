@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Loader } from "lucide-react";
-import { priceConversor } from "@/app/utils/priceConversor";
+import { priceConversor } from "@/utils/priceConversor";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { formatDate } from "@/app/utils/formatDate";
+import { formatDate } from "@/utils/formatDate";
 import { useOrdersStore } from "@/stores/ordersStore";
-import { Order } from "@/app/types";
+import { Order } from "@/types";
 
 
 export default function OrdersList() {

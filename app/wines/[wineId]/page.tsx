@@ -1,7 +1,7 @@
 import type { Metadata, ResolvingMetadata } from "next";
-import { api } from "@/app/lib/api";
-import type { Wine } from "@/app/types";
-import WineDetailsComponent from "./components/WineDetailsComponent";
+import { api } from "@/lib/api";
+import type { Wine } from "@/types";
+import WineDetailsComponent from "../../../components/products/WineDetailsComponent";
 
 type Props = {
     params: { wineId: string };
@@ -10,7 +10,7 @@ type Props = {
 // Generate SEO Metadata
 export async function generateMetadata({ params }: Props, parent: ResolvingMetadata): Promise<Metadata> {
     try {
-        const { wineId } = params;
+        const { wineId } = await params;
         const wine = (await api.get(`/wines/${wineId}`)) as Wine;
         const previousImages = (await parent).openGraph?.images || [];
 

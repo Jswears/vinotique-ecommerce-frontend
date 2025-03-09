@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Footer from "./components/layout/Footer";
-import Navbar from "./components/layout/Navbar";
-import { ThemeProvider } from "./components/layout/ThemeProvider";
+import Footer from "../components/layout/Footer";
+import Navbar from "../components/layout/Navbar";
+import { ThemeProvider } from "../components/providers/ThemeProvider";
 import { Toaster } from "@/components/ui/toaster";
-import ConfigureAmplifyClientSide from "./components/ConfigureAmplifyClientSide";
 import ConfigureAmplify from "@/utils/configureAmplify";
 
 export const metadata: Metadata = {
@@ -24,7 +23,6 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Navbar />
           <main className="flex-grow bg-background text-foreground">
-            <ConfigureAmplifyClientSide />
             {children}
           </main>
           <Toaster />

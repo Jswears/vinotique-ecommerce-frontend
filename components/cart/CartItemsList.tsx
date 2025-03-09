@@ -1,6 +1,6 @@
 'use client'
 import CartItemsSkeleton from "./CartItemsSkeleton";
-import WineAlert from "@/app/components/ui/WineAlertComponent";
+import WineAlert from "@/components/ui/WineAlertComponent";
 import {
     Card,
     CardContent,
@@ -12,7 +12,7 @@ import { ShoppingCart } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import CartItemCard from "./CartItemCard";
-import { priceConversor } from "@/app/utils/priceConversor";
+import { priceConversor } from "@/utils/priceConversor";
 import useCartStore from "@/stores/cartStore";
 import ClearCartButton from "./ClearCartButton";
 import CheckoutButton from "./CheckoutButton";

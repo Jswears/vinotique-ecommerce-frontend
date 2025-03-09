@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { Wine, Order } from "@/app/types";
-import { priceConversor } from "@/app/utils/priceConversor";
+import type { Wine, Order } from "@/types";
+import { priceConversor } from "@/utils/priceConversor";
 
 interface TotalStatsProps {
     wines: Wine[];

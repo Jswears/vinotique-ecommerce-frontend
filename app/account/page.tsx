@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import useCartStore from "@/stores/cartStore"
-import LogoutButton from "./components/LogoutButton"
+import LogoutButton from "@/components/auth/LogoutButton"
 type UserAttributesType = {
     preferred_username: string
     email: string

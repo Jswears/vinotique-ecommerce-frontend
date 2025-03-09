@@ -1,6 +1,6 @@
 "use client";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import type { Order, Wine } from "@/app/types";
+import type { Order, Wine } from "@/types";
 import {
     Card,
     CardContent,

@@ -1,4 +1,4 @@
-import OrdersList from "./components/OrdersList"
+import OrdersList from "@/components/admin/orders/OrdersList"
 
 
 

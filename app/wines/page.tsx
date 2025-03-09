@@ -1,5 +1,5 @@
+import WineList from "@/components/products/WineList";
 import { Metadata } from "next";
-import WineList from "./components/WineList";
 
 // TODO: Change metada everywhere so they all fit the same pattern
 export const metadata: Metadata = {

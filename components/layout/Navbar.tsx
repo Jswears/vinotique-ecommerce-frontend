@@ -3,9 +3,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Wine, User } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { CartIcon } from "@/app/components/layout/CartIcon";
+import { CartIcon } from "@/components/layout/CartIcon";
 import { NavLink } from "./NavLink";
-import { ThemeToggle } from "./ThemeToggler";
+import { ThemeToggle } from "../providers/ThemeToggler";
 import { useAuthStore } from "@/stores/authStore";
 import { useEffect, useMemo } from "react";
 

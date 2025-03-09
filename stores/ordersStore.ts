@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { useAuthStore } from "./authStore";
-import { Order, OrdersResponse } from "@/app/types";
-import { api } from "@/app/lib/api";
+import { Order, OrdersResponse } from "@/types";
+import { api } from "@/lib/api";
 
 interface OrdersStoreState {
   orders: Order[];

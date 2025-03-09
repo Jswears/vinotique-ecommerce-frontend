@@ -1,4 +1,4 @@
-import type { Order } from "@/app/types";
+import type { Order } from "@/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 interface TopSellingWinesProps {

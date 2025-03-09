@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
 import useCartStore from "@/stores/cartStore";
 import { CheckCheckIcon, Plus, ShoppingCart } from "lucide-react";
 import { useState } from "react";
+import { Button } from "../ui/button";
 
 interface WineProps {
     wine: {
@@ -14,7 +14,9 @@ interface WineProps {
     type?: "simple" | "default";
 }
 
-const AddToCartButton: React.FC<WineProps> = ({ wine, type }) => {
+
+
+const AddToCartButton = ({ wine, type }: WineProps) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const { addToCart } = useCartStore();
@@ -35,13 +37,6 @@ const AddToCartButton: React.FC<WineProps> = ({ wine, type }) => {
         }
     }
 
-    if (error) {
-        return (
-            <div className="text-center mt-20">
-                <p className="text-red-600 dark:text-red-400">{error}</p>
-            </div>
-        )
-    }
 
     return (
         <Button disabled={!wine.isInStock} variant={type === "simple" ? "secondary" : "default"} size={type === "simple" ? "sm" : undefined} className="w-full" onClick={handleAddToCart} >
@@ -61,3 +56,5 @@ const AddToCartButton: React.FC<WineProps> = ({ wine, type }) => {
 }
 
 export default AddToCartButton;
+
+

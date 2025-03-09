@@ -1,16 +1,16 @@
 "use client";
 import { useEffect, useState } from "react";
-import { api } from "../../../lib/api";
+import { api } from "../../lib/api";
 import Image from "next/image";
-import { Wine } from "@/app/types";
+import { Wine } from "@/types";
 import WineDetailsSkeleton from "./WineDetailsSkeleton";
-import WineAlert from "@/app/components/ui/WineAlertComponent";
+import WineAlert from "@/components/ui/WineAlertComponent";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Grape, MapPin } from "lucide-react";
-import { priceConversor } from "@/app/utils/priceConversor";
-import { WineDetailsComponentProps } from "@/app/types/components";
-import AddToCartButton from "@/app/components/features/AddToCartButton";
+import { priceConversor } from "@/utils/priceConversor";
+import { WineDetailsComponentProps } from "@/types/components";
+import AddToCartButton from "@/components/cart/AddToCartButton";
 
 const WineDetailsComponent = ({ wineId }: WineDetailsComponentProps) => {
     const [wine, setWine] = useState<Wine | null>(null);

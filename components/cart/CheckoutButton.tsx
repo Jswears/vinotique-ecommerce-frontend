@@ -1,5 +1,5 @@
-import { api } from "@/app/lib/api";
-import { CartItem } from "@/app/types";
+import { api } from "@/lib/api";
+import { CartItem } from "@/types";
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/stores/authStore";
 import { CreditCard, LogIn } from "lucide-react";

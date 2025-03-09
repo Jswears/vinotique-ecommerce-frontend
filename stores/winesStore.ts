@@ -1,5 +1,5 @@
-import { api } from "@/app/lib/api";
-import { Wine, WinesResponse } from "@/app/types";
+import { api } from "@/lib/api";
+import { Wine, WinesResponse } from "@/types";
 import { create } from "zustand";
 import { useAuthStore } from "./authStore";
 // Define the store state and actions

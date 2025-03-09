@@ -1,4 +1,4 @@
-import type { Order } from "@/app/types";
+import type { Order } from "@/types";
 import { Pie, PieChart, Tooltip } from "recharts";
 import {
     Card,

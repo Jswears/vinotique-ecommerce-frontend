@@ -1,7 +1,7 @@
 import type { Metadata, ResolvingMetadata } from "next"
-import EditWineComponent from "./components/EditWineComponent"
-import { api } from "@/app/lib/api"
-import type { Wine } from "@/app/types"
+import EditWineComponent from "@/components/admin/editWines/EditWineComponent"
+import { api } from "@/lib/api"
+import type { Wine } from "@/types"
 
 type Props = {
     params: Promise<{ wineId: string }>

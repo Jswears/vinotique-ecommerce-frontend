@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import WineCard from './WineCard';
 import WineCardSkeleton from './WinesCardSkeleton';
-import WineAlert from '@/app/components/ui/WineAlertComponent';
+import WineAlert from '@/components/ui/WineAlertComponent';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { useWinesStore } from '@/stores/winesStore';
 

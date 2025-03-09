@@ -1,4 +1,4 @@
-import { RemoveFromCartButtonProps } from "@/app/types/components";
+import { RemoveFromCartButtonProps } from "@/types/components";
 import { Button } from "@/components/ui/button";
 import useCartStore from "@/stores/cartStore";
 import { Minus, } from "lucide-react";
