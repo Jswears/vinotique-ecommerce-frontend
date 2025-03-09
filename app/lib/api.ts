@@ -1,5 +1,5 @@
-import { useAuthStore } from "@/stores/authStore";
 import axios, { AxiosInstance, AxiosResponse } from "axios";
+import { useAuthStore } from "@/stores/authStore";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_BASE_API_URL;
 
@@ -8,8 +8,15 @@ const axiosClient: AxiosInstance = axios.create({
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer `,
   },
+});
+
+axiosClient.interceptors.request.use((config) => {
+  const token = useAuthStore.getState().user?.accessToken;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 export const api = {

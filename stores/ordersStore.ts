@@ -1,33 +1,48 @@
-import { api } from "@/app/lib/api";
-import { Order, OrdersResponse } from "@/app/types";
 import { create } from "zustand";
+import { useAuthStore } from "./authStore";
+import { Order, OrdersResponse } from "@/app/types";
+import { api } from "@/app/lib/api";
 
-// Define the store state and actions
 interface OrdersStoreState {
   orders: Order[];
-  loading: boolean;
+  loadingOrdersState: "idle" | "loading" | "error" | "success";
   error: string | null;
   totalOrdersCount: number;
   fetchOrders: () => Promise<void>;
 }
 
 export const useOrdersStore = create<OrdersStoreState>((set, get) => ({
-  // Initial state
   orders: [],
-  loading: false,
+  loadingOrdersState: "idle",
   totalOrdersCount: 0,
   error: null,
 
-  // Fetch the orders from the backend
   fetchOrders: async () => {
-    set({ loading: true });
+    set({ loadingOrdersState: "loading", error: null, orders: [] });
+
     try {
+      // Refresh token if expired
+      await useAuthStore.getState().refreshToken();
+
+      const user = useAuthStore.getState().user;
+      if (!user || !user.accessToken) {
+        set({ loadingOrdersState: "error", error: "User not authenticated" });
+        return;
+      }
+
       const response = (await api.get("/orders")) as OrdersResponse;
-      set({ orders: response.orders, totalOrdersCount: response.totalCount });
+
+      if (response) {
+        set({
+          orders: response.orders,
+          totalOrdersCount: response.totalCount,
+          loadingOrdersState: "success",
+        });
+      } else {
+        set({ loadingOrdersState: "error", error: "Failed to fetch orders" });
+      }
     } catch (error) {
-      set({ error: (error as Error).message });
-    } finally {
-      set({ loading: false });
+      set({ error: (error as Error).message, loadingOrdersState: "error" });
     }
   },
 }));

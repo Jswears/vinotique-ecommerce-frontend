@@ -1,7 +1,7 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useWinesStore } from "@/stores/winesStore";
-import { Wine, Users, ShoppingBag } from "lucide-react"
+import { Wine, Users, ShoppingBag, Loader } from "lucide-react"
 import { useEffect } from "react";
 import WineAlert from "../components/ui/WineAlertComponent";
 import AdminDashboardSkeleton from "./components/AdminDashboardSkeleton";
@@ -9,7 +9,7 @@ import { useOrdersStore } from "@/stores/ordersStore";
 
 export default function AdminDashboard() {
     const { totalWinesCount, fetchWines, wines, error, loadingState } = useWinesStore();
-    const { totalOrdersCount, fetchOrders } = useOrdersStore();
+    const { totalOrdersCount, fetchOrders, loadingOrdersState } = useOrdersStore();
 
     useEffect(() => {
         if (wines.length === 0) {
@@ -25,10 +25,11 @@ export default function AdminDashboard() {
 
 
     useEffect(() => {
-        if (totalOrdersCount === 0) {
+        if (loadingOrdersState === 'idle') {
             fetchOrders();
         }
     }, [fetchOrders, totalOrdersCount]);
+
     if (loadingState === "loading") {
         <AdminDashboardSkeleton />;
     }
@@ -50,7 +51,13 @@ export default function AdminDashboard() {
                         <Wine className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">{totalWinesCount}</div>
+                        {loadingState === "loading" ? (
+                            <div className="flex justify-center items-center">
+                                <Loader className="h-6 w-6 animate-spin text-muted-foreground" />
+                            </div>
+                        ) : (
+                            <div className="text-2xl font-bold">{totalWinesCount}</div>
+                        )}
                     </CardContent>
                 </Card>
                 <Card>
@@ -68,7 +75,13 @@ export default function AdminDashboard() {
                         <ShoppingBag className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">{totalOrdersCount}</div>
+                        {loadingOrdersState === "loading" ? (
+                            <div className="flex justify-center items-center">
+                                <Loader className="h-6 w-6 animate-spin text-muted-foreground" />
+                            </div>
+                        ) : (
+                            <div className="text-2xl font-bold">{totalOrdersCount}</div>
+                        )}
                     </CardContent>
                 </Card>
             </div>

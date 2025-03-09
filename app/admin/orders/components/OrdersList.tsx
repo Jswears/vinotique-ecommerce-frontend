@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Eye } from "lucide-react";
+import { Eye, Loader } from "lucide-react";
 import { priceConversor } from "@/app/utils/priceConversor";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatDate } from "@/app/utils/formatDate";
@@ -18,13 +18,13 @@ export default function OrdersList() {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-    const { orders, fetchOrders, loading, error } = useOrdersStore();
+    const { orders, fetchOrders, loadingOrdersState, error } = useOrdersStore();
 
     useEffect(() => {
-        if (orders.length === 0) {
+        if (loadingOrdersState === "idle") {
             fetchOrders();
         }
-    }, [fetchOrders, orders.length]);
+    }, [fetchOrders, loadingOrdersState]);
 
     const getStatusVariant = (status: string) => {
         switch (status.toLowerCase()) {
@@ -61,14 +61,13 @@ export default function OrdersList() {
                         />
                     </div>
 
-                    {loading ? (
-                        <p>Loading orders...</p>
+                    {loadingOrdersState === "loading" ? (
+                        <div className="flex justify-center items-center">
+                            <Loader className="animate-spin h-8 w-8" />
+                        </div>
                     ) : error ? (
-                        <p className="text-red-500">Error: {error}</p>
+                        <p>Error: {error}</p>
                     ) : (
-                        // {wines.map((wine) => (
-                        //     <WineCard key={wine.wineId} wine={wine} />
-                        // ))}
                         <Table>
                             <TableHeader>
                                 <TableRow>
