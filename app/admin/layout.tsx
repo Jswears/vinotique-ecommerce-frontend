@@ -1,5 +1,12 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AdminSidebar } from "../../components/layout/AdminSidebar"
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Admin Panel | Vinotique Wine Shop",
+    description: "Admin panel for Vinotique Wine Shop",
+};
+
 
 export default function AdminLayout({
     children,

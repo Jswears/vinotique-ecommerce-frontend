@@ -4,7 +4,7 @@ import type { Wine } from "@/types";
 import WineDetailsComponent from "../../../components/products/WineDetailsComponent";
 
 type Props = {
-    params: { wineId: string };
+    params: Promise<{ wineId: string }>;
 };
 
 // Generate SEO Metadata
@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 
         return {
             title: `${wine.vintage} ${wine.productName} - ${wine.producer}`,
-            description: `Details about ${wine.productName} from ${wine.region}.`,
+            description: `Discover details about ${wine.productName} from ${wine.region}.`,
             openGraph: {
                 images: [wine.imageUrl, ...previousImages],
             },
@@ -31,12 +31,15 @@ export async function generateMetadata({ params }: Props, parent: ResolvingMetad
 
 // Wine Details Page
 const WineDetailsPage = async ({ params }: Props) => {
+    const { wineId } = await params;
     return (
-        <div className="container mx-auto px-8 py-16">
-            <h1 className="text-4xl font-extrabold tracking-tight text-primary mb-8 text-center">
-                Wine Details
-            </h1>
-            <WineDetailsComponent wineId={params.wineId} />
+        <div className="container mx-auto px-6 py-16 space-y-12">
+            <section className="text-center space-y-4">
+                <h1 className="text-5xl font-bold text-foreground leading-tight">
+                    Wine Details
+                </h1>
+            </section>
+            <WineDetailsComponent wineId={wineId} />
         </div>
     );
 };

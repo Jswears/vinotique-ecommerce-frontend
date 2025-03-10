@@ -1,60 +1,61 @@
 import useCartStore from "@/stores/cartStore";
-import { CheckCheckIcon, Plus, ShoppingCart } from "lucide-react";
+import { Loader2, Plus, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import { AddToCartButtonProps } from "@/types/components";
 
-interface WineProps {
-  wine: {
-    wineId: string;
-    productName: string;
-    price: number;
-    imageUrl: string;
-    isInStock: boolean;
-  }
-  type?: "simple" | "default";
-}
-
-
-
-const AddToCartButton = ({ wine, type }: WineProps) => {
-  const [loading, setLoading] = useState(false);
+const AddToCartButton = ({ wine, type }: AddToCartButtonProps) => {
+  const [isAdding, setIsAdding] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { addToCart } = useCartStore();
+  const { addToCart, cartItems } = useCartStore();
+
+  const wineWithQuantity = cartItems.find((item) => item.wineId === wine.wineId);
 
   const handleAddToCart = async () => {
-    setLoading(true);
+    setIsAdding(true);
+    setError(null);
     try {
       await addToCart(wine.wineId, 1);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
       } else {
-        setError("An unknown error occurred");
+        setError("An unexpected error occurred. Please try again.");
       }
-
     } finally {
-      setLoading(false);
+      setIsAdding(false);
     }
-  }
+  };
 
+  const isDisabled = !wine.isInStock || (wineWithQuantity?.quantity ?? 0) >= wine.stockQuantity || isAdding;
 
   return (
-    <Button disabled={!wine.isInStock} variant={type === "simple" ? "secondary" : "default"} size={type === "simple" ? "sm" : undefined} className="w-full" onClick={handleAddToCart} >
-      {loading ? (
-        <>
-          {type !== "simple" ? <><CheckCheckIcon /> Added to Cart</> : <Plus />}
-        </>
-      ) : (
-        type === "simple" ? <Plus /> : (
+    <div className="flex flex-col items-center w-full">
+      <Button
+        disabled={isDisabled}
+        variant={type === "simple" ? "secondary" : "default"}
+        size={type === "simple" ? "sm" : "sm"}
+        className="w-full rounded-none  font-medium flex items-center justify-center gap-2 transition-transform hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+        onClick={handleAddToCart}
+      >
+        {isAdding ? (
+          <Loader2 className="animate-spin h-4 w-4" />
+        ) : type === "simple" ? (
+          <Plus />
+        ) : (
           <>
-            <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
+            <ShoppingCart className="h-4 w-4" /> Add to Cart
           </>
-        )
+        )}
+      </Button>
+
+      {error && (
+        <p className="text-sm text-red-500 mt-2 animate-fade-in" aria-live="polite">
+          {error}
+        </p>
       )}
-    </Button>
-  )
-}
+    </div>
+  );
+};
 
 export default AddToCartButton;
-
-

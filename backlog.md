@@ -15,3 +15,4 @@
   - [ ] Edit-wine
   - [ ] Create-wine
 - [ ] Improve typescript implementation
+- [ ] Add special featured wines route

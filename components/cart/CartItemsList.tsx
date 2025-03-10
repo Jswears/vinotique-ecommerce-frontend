@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import CartItemsSkeleton from "./CartItemsSkeleton";
 import WineAlert from "@/components/ui/WineAlertComponent";
 import {
@@ -16,34 +16,35 @@ import { priceConversor } from "@/utils/priceConversor";
 import useCartStore from "@/stores/cartStore";
 import ClearCartButton from "./ClearCartButton";
 import CheckoutButton from "./CheckoutButton";
+import { useEffect } from "react";
 
 const CartItemsList = () => {
-    const { cartItems, getTotalPrice, loading, error } = useCartStore()
+    const { cartItems, fetchCart, getTotalPrice, loading, error } = useCartStore();
     const totalPrice = getTotalPrice();
 
+    useEffect(() => {
+        if (cartItems.length === 0) {
+            fetchCart();
+        }
+    }, [cartItems]);
 
-    if (error) {
-        return <WineAlert title="An error occurred" error={error} />
-    }
-
-    if (loading && !cartItems) {
-        return (
-            <CartItemsSkeleton />
-        )
-    }
-
+    if (error) return <WineAlert title="An error occurred" error={error} />;
+    if (loading && !cartItems) return <CartItemsSkeleton />;
     if (cartItems?.length === 0 && !loading) {
         return (
-            <WineAlert title="Your cart is empty" error="Looks like you haven't added anything to your cart yet." />
-        )
+            <WineAlert
+                title="Your cart is empty"
+                error="Looks like you haven't added anything to your cart yet."
+            />
+        );
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <Card>
+        <div className="max-w-4xl mx-auto px-6 py-8">
+            <Card className="shadow-md border border-border rounded-lg">
                 <CardHeader>
                     <CardTitle className="text-3xl font-bold flex items-center">
-                        <ShoppingCart className="mr-2" />
+                        <ShoppingCart className="mr-2 h-8 w-8 text-primary" />
                         Your Cart
                     </CardTitle>
                 </CardHeader>
@@ -71,7 +72,7 @@ const CartItemsList = () => {
                 </CardFooter>
             </Card>
         </div>
-    )
-}
+    );
+};
 
 export default CartItemsList;

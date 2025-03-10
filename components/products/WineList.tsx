@@ -1,12 +1,18 @@
-"use client"
-import { useState, useEffect } from 'react';
-import WineCard from './WineCard';
-import WineCardSkeleton from './WinesCardSkeleton';
-import WineAlert from '@/components/ui/WineAlertComponent';
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
-import { useWinesStore } from '@/stores/winesStore';
-import { useAuthStore } from '@/stores/authStore';
-import { Button } from '../ui/button';
+"use client";
+import { useState, useEffect } from "react";
+import WineCard from "./WineCard";
+import WineCardSkeleton from "./WinesCardSkeleton";
+import WineAlert from "@/components/ui/WineAlertComponent";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious
+} from "@/components/ui/pagination";
+import { useWinesStore } from "@/stores/winesStore";
+import useCartStore from "@/stores/cartStore";
 
 const WineList = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -16,10 +22,10 @@ const WineList = () => {
     const totalPages = Math.ceil(totalItems / pageSize);
 
     const { fetchWines, wines, loadingState, error } = useWinesStore();
-    const { fetchUser } = useAuthStore();
+    const { cartItems } = useCartStore();
 
     useEffect(() => {
-        if (loadingState === 'idle') {
+        if (loadingState === "idle") {
             fetchWines();
         }
     }, [fetchWines, loadingState]);
@@ -44,7 +50,7 @@ const WineList = () => {
                     <PaginationLink
                         onClick={() => !isDisabled && handlePageChange(pageNumber)}
                         isActive={pageNumber === currentPage}
-                        className={isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                        className={isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
                     >
                         {pageNumber}
                     </PaginationLink>
@@ -53,44 +59,40 @@ const WineList = () => {
         });
     };
 
-    if (loadingState === 'loading') {
-        return <WineCardSkeleton />;
-    }
-
-    if (loadingState === 'error') {
-        return <WineAlert title="An error occurred" error={error!} />;
-    }
-
-    if (loadingState === 'success' && wines.length === 0) {
-        return <WineAlert title="No wines available" error="There are no wines available at the moment" />;
+    if (loadingState === "loading") return <WineCardSkeleton />;
+    if (loadingState === "error") return <WineAlert title="An error occurred" error={error!} />;
+    if (loadingState === "success" && wines.length === 0) {
+        return <WineAlert title="No wines available" error="There are no wines available at the moment." />;
     }
 
     return (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <h1 className="text-3xl font-bold mb-6">Our Wines</h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="max-w-7xl mx-auto px-6 py-12 space-y-10">
+            <h2 className="text-3xl font-semibold text-center">Our Wines</h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 {wines.map((wine) => (
                     <WineCard key={wine.wineId} wine={wine} isFeatured={false} />
                 ))}
             </div>
+
             {totalPages > 1 && (
-                <Pagination className="mt-8">
-                    <PaginationContent>
+                <Pagination className="mt-8 flex justify-center">
+                    <PaginationContent className="flex gap-2">
                         <PaginationItem>
                             <PaginationPrevious
                                 onClick={() => handlePageChange(currentPage - 1)}
-                                className={currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                                className={`transition-colors ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:text-primary cursor-pointer"
+                                    }`}
                             />
                         </PaginationItem>
                         {renderPaginationItems()}
                         <PaginationItem>
                             <PaginationNext
                                 onClick={() => handlePageChange(currentPage + 1)}
-                                className={
-                                    currentPage === totalPages || !pageTokens[currentPage]
-                                        ? 'opacity-50 cursor-not-allowed'
-                                        : 'cursor-pointer'
-                                }
+                                className={`transition-colors ${currentPage === totalPages || !pageTokens[currentPage]
+                                    ? "opacity-50 cursor-not-allowed"
+                                    : "hover:text-primary cursor-pointer"
+                                    }`}
                             />
                         </PaginationItem>
                     </PaginationContent>

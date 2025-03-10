@@ -22,6 +22,25 @@ export type Wine = {
   stockQuantity: number;
 };
 
+// Form Data
+export interface FormData {
+  productName: string;
+  producer: string;
+  description: string;
+  category: string;
+  region: string;
+  country: string;
+  grapeVarietal: string[];
+  vintage: number;
+  alcoholContent: number;
+  sizeMl: number;
+  price: number;
+  stockQuantity: number;
+  imageUrl: string;
+  isFeatured: boolean;
+  wineId?: string;
+}
+
 export type WinesResponse = {
   wines: Wine[];
   totalCount: number;
@@ -64,6 +83,7 @@ export interface CartItem {
   price: number;
   imageUrl: string;
   isInStock: boolean;
+  stockQuantity: number;
 }
 // Type for the cart item sent in POST /cart
 export interface CartPostItem {

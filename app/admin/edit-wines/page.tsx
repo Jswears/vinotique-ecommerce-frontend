@@ -26,7 +26,10 @@ export default function EditWinesPage() {
     const filteredWines = wines.filter(
         (wine) =>
             wine.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            wine.producer.toLowerCase().includes(searchTerm.toLowerCase()),
+            wine.producer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            wine.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            wine.vintage.toString().includes(searchTerm) ||
+            wine.country.toLowerCase().includes(searchTerm.toLowerCase()),
     )
 
     return (

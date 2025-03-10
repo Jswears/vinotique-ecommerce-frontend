@@ -14,45 +14,25 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
-import { Wine } from "@/types"
+import { FormData, Wine, WineCategoryEnum } from "@/types"
+import { EditWineComponentProps } from "@/types/components"
 
-interface EditWineComponentProps {
-    wineId: string
-}
 
-interface FormData {
-    productName: string
-    producer: string
-    description: string
-    category: string
-    region: string
-    country: string
-    grapeVarietal: string[]
-    vintage: string
-    alcoholContent: string
-    sizeMl: string
-    price: string
-    stockQuantity: string
-    imageUrl: string
-    isFeatured: boolean
-    wineId?: string
-}
-
-const EditWineComponent: React.FC<EditWineComponentProps> = ({ wineId }) => {
+const EditWineComponent = ({ wineId }: EditWineComponentProps) => {
     const { wines, fetchWine, fetchWines } = useWinesStore()
     const [formData, setFormData] = useState<FormData>({
         productName: "",
         producer: "",
         description: "",
-        category: "",
+        category: WineCategoryEnum.Red,
         region: "",
         country: "",
         grapeVarietal: [],
-        vintage: "",
-        alcoholContent: "",
-        sizeMl: "",
-        price: "",
-        stockQuantity: "",
+        vintage: 0,
+        alcoholContent: 0,
+        sizeMl: 0,
+        price: 0,
+        stockQuantity: 0,
         imageUrl: "",
         isFeatured: false,
     })
@@ -63,7 +43,8 @@ const EditWineComponent: React.FC<EditWineComponentProps> = ({ wineId }) => {
     useEffect(() => {
         const loadWine = async () => {
             if (wines.length === 0) {
-                await fetchWine(wineId)
+                const wine = await fetchWine(wineId)
+
             }
             const wine = wines.find((wine: Wine) => wine.wineId === wineId)
             if (wine) {
@@ -71,18 +52,18 @@ const EditWineComponent: React.FC<EditWineComponentProps> = ({ wineId }) => {
                     productName: wine.productName || "",
                     producer: wine.producer || "",
                     description: wine.description || "",
-                    category: wine.category || "",
+                    category: wine.category || WineCategoryEnum.Red,
                     region: wine.region || "",
                     country: wine.country || "",
                     grapeVarietal: wine.grapeVarietal || [],
-                    vintage: wine.vintage?.toString() || "",
-                    alcoholContent: wine.alcoholContent?.toString() || "",
-                    sizeMl: wine.sizeMl?.toString() || "",
-                    price: wine.price?.toString() || "",
-                    stockQuantity: wine.stockQuantity?.toString() || "",
+                    vintage: wine.vintage || 0,
+                    alcoholContent: wine.alcoholContent | 0,
+                    sizeMl: wine.sizeMl || 0,
+                    price: wine.price || 0,
+                    stockQuantity: wine.stockQuantity || 0,
                     imageUrl: wine.imageUrl || "",
                     isFeatured: wine.isFeatured || false,
-                    wineId: wine.wineId, // Ensure wineId is set
+                    wineId: wine.wineId,
                 })
             }
         }
@@ -109,7 +90,7 @@ const EditWineComponent: React.FC<EditWineComponentProps> = ({ wineId }) => {
         setIsLoading(true)
         try {
             await api.put(`/wines/${wineId}`, formData)
-            await fetchWines() // Refetch wines after update
+            await fetchWines()
             toast({
                 title: "Success",
                 description: "Wine updated successfully",
@@ -236,7 +217,7 @@ const EditWineComponent: React.FC<EditWineComponentProps> = ({ wineId }) => {
                                 name="price"
                                 type="number"
                                 value={formData.price}
-                                onChange={(e) => setFormData((prev: FormData) => ({ ...prev, price: e.target.value }))}
+                                onChange={(e) => setFormData((prev: FormData) => ({ ...prev, price: Number(e.target.value) }))}
                                 required
                             />
                         </div>
@@ -247,7 +228,7 @@ const EditWineComponent: React.FC<EditWineComponentProps> = ({ wineId }) => {
                                 name="stockQuantity"
                                 type="number"
                                 value={formData.stockQuantity}
-                                onChange={(e) => setFormData((prev: FormData) => ({ ...prev, stockQuantity: e.target.value }))}
+                                onChange={(e) => setFormData((prev: FormData) => ({ ...prev, stockQuantity: Number(e.target.value) }))}
                                 required
                             />
                         </div>

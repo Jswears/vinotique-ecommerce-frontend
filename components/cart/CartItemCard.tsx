@@ -6,33 +6,22 @@ import RemoveFromCartButton from "./RemoveFromCartButton";
 const CartItemCard = ({ cartItem }: { cartItem: CartItem }) => {
     return (
         <div className="flex items-center border-b dark:border-gray-700 py-4">
-            {/* TODO: RE-IMPLEMENT LATER */}
-            {/* <Image
-                src={cartItem.imageUrl}
-                alt={cartItem.productName}
-                width={80}
-                height={80}
-                className="w-fit h-fit object-cover mr-4"
-            /> */}
             <div className="flex-grow">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+                <h2 className="text-xl font-semibold text-foreground">
                     {cartItem.productName}
                 </h2>
-                <p className="text-gray-600 dark:text-gray-400">
-                    {priceConversor((cartItem.price * (cartItem.quantity ?? 0)))}
+                <p className="text-muted-foreground">
+                    {priceConversor(cartItem.price * (cartItem.quantity ?? 0))}
                 </p>
-                <p className="text-gray-600 dark:text-gray-400">x{cartItem.quantity}</p>
+                <p className="text-muted-foreground">x{cartItem.quantity}</p>
             </div>
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
                 <RemoveFromCartButton wine={cartItem} type="simple" />
-                <span className="mx-2 text-gray-900 dark:text-gray-100">
-                    {cartItem.quantity}
-                </span>
+                <span className="text-lg font-medium">{cartItem.quantity}</span>
                 <AddToCartButton wine={cartItem} type={"simple"} />
             </div>
-
         </div>
     );
-}
+};
 
 export default CartItemCard;
