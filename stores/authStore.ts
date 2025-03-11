@@ -12,7 +12,7 @@ interface AuthUser {
   userId: string;
   email: string;
   isAdmin: boolean;
-  accessToken: string;
+  accessToken: string | undefined;
   expiration: number;
 }
 
@@ -50,6 +50,7 @@ export const useAuthStore = create<AuthStore>()(
           }
           // Authenticated session – load user details.
           const accessToken = session.tokens.accessToken;
+          const idToken = session.tokens.idToken;
           const userAttributes = await fetchUserAttributes();
           const currentUser = await getCurrentUser();
           const user: AuthUser = {
@@ -60,12 +61,13 @@ export const useAuthStore = create<AuthStore>()(
               (Array.isArray(accessToken.payload["cognito:groups"]) &&
                 accessToken.payload["cognito:groups"].includes("ADMINS")) ||
               false,
-            accessToken: accessToken.toString(),
+            accessToken: idToken?.toString(),
             expiration: accessToken.payload.exp
               ? accessToken.payload.exp * 1000
               : 0,
           };
-
+          // If want to test with postman, add this line to see the token
+          // console.log(idToken?.toString());
           set({ user, isAuthenticated: true });
         } catch (error) {
           console.error("Error fetching user:", error);
