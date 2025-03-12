@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { signOut, fetchUserAttributes } from "@aws-amplify/auth"
+import { fetchUserAttributes } from "@aws-amplify/auth"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"

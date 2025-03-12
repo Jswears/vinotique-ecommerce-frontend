@@ -1,5 +1,10 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import {
+  persist,
+  PersistStorage,
+  StateStorage,
+  StorageValue,
+} from "zustand/middleware";
 import {
   fetchAuthSession,
   fetchUserAttributes,
@@ -26,6 +31,21 @@ interface AuthStore {
   initAuth: () => Promise<void>;
   clearGuestUser: () => void;
 }
+
+// Create a safe storage fallback. This uses localStorage if available,
+// otherwise it provides no-op functions.
+const safeStorage: PersistStorage<AuthStore> = {
+  getItem: (key: string) => {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : null;
+  },
+  setItem: (key: string, value: StorageValue<AuthStore>) => {
+    localStorage.setItem(key, JSON.stringify(value));
+  },
+  removeItem: (key: string) => {
+    localStorage.removeItem(key);
+  },
+};
 
 export const useAuthStore = create<AuthStore>()(
   persist(
@@ -66,8 +86,6 @@ export const useAuthStore = create<AuthStore>()(
               ? accessToken.payload.exp * 1000
               : 0,
           };
-          // If want to test with postman, add this line to see the token
-          // console.log(idToken?.toString());
           set({ user, isAuthenticated: true });
         } catch (error) {
           console.error("Error fetching user:", error);
@@ -109,6 +127,6 @@ export const useAuthStore = create<AuthStore>()(
         set({ guestUserId: undefined });
       },
     }),
-    { name: "auth-store" }
+    { name: "auth-store", storage: safeStorage }
   )
 );

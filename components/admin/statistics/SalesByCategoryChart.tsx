@@ -21,12 +21,7 @@ interface SalesByCategoryDashboardProps {
     wines: Wine[];
 }
 
-// Define a theme for each wine category with colors that work well in both light and dark modes.
-// For "White", we use a light gray fill and background so text remains visible.
-const categoryTheme: Record<
-    string,
-    { fill: string; bg: string; border: string; text: string }
-> = {
+const categoryTheme: Record<string, { fill: string; bg: string; border: string; text: string }> = {
     Red: { fill: "#E53E3E", bg: "bg-red-100", border: "border-red-500", text: "text-red-700" },
     White: { fill: "#CBD5E0", bg: "bg-gray-200", border: "border-gray-400", text: "text-gray-800" },
     Rose: { fill: "#ED64A6", bg: "bg-pink-100", border: "border-pink-500", text: "text-pink-700" },
@@ -36,36 +31,33 @@ const categoryTheme: Record<
 };
 
 export default function SalesByCategoryDashboard({ orders, wines }: SalesByCategoryDashboardProps) {
-    // Get unique categories from the wines.
     const categories = Array.from(new Set(wines.map((wine) => wine.category)));
-
-    // State for the active category.
-    const [activeCategory, setActiveCategory] = useState<string>(categories[0]);
+    const defaultCategory = categories[0];
+    const [activeCategory, setActiveCategory] = useState<string>(defaultCategory);
 
     if (orders.length === 0 || wines.length === 0) {
         return <p className="text-red-500">No orders or wines available.</p>;
     }
 
-    // Compute total sales per category (converting cents to dollars).
+    // Compute total sales per category (dollars).
     const categoryTotals: Record<string, number> = categories.reduce((acc, category) => {
         let total = 0;
         orders.forEach((order) => {
             order.cartItems?.forEach((item) => {
-                const wine = wines.find((w) => w.wineId === item.wineId);
-                if (wine && wine.category === category) {
+                if (item.category === category) {
                     total += item.quantity * item.price;
                 }
             });
         });
         acc[category] = total / 100;
+
         return acc;
     }, {} as Record<string, number>);
 
-    // Compute overall monthly sales (aggregated across all categories).
+    // Compute overall monthly sales.
     const overallMonthlySales: Record<string, number> = {};
     orders.forEach((order) => {
-        const orderDate = new Date(order.createdAt);
-        const monthKey = orderDate.toISOString().slice(0, 7); // "YYYY-MM"
+        const monthKey = new Date(order.createdAt).toISOString().slice(0, 7);
         order.cartItems?.forEach((item) => {
             overallMonthlySales[monthKey] = (overallMonthlySales[monthKey] || 0) + item.quantity * item.price;
         });
@@ -77,8 +69,7 @@ export default function SalesByCategoryDashboard({ orders, wines }: SalesByCateg
     // Compute monthly sales for the selected category.
     const monthlySalesRaw: Record<string, number> = {};
     orders.forEach((order) => {
-        const orderDate = new Date(order.createdAt);
-        const monthKey = orderDate.toISOString().slice(0, 7);
+        const monthKey = new Date(order.createdAt).toISOString().slice(0, 7);
         order.cartItems?.forEach((item) => {
             const wine = wines.find((w) => w.wineId === item.wineId);
             if (wine && wine.category === activeCategory) {
@@ -90,7 +81,6 @@ export default function SalesByCategoryDashboard({ orders, wines }: SalesByCateg
         .map(([month, sales]) => ({ month, sales: sales / 100 }))
         .sort((a, b) => a.month.localeCompare(b.month));
 
-    // Chart configuration uses the active category’s fill color.
     const chartConfig = {
         sales: {
             label: "Sales",
@@ -100,15 +90,13 @@ export default function SalesByCategoryDashboard({ orders, wines }: SalesByCateg
 
     return (
         <div className="space-y-8 p-4">
-            {/* Dashboard Header */}
             <div className="text-center">
-                <h1 className="text-2xl font-bold">Sales Dashboard</h1>
-                <p className="text-sm text-muted-foreground">
-                    Overview and detailed trends by wine category
+                <h2 className="text-2xl font-bold">Sales by Category</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                    Select a category to view its monthly trends
                 </p>
             </div>
-
-            {/* General Overview Card */}
+            {/* General Overview Chart */}
             <Card className="shadow-lg">
                 <CardHeader>
                     <CardTitle className="text-lg font-semibold">General Overview</CardTitle>
@@ -128,9 +116,10 @@ export default function SalesByCategoryDashboard({ orders, wines }: SalesByCateg
                                 minTickGap={32}
                                 tickFormatter={(value) => {
                                     const date = new Date(value + "-01");
-                                    return date.toLocaleDateString("en-US", {
+                                    return date.toLocaleDateString("en-GB", {
                                         month: "short",
                                         year: "numeric",
+                                        timeZone: "CET",
                                     });
                                 }}
                             />
@@ -141,9 +130,10 @@ export default function SalesByCategoryDashboard({ orders, wines }: SalesByCateg
                                         nameKey="sales"
                                         labelFormatter={(value) => {
                                             const date = new Date(value + "-01");
-                                            return date.toLocaleDateString("en-US", {
+                                            return date.toLocaleDateString("en-GB", {
                                                 month: "short",
                                                 year: "numeric",
+                                                timeZone: "CET",
                                             });
                                         }}
                                     />
@@ -155,7 +145,7 @@ export default function SalesByCategoryDashboard({ orders, wines }: SalesByCateg
                 </CardContent>
             </Card>
 
-            {/* Category Summary Card */}
+            {/* Category Summary */}
             <Card className="shadow-lg">
                 <CardHeader>
                     <CardTitle className="text-lg font-semibold">Sales Summary by Category</CardTitle>
@@ -170,20 +160,22 @@ export default function SalesByCategoryDashboard({ orders, wines }: SalesByCateg
                             onClick={() => setActiveCategory(category)}
                             className={`p-4 border rounded-lg flex flex-col items-center justify-center transition-all hover:shadow-md 
                 ${activeCategory === category ? categoryTheme[category].bg : "bg-transparent"}
-                ${categoryTheme[category].border} 
+                ${categoryTheme[category].border}
                 ${activeCategory === category ? categoryTheme[category].text : "text-muted-foreground"}`}
                         >
                             <span className="font-semibold">{category}</span>
-                            <span className="text-xl">{categoryTotals[category].toLocaleString()}</span>
+                            <span onClick={() => console.log(categoryTotals)} className="text-xl">+{categoryTotals[category].toLocaleString()}</span>
                         </button>
                     ))}
                 </CardContent>
             </Card>
 
-            {/* Detailed Chart Card for Selected Category */}
+            {/* Detailed Category Chart */}
             <Card className="shadow-lg">
                 <CardHeader>
-                    <CardTitle className="text-lg font-semibold">{activeCategory} Sales Over Time</CardTitle>
+                    <CardTitle className="text-lg font-semibold">
+                        {activeCategory} Sales Over Time
+                    </CardTitle>
                     <CardDescription className="text-sm text-muted-foreground">
                         Monthly breakdown for the selected category
                     </CardDescription>
@@ -200,9 +192,10 @@ export default function SalesByCategoryDashboard({ orders, wines }: SalesByCateg
                                 minTickGap={32}
                                 tickFormatter={(value) => {
                                     const date = new Date(value + "-01");
-                                    return date.toLocaleDateString("en-US", {
+                                    return date.toLocaleDateString("en-GB", {
                                         month: "short",
                                         year: "numeric",
+                                        timeZone: "CET",
                                     });
                                 }}
                             />
@@ -213,9 +206,10 @@ export default function SalesByCategoryDashboard({ orders, wines }: SalesByCateg
                                         nameKey="sales"
                                         labelFormatter={(value) => {
                                             const date = new Date(value + "-01");
-                                            return date.toLocaleDateString("en-US", {
+                                            return date.toLocaleDateString("en-GB", {
                                                 month: "short",
                                                 year: "numeric",
+                                                timeZone: "CET",
                                             });
                                         }}
                                     />

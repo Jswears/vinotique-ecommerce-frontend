@@ -1,24 +1,30 @@
 "use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Wine, User } from "lucide-react";
+import { Wine, User, Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { CartIcon } from "@/components/cart/CartIcon";
 import { NavLink } from "./NavLink";
 import { ThemeToggle } from "../providers/ThemeToggler";
 import { useAuthStore } from "@/stores/authStore";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
+import { AnimatePresence } from "framer-motion";
+import { MobileNav } from "./MobileNav";
 
 const Navbar = () => {
     const pathname = usePathname();
     const { user, initAuth } = useAuthStore();
+    const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [isClient, setIsClient] = useState(false);
 
-    // Memoize auth initialization to prevent unnecessary re-renders
-    useMemo(() => {
+    // Initialize auth and set client flag
+    useEffect(() => {
         initAuth();
+        setIsClient(true);
     }, [initAuth]);
 
-    if (user?.isAdmin && pathname.startsWith("/admin")) {
+    // Hide Navbar if user is admin and on the admin panel
+    if (!isClient || (user?.isAdmin && pathname.startsWith("/admin"))) {
         return null;
     }
 
@@ -34,8 +40,8 @@ const Navbar = () => {
                         </Link>
                     </div>
 
-                    {/* Navigation Links */}
-                    <div className="hidden sm:flex sm:space-x-6">
+                    {/* Desktop Navigation */}
+                    <div className="hidden md:flex md:space-x-6">
                         <NavLink href="/" active={pathname === "/"}>
                             Home
                         </NavLink>
@@ -50,18 +56,35 @@ const Navbar = () => {
                     </div>
 
                     {/* Right-side Controls */}
-                    <div className="flex items-center space-x-4">
-                        <ThemeToggle />
+                    <div className="flex flex-end items-center gap-2">
+                        <div className="items-center hidden md:flex">
+                            <ThemeToggle />
+                        </div>
                         <CartIcon />
-                        <Button variant="ghost" size="icon" asChild>
+                        <Button variant="ghost" size="icon" asChild className="hidden md:flex">
                             <Link href="/account">
                                 <User className="h-5 w-5" />
                                 <span className="sr-only">Account</span>
                             </Link>
                         </Button>
+
+                        {/* Mobile Menu Button */}
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="md:hidden"
+                            onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
+                        >
+                            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                        </Button>
                     </div>
                 </div>
             </nav>
+
+            {/* Mobile Navigation */}
+            <AnimatePresence>
+                {isMobileMenuOpen && <MobileNav closeMenu={() => setMobileMenuOpen(false)} user={user} />}
+            </AnimatePresence>
         </header>
     );
 };

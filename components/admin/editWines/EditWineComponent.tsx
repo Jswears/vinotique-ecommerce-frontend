@@ -42,10 +42,7 @@ const EditWineComponent = ({ wineId }: EditWineComponentProps) => {
 
     useEffect(() => {
         const loadWine = async () => {
-            if (wines.length === 0) {
-                const wine = await fetchWine(wineId)
-
-            }
+            await fetchWine(wineId)
             const wine = wines.find((wine: Wine) => wine.wineId === wineId)
             if (wine) {
                 setFormData({

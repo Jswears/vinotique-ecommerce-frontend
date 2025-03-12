@@ -6,7 +6,6 @@ import { useState } from "react";
 
 const ClearCartButton = () => {
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
     const { clearCart } = useCartStore();
     const { toast } = useToast();
 
@@ -20,7 +19,13 @@ const ClearCartButton = () => {
                 variant: "default",
             });
         } catch (error) {
-            setError(error instanceof Error ? error.message : "An unknown error occurred");
+            toast({
+                title: "An error occurred",
+                description: "An error occurred while clearing your cart. Please try again.",
+                variant: "destructive",
+            });
+            console.log("Error clearing cart:", error);
+
         } finally {
             setLoading(false);
         }

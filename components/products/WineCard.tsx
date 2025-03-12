@@ -17,7 +17,7 @@ const WineCard = ({ wine, isFeatured }: WineCardProps) => {
                     alt={wine.productName}
                     width={800}
                     height={800}
-                    className="w-full h-80 object-cover"
+                    className="w-full h-full object-cover"
                 />
             </CardHeader>
             <CardContent className="p-4 space-y-2 flex flex-col items-left">

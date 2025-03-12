@@ -5,9 +5,9 @@ import FeaturedWinesList from "../components/products/FeaturedWinesList";
 
 const HomePage = () => {
   return (
-    <div className="container mx-auto px-6 py-24 space-y-16">
+    <div className="h-dvh flex flex-col justify-between container mx-auto px-6 py-24 space-y-16">
       {/* Hero Section */}
-      <section className="text-center space-y-6 flex flex-col items-center">
+      <section className="text-center space-y-6 flex flex-col items-center justify-between">
         <h1 className="text-4xl font-bold text-foreground leading-tight">
           Welcome to Vinotique
         </h1>
@@ -30,9 +30,9 @@ const HomePage = () => {
       </section>
 
       {/* Call-to-Action */}
-      <section className="text-center flex flex-col justify-between bg-accent rounded-md p-10 space-y-6 shadow-md">
+      <section className="text-center flex flex-col justify-between bg-accent/80 rounded-md p-10 space-y-6 shadow-md">
         <h2 className="text-2xl font-semibold dark:text-black text-muted-foreground">Ready to explore more?</h2>
-        <p className="text-lg dark:text-black/50 text-muted-foreground  max-w-lg mx-auto leading-relaxed">
+        <p className="text-lg dark:text-black/50 text-muted-foreground   leading-relaxed">
           Visit our full collection to find your perfect wine.
         </p>
         <Link href="/wines" passHref>

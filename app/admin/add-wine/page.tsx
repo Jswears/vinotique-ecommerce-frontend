@@ -11,18 +11,18 @@ import { useRouter } from "next/navigation"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 
-export default function AdminPanel() {
-    const { formData, previewUrl, isLoading, handleChange, handleKeyDown, handleSubmit, removeGrapeVarietal, error } = useWineForm()
-    const router = useRouter()
+export default function Addwine() {
+    const { formData, previewUrl, isLoading, handleChange, handleKeyDown, handleSubmit, removeGrapeVarietal, validationErrors } = useWineForm();
+    const router = useRouter();
+
     const onSubmit = async (e: React.FormEvent) => {
-        e.preventDefault()
-        router.push("/admin/edit-wines")
-        try {
-            await handleSubmit()
-        } catch (err) {
-            console.error(err)
+        e.preventDefault();
+        const success = await handleSubmit();
+
+        if (success) {
+            router.push("/admin/edit-wines");
         }
-    }
+    };
 
     const handleCheckboxChange = (checked: boolean) => {
         handleChange({ target: { name: "isFeatured", value: checked } } as unknown as React.ChangeEvent<HTMLInputElement>)
@@ -99,9 +99,13 @@ export default function AdminPanel() {
                         </div>
 
                         <ImagePreview previewUrl={previewUrl} />
-
-                        {error && <p className="text-red-600 text-sm">{error}</p>}
-
+                        {validationErrors.length > 0 && (
+                            <div>
+                                {validationErrors.map((error, index) => (
+                                    <p key={index}>{error.message}</p>
+                                ))}
+                            </div>
+                        )}
                         <SubmitButton isLoading={isLoading} />
                     </form>
                 </CardContent>

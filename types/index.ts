@@ -76,7 +76,7 @@ export type WineFormData = {
 
 // ---- Cart Types ----
 export interface CartItem {
-  addedAt: string;
+  addedAt: Date;
   wineId: string;
   quantity: number;
   productName: string;
@@ -132,6 +132,7 @@ export type Order = {
     price: number;
     quantity: number;
     wineId: string;
+    category: string;
   }[];
   createdAt: string;
   customer: string;

@@ -12,7 +12,6 @@ import {
     PaginationPrevious
 } from "@/components/ui/pagination";
 import { useWinesStore } from "@/stores/winesStore";
-import useCartStore from "@/stores/cartStore";
 
 const WineList = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +21,6 @@ const WineList = () => {
     const totalPages = Math.ceil(totalItems / pageSize);
 
     const { fetchWines, wines, loadingState, error } = useWinesStore();
-    const { cartItems } = useCartStore();
 
     useEffect(() => {
         if (loadingState === "idle") {

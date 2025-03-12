@@ -3,6 +3,7 @@ import { WineCategoryEnum, WineFormData } from "../types";
 import { api } from "../lib/api";
 import axios from "axios";
 import { z } from "zod";
+import { useToast } from "./use-toast";
 
 const CLOUDFRONT_URL = process.env.NEXT_PUBLIC_CLOUDFRONT_URL;
 
@@ -25,6 +26,7 @@ const wineFormSchema = z.object({
 });
 
 export const useWineForm = () => {
+    const { toast } = useToast();
     const [formData, setFormData] = useState<WineFormData>({
         productName: "",
         producer: "",
@@ -33,7 +35,7 @@ export const useWineForm = () => {
         region: "",
         country: "",
         grapeVarietal: [],
-        grapeVarietalInput: "", // Initialize grapeVarietalInput
+        grapeVarietalInput: "",
         vintage: 0,
         alcoholContent: 0,
         sizeMl: 750,
@@ -45,7 +47,7 @@ export const useWineForm = () => {
 
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string>("");
+    const [validationErrors, setValidationErrors] = useState<z.ZodIssue[]>([]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
@@ -92,75 +94,46 @@ export const useWineForm = () => {
         }));
     };
 
-    const getPresignedUrlForImage = async (fileName: string, fileType: string) => {
-        try {
-            const response = await api.post<{ presignedUrl: string }>("/wines/presignedUrl", { fileName, fileType });
-            return response.presignedUrl;
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    const uploadImageToS3 = async (image: File, presignedUrl: string) => {
-        try {
-            await axios.put(presignedUrl, image, { headers: { "Content-Type": image.type } });
-        } catch (error) {
-            throw error;
-        }
-    };
-
-    const submitWineData = async (publicUrl: string) => {
-        try {
-            const wineData = {
-                productName: formData.productName,
-                producer: formData.producer,
-                description: formData.description,
-                category: formData.category,
-                region: formData.region,
-                country: formData.country,
-                grapeVarietal: formData.grapeVarietal,
-                vintage: formData.vintage,
-                alcoholContent: formData.alcoholContent,
-                sizeMl: formData.sizeMl,
-                price: formData.price,
-                stockQuantity: formData.stockQuantity,
-                imageUrl: publicUrl,
-                isFeatured: formData.isFeatured,
-            };
-            const response = await api.post("/wines", wineData);
-            return response;
-        } catch (error) {
-            throw error;
-        }
-    };
-
     const handleSubmit = async () => {
         if (!formData.image) {
-            return;
+            toast({
+                title: "Image Required",
+                description: "Please upload an image for the wine.",
+                variant: "destructive",
+            })
+            return false;
         }
+
         setIsLoading(true);
         try {
             // Validate form data
             wineFormSchema.parse(formData);
-            console.log("dataform", formData)
+
             const { name } = formData.image;
             const fileName = `${formData.category}/${name}`;
+            const signedUrl = await api.post<{ presignedUrl: string }>("/wines/presigned-url", {
+                fileName,
+                fileType: formData.image.type
+            });
 
-            const signedUrl = await getPresignedUrlForImage(fileName, formData.image.type);
-
-            await uploadImageToS3(formData.image, signedUrl);
+            await axios.put(signedUrl.presignedUrl, formData.image, {
+                headers: { "Content-Type": formData.image.type }
+            });
 
             const publicUrl = `${CLOUDFRONT_URL || "https://example"}/${fileName}`;
 
-            await submitWineData(publicUrl);
-        } catch (error: unknown) { // Specify the type as unknown
-            if (error instanceof z.ZodError) {
-                setError(error.errors.map(err => err.message).join(", "));
-            } else {
-                setError("An unexpected error occurred.");
-            }
-        } finally {
-            setIsLoading(false);
+            await api.post("/wines", {
+                ...formData,
+                imageUrl: publicUrl
+            });
+
+            toast({
+                title: "Wine Added",
+                description: "The wine has been added successfully.",
+                variant: "default",
+            })
+
+            // Reset form after success
             setFormData({
                 productName: "",
                 producer: "",
@@ -179,6 +152,36 @@ export const useWineForm = () => {
                 image: null,
             });
             setPreviewUrl(null);
+            setValidationErrors([]); // Clear validation errors on success
+
+            return true; // ✅ Indicate success
+        } catch (error: unknown) {
+            if (error instanceof z.ZodError) {
+                setValidationErrors(error.errors); // Set validation errors
+                const descriptionError = error.errors.find(err => err.path.includes("description"));
+                if (descriptionError) {
+                    toast({
+                        title: "Invalid Form",
+                        description: descriptionError.message,
+                        variant: "destructive"
+                    });
+                } else {
+                    toast({
+                        title: "Invalid Form",
+                        description: error.errors[0].message,
+                        variant: "destructive"
+                    });
+                }
+            } else {
+                toast({
+                    title: "Error",
+                    description: "An unexpected error occurred. Please try again.",
+                    variant: "destructive"
+                });
+            }
+            return false; // ❌ Indicate failure
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -186,11 +189,11 @@ export const useWineForm = () => {
         formData,
         previewUrl,
         isLoading,
+        validationErrors,
         handleChange,
         handleKeyDown,
         handleSubmit,
         removeGrapeVarietal,
-        error,
         setFormData,
     };
 };

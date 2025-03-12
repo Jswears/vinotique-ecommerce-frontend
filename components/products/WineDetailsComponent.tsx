@@ -33,7 +33,7 @@ const WineDetailsComponent = ({ wineId }: WineDetailsComponentProps) => {
     if (!wine) return <WineAlert title="Not Found" error="Wine not found" />;
 
     return (
-        <div className="container mx-auto px-6 py-16">
+        <div className="container mx-auto sm:px-6 py-16">
             <Card className="overflow-hidden shadow-xl rounded-lg">
                 <div className="grid grid-cols-1 md:grid-cols-2">
                     {/* Image Section */}
@@ -43,12 +43,12 @@ const WineDetailsComponent = ({ wineId }: WineDetailsComponentProps) => {
                             alt={wine.productName}
                             width={800}
                             height={800}
-                            className="h-full w-full object-cover rounded-l-lg md:rounded-none"
+                            className="h-full w-fit object-cover rounded-l-lg md:rounded-none"
                         />
                     </div>
 
                     {/* Details Section */}
-                    <div className="p-8 space-y-6">
+                    <div className="sm:p-8 space-y-6">
                         <CardHeader>
                             <CardTitle className="text-4xl font-extrabold">{wine.productName}</CardTitle>
                             <CardDescription className="text-lg text-muted-foreground">{wine.producer}</CardDescription>

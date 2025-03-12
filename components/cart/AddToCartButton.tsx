@@ -14,8 +14,19 @@ const AddToCartButton = ({ wine, type }: AddToCartButtonProps) => {
   const handleAddToCart = async () => {
     setIsAdding(true);
     setError(null);
+
+    const cartItem = {
+      wineId: wine.wineId,
+      productName: wine.productName,
+      price: wine.price,
+      imageUrl: wine.imageUrl,
+      quantity: 1,
+      isInStock: wine.isInStock,
+      stockQuantity: wine.stockQuantity,
+      addedAt: new Date(),
+    }
     try {
-      await addToCart(wine.wineId, 1);
+      await addToCart(cartItem, 1);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);

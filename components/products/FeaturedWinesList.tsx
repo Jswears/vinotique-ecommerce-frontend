@@ -32,4 +32,3 @@ const FeaturedWinesList = () => {
 };
 
 export default FeaturedWinesList;
-``

@@ -16,3 +16,4 @@
   - [ ] Create-wine
 - [ ] Improve typescript implementation
 - [ ] Add special featured wines route
+- [ ] Handle add to cart for non authenticated users by storing the cart in local storage and then transferring it to the user's cart once they log in, to reduce api calls and improve user experience

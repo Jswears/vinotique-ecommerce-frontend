@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { formatDate } from "@/utils/formatDate";
 import { useOrdersStore } from "@/stores/ordersStore";
 import { Order } from "@/types";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 
 export default function OrdersList() {
@@ -121,7 +122,9 @@ export default function OrdersList() {
                 <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
                     <DialogContent>
                         <DialogHeader>
-                            <DialogTitle>Order Details</DialogTitle>
+                            <VisuallyHidden>
+                                <DialogTitle>Order Details</DialogTitle>
+                            </VisuallyHidden>
                         </DialogHeader>
                         <div className="space-y-2">
                             <p><strong>Customer:</strong> {selectedOrder.customer}</p>

@@ -26,7 +26,7 @@ const CartItemsList = () => {
         if (cartItems.length === 0) {
             fetchCart();
         }
-    }, [cartItems]);
+    }, [cartItems, fetchCart]);
 
     if (error) return <WineAlert title="An error occurred" error={error} />;
     if (loading && !cartItems) return <CartItemsSkeleton />;

@@ -3,11 +3,18 @@ import useCartStore from "@/stores/cartStore";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
 export function CartIcon() {
-    const { getTotalQuantity } = useCartStore();
+    const { getTotalQuantity, fetchCart, cartItems } = useCartStore();
     const pathname = usePathname();
     const totalQuantity = getTotalQuantity();
+
+    useEffect(() => {
+        if (cartItems.length === 0) {
+            fetchCart();
+        }
+    }, [cartItems.length, fetchCart]);
 
     return (
         <Link href="/checkout/cart" className="relative p-2">

@@ -28,7 +28,7 @@ export default function AdminDashboard() {
         if (loadingOrdersState === 'idle') {
             fetchOrders();
         }
-    }, [fetchOrders, totalOrdersCount]);
+    }, [fetchOrders, totalOrdersCount, loadingOrdersState]);
 
     if (loadingState === "loading") {
         <AdminDashboardSkeleton />;

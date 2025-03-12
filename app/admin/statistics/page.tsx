@@ -78,11 +78,11 @@ export default function AdminStatisticsPage() {
             </section>
 
             {/* Detailed Charts */}
-            <section className="grid gap-6 md:grid-cols-2">
-                <div className="shadow-lg">
+            <section className="flex flex-col md:flex-row">
+                <div className="shadow-lg w-full">
                     <SalesByCategoryDashboard orders={orders} wines={wines} />
                 </div>
-                <div className="shadow-lg">
+                <div className="shadow-lg w-full">
                     <RecentOrders orders={orders} />
                 </div>
             </section>

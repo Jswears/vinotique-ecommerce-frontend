@@ -40,7 +40,7 @@ export function AdminSidebar() {
                 variant: "destructive",
             })
         }
-    }, [router, toast]);
+    }, [router, toast, logout]);
 
 
 
