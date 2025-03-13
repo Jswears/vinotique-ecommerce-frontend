@@ -9,6 +9,7 @@ const CallToAction = () => {
             <p className="text-white text-center mt-2">
                 Visit our full collection to find your perfect wine.
             </p>
+            {/* Fix */}
             <Link
                 href="/wines"
                 className="mt-6 px-6 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition"
