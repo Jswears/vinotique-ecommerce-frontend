@@ -35,6 +35,7 @@ const ClearCartButton = () => {
         <Button
             disabled={loading}
             variant="destructive"
+            size={"sm"}
             className="text-white hover:shadow-md"
             onClick={handleClearCart}
         >

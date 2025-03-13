@@ -40,7 +40,7 @@ const CartItemsList = () => {
     }
 
     return (
-        <div className="max-w-4xl mx-auto px-6 py-8">
+        <div className="max-w-4xl mx-auto py-8">
             <Card className="shadow-md border border-border rounded-lg">
                 <CardHeader>
                     <CardTitle className="text-3xl font-bold flex items-center">
@@ -58,14 +58,14 @@ const CartItemsList = () => {
                         ))}
                     </ScrollArea>
                 </CardContent>
-                <CardFooter className="flex justify-between items-center">
-                    <div>
+                <CardFooter className="flex flex-col gap-8 justify-between items-start md:flex-row md:items-center">
+                    <div className="flex items-center gap-4">
                         <p className="text-lg font-semibold">Total:</p>
                         <p className="text-2xl font-bold text-primary">
                             {totalPrice && priceConversor(totalPrice)}
                         </p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex justify-end self-end items-center gap-2">
                         <ClearCartButton />
                         <CheckoutButton cartItems={cartItems} />
                     </div>

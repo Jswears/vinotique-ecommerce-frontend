@@ -27,12 +27,12 @@ const RemoveFromCartButton = ({ wine, type }: RemoveFromCartButtonProps) => {
             )}
             <Button
                 disabled={loading}
-                variant={type === "simple" ? "secondary" : "default"}
-                size={type === "simple" ? "sm" : "lg"}
-                className="hover:shadow-md transition-all"
+                variant={type === "simple" ? "ghost" : "default"}
+                size={type === "simple" ? "icon" : "lg"}
+                className={`w-full ${type === "simple" ? "rounded-sm hover:bg-accent/70" : "rounded-none"} font-medium flex items-center justify-center gap-2 transition-transform hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed`}
                 onClick={handleRemoveFromCart}
             >
-                <Minus />
+                <Minus size={16} />
             </Button>
         </>
     );

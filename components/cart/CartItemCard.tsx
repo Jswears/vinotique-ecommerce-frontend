@@ -7,7 +7,7 @@ import Image from "next/image";
 const CartItemCard = ({ cartItem }: { cartItem: CartItem }) => {
     return (
         <div className="flex items-center border-b dark:border-gray-700 py-4">
-            <Image src={cartItem.imageUrl} alt={cartItem.productName} width={600} height={600} className="w-fit h-44 object-cover mr-4 hover:scale-105" />
+            <Image src={cartItem.imageUrl} alt={cartItem.productName} width={600} height={600} className="hidden md:block w-fit h-20 md:h-32 object-contain mr-4 hover:scale-105" />
             <div className="flex-grow">
                 <h2 className="text-xl font-semibold text-foreground">
                     {cartItem.productName}

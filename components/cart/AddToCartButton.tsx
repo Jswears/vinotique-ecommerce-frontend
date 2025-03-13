@@ -44,15 +44,15 @@ const AddToCartButton = ({ wine, type }: AddToCartButtonProps) => {
     <div className="flex flex-col items-center w-full">
       <Button
         disabled={isDisabled}
-        variant={type === "simple" ? "secondary" : "default"}
-        size={type === "simple" ? "sm" : "sm"}
-        className="w-full rounded-none  font-medium flex items-center justify-center gap-2 transition-transform hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+        variant={type === "simple" ? "ghost" : "default"}
+        size={type === "simple" ? "icon" : "sm"}
+        className={`w-full ${type === "simple" ? "rounded-sm hover:bg-accent/70" : "rounded-none"} font-medium flex items-center justify-center gap-2 transition-transform hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed`}
         onClick={handleAddToCart}
       >
         {isAdding ? (
           <Loader2 className="animate-spin h-4 w-4" />
         ) : type === "simple" ? (
-          <Plus />
+          <Plus size={16} />
         ) : (
           <>
             <ShoppingCart className="h-4 w-4" /> Add to Cart
