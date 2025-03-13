@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation"
 import { useToast } from "@/hooks/use-toast"
 import useCartStore from "@/stores/cartStore"
 import LogoutButton from "@/components/auth/LogoutButton"
+import { useAuthStore } from "@/stores/authStore"
 type UserAttributesType = {
     preferred_username: string
     email: string
@@ -18,7 +19,7 @@ export default function AccountPage() {
     const router = useRouter()
     const { toast } = useToast()
     const { fetchCart } = useCartStore();
-
+    const { user } = useAuthStore();
 
     useEffect(() => {
         async function fetchUser() {
@@ -38,16 +39,20 @@ export default function AccountPage() {
                     description: "Please log in to view this page.",
                     variant: "destructive",
                 })
+                router.push("/auth/login")
             }
         }
 
-        fetchUser()
-    }, [fetchCart, router, toast])
+        if (!user) {
+            router.push("/auth/login")
+        } else {
+            fetchUser()
+        }
+    }, [fetchCart, router, toast, user])
 
     if (!userAttributes) {
         return <div>Loading...</div>
     }
-
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -67,7 +72,6 @@ export default function AccountPage() {
                             Back to Home
                         </Button>
                         <LogoutButton />
-
                     </div>
                 </CardContent>
             </Card>
