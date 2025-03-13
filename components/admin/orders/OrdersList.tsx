@@ -129,7 +129,7 @@ export default function OrdersList() {
                         <div className="space-y-2">
                             <p><strong>Customer:</strong> {selectedOrder.customer}</p>
                             <p><strong>Order ID:</strong> {selectedOrder.orderId}</p>
-                            <p><strong>Total:</strong> €{selectedOrder.totalAmount}</p>
+                            <p><strong>Total:</strong> {priceConversor(selectedOrder.totalAmount)}</p>
                             <p><strong>Status:</strong> {selectedOrder.orderStatus}</p>
                             <p><strong>Date:</strong> {formatDate(selectedOrder.createdAt)}</p>
 
