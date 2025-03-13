@@ -18,17 +18,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans antialiased min-h-screen flex flex-col`}>
+      <body className="font-sans antialiased flex flex-col justify-between min-h-screen bg-background text-foreground">
         <ConfigureAmplify />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Navbar />
-          <main className="flex-grow bg-background text-foreground">
+          <main className="min-h-screen flex-grow bg-background text-foreground">
             {children}
           </main>
           <Toaster />
           <Footer />
         </ThemeProvider>
       </body>
+
     </html>
   );
 }

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import FeaturedWinesList from "../components/products/FeaturedWinesList";
+import CallToAction from "@/components/home/CallToAction";
 
 const HomePage = () => {
   return (
@@ -29,22 +30,7 @@ const HomePage = () => {
         <FeaturedWinesList />
       </section>
 
-      {/* Call-to-Action */}
-      <section className="text-center flex flex-col justify-between bg-accent/80 rounded-md p-10 space-y-6 shadow-md">
-        <h2 className="text-2xl font-semibold dark:text-black text-muted-foreground">Ready to explore more?</h2>
-        <p className="text-lg dark:text-black/50 text-muted-foreground   leading-relaxed">
-          Visit our full collection to find your perfect wine.
-        </p>
-        <Link href="/wines" passHref>
-          <Button
-            size="lg"
-            variant="secondary"
-            className="rounded-full hover:scale-105 transition-transform"
-          >
-            View All Wines <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        </Link>
-      </section>
+      <CallToAction />
     </div>
   );
 };
