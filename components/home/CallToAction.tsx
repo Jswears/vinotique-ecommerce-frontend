@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const CallToAction = () => {
     return (
-        <div className="w-full flex flex-col items-center justify-center bg-orange-600 p-8 rounded-lg mb-16">
+        <div className="w-full flex flex-col items-center justify-center bg-orange-600 p-8 rounded-lg mt-12 mb-24">
             <h2 className="text-2xl font-bold text-white text-center">
                 Ready to explore more?
             </h2>

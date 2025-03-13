@@ -6,7 +6,7 @@ import CallToAction from "@/components/home/CallToAction";
 
 const HomePage = () => {
   return (
-    <div className="h-dvh flex flex-col justify-between container mx-auto px-6 py-24 space-y-16">
+    <div className="min-h-screen flex flex-col justify-between container mx-auto px-6 py-24 space-y-16">
       {/* Hero Section */}
       <section className="text-center space-y-6 flex flex-col items-center justify-between">
         <h1 className="text-4xl font-bold text-foreground leading-tight">
