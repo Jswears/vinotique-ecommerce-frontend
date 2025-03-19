@@ -118,6 +118,10 @@ const useCartStore = create<CartStoreState>()(
             return {
               ...state,
               cartItems: updatedCartItems,
+              totalPrice: updatedCartItems.reduce(
+                (sum, item) => sum + item.price * item.quantity,
+                0
+              ),
               itemsCount: updatedCartItems.reduce(
                 (sum, item) => sum + item.quantity,
                 0

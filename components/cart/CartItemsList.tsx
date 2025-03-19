@@ -17,6 +17,8 @@ import useCartStore from "@/stores/cartStore";
 import ClearCartButton from "./ClearCartButton";
 import CheckoutButton from "./CheckoutButton";
 import { useEffect } from "react";
+import { CartItem } from "@/types";
+
 
 const CartItemsList = () => {
     const { cartItems, fetchCart, getTotalPrice, loading, error } = useCartStore();
